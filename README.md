@@ -35,6 +35,12 @@ Visit (https://www.perfectgym.com/)
 + [ ] R23 - Mandatory - Club owner can allow his members to sign up family members and to manage their account under one family membership
 + [ ] R24 - Mandatory - Club owner can Set discounts or vouchers that are reedemable upon registration to get his new clients up and running as quickly as possible.
 
+#### Users (Club owners)
+
++ [ ] R1 - Mandatory - Add users
++ [ ] R2 - Mandatory - Remove users
++ [ ] R3 - Mandatory - Add clubs
+
 #### Clients
 
 + [ ] R1 - Mandatory - Add clients
