@@ -6,7 +6,11 @@ values
 instance variables
 	public name: String;
 operations
--- TODO Define operations here
+
+	public User: seq of char ==> User
+ 	User(newName) == (name := newName; return self)
+ 	post name = newName;
+ 	
 functions
 -- TODO Define functiones here
 traces

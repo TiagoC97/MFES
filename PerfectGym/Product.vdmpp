@@ -6,8 +6,17 @@ values
 instance variables
 	public name : String;
 	public cost : real;
+	public quantity: nat;
 operations
--- TODO Define operations here
+	public Product: String * real * nat ==> Product
+ 	Product(prod_name, prod_cost, prod_quantity) == 
+ 	(
+ 		name := prod_name;
+		cost := prod_cost;
+		quantity := prod_quantity;
+		return self;
+ 	);
+ 	
 functions
 -- TODO Define functiones here
 traces

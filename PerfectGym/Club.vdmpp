@@ -14,6 +14,7 @@ instance variables
 	private trainers: set of Trainer := {};
 	private newsletters: set of Newsletter := {};
 	private crm: CRM;
+	private owner: Owner;
 	
 operations
 
@@ -24,15 +25,29 @@ operations
  	
  		-- add a new client to the club
 		public addClient: Client ==> ()
-		addClient(client) == clients := clients union {client}
+		addClient(client) == 
+		|| (clients := clients union {client}, PerfectGym`getInstance().addUser(client))
 		pre client not in set clients
 		post clients = clients~ union {client};
 		
 		-- add a new trainer to the club
 		public addTrainer: Trainer ==> ()
-		addTrainer(trainer) == trainers := trainers union {trainer}
+		addTrainer(trainer) == 
+		|| (trainers := trainers union {trainer}, PerfectGym`getInstance().addUser(trainer))
 		pre trainer not in set trainers
 		post trainers = trainers~ union {trainer};
+		
+		-- add a client of personal training to a trainer
+		public addPersonalTraining: Trainer * Client ==> ()
+		addPersonalTraining(trainer, client) ==
+		trainer.addTrainee(client)
+		pre 
+			-- trainer exists in the database			
+			trainer in set trainers and
+			-- client exists in the database
+			client in set clients and
+			-- client is not in the tariner trainees
+			client not in set trainer.trainees;
  	
 functions
 -- TODO Define functiones here

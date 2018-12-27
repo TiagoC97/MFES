@@ -5,10 +5,19 @@ values
 -- TODO Define values here
 instance variables
 
-	private trainees: set of Client := {};
+	public trainees: set of Client := {};
 	
 operations
--- TODO Define operations here
+
+	public Trainer: (String) ==> Trainer
+ 	Trainer(String) == User(String)
+ 	post trainees = {};
+
+	public addTrainee: Client ==> ()
+	addTrainee(client) == trainees := trainees union {client}
+	pre client not in set trainees
+	post trainees = trainees~ union {client};
+		
 functions
 -- TODO Define functiones here
 traces

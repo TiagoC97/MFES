@@ -3,11 +3,13 @@ class Lead
 types
 	public String = seq of char;
 values
--- TODO Define values here
+	
 instance variables
--- TODO Define instance variables here
+	public name: String;
 operations
--- TODO Define operations here
+	public Lead: seq of char ==> Lead
+ 	Lead(newName) == (name := newName; return self)
+ 	post name = newName;
 functions
 -- TODO Define functiones here
 traces

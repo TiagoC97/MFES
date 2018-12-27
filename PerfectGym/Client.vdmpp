@@ -7,13 +7,12 @@ values
 	
 instance variables
 
-	
-	
-	private trainer: Trainer;
-	
 
 operations
--- TODO Define operations here
+
+	public Client: String ==> Client
+ 	Client(String) == User(String)
+
 functions
 -- TODO Define functiones here
 traces

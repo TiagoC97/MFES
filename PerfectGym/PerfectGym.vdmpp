@@ -8,12 +8,18 @@ instance variables
 
 	private clubs: set of Club := {};
 	private users: set of User := {};
+	
+	private static perfectGym: PerfectGym := new PerfectGym();
 operations
 -- TODO Define operations here
 		-- constructor
 		public PerfectGym: () ==> PerfectGym
 		PerfectGym() == (return self)
-		post clubs = {};
+		post clubs = {} and users = {};
+		
+		-- singleton - return the existent instance
+		public pure static getInstance: () ==> PerfectGym
+		getInstance() == return perfectGym;
 		
 		-- add a new club to the PerfectGym
 		public addClub: Club ==> ()
