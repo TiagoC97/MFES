@@ -1,12 +1,39 @@
 class Club
 types
--- TODO Define types here
+
+	public String = seq of char;
+	
 values
 -- TODO Define values here
 instance variables
--- TODO Define instance variables here
+
+	public name: String;
+
+	private clients: set of Client := {};
+	private salesRepresentatives: set of SalesRepresentative := {};
+	private trainers: set of Trainer := {};
+	private newsletters: set of Newsletter := {};
+	private crm: CRM;
+	
 operations
--- TODO Define operations here
+
+	-- constructor
+ 	public Club: () ==> Club
+ 	Club() == return self
+ 	post clients = {};
+ 	
+ 		-- add a new client to the club
+		public addClient: Client ==> ()
+		addClient(client) == clients := clients union {client}
+		pre client not in set clients
+		post clients = clients~ union {client};
+		
+		-- add a new trainer to the club
+		public addTrainer: Trainer ==> ()
+		addTrainer(trainer) == trainers := trainers union {trainer}
+		pre trainer not in set trainers
+		post trainers = trainers~ union {trainer};
+ 	
 functions
 -- TODO Define functiones here
 traces

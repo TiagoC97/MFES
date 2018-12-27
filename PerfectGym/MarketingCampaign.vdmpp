@@ -1,6 +1,6 @@
-class Message
+class MarketingCampaign
 types
--- TODO Define types here
+	public String = seq of char;
 values
 -- TODO Define values here
 instance variables
@@ -11,4 +11,4 @@ functions
 -- TODO Define functiones here
 traces
 -- TODO Define Combinatorial Test Traces here
-end Message
+end MarketingCampaign

@@ -1,12 +1,32 @@
 class PerfectGym
 types
--- TODO Define types here
+	public String = seq of char;	
 values
 -- TODO Define values here
 instance variables
 -- TODO Define instance variables here
+
+	private clubs: set of Club := {};
+	private users: set of User := {};
 operations
 -- TODO Define operations here
+		-- constructor
+		public PerfectGym: () ==> PerfectGym
+		PerfectGym() == (return self)
+		post clubs = {};
+		
+		-- add a new club to the PerfectGym
+		public addClub: Club ==> ()
+		addClub(club) == clubs := clubs union {club}
+		pre club not in set clubs
+		post clubs = clubs~ union {club};
+		
+		-- add a new user to the PerfectGym
+		public addUser: User ==> ()
+		addUser(user) == users := users union {user}
+		pre user not in set users
+		post users = users~ union {user};
+		
 functions
 -- TODO Define functiones here
 traces

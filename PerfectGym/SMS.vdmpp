@@ -1,6 +1,6 @@
-class SMS is subclass of Message
+class SMS
 types
--- TODO Define types here
+	public String = seq of char;
 values
 -- TODO Define values here
 instance variables

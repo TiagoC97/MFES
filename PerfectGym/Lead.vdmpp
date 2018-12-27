@@ -1,6 +1,7 @@
 class Lead
+-- VAI SER SUBCALSS DO USER???
 types
--- TODO Define types here
+	public String = seq of char;
 values
 -- TODO Define values here
 instance variables

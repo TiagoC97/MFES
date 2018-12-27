@@ -1,6 +1,6 @@
-class SalesRepresentative is subclass of Employee
+class SalesRepresentative is subclass of User
 types
--- TODO Define types here
+	public String = seq of char;
 values
 -- TODO Define values here
 instance variables
