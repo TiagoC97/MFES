@@ -1,10 +1,11 @@
-class Trainer is subclass of User
+class Trainer is subclass of Employee
 types
 	public String = seq of char;
 values
 -- TODO Define values here
 instance variables
 
+	
 	public trainees: set of Client := {};
 	
 operations

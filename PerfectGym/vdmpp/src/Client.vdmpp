@@ -1,11 +1,11 @@
 class Client is subclass of User
 types
 
-	public String = seq of char;
-	
 values
 	
 instance variables
+	public receivedMessages: seq of String := [];
+	public receivedNewsletters: seq of String := [];
 
 
 operations

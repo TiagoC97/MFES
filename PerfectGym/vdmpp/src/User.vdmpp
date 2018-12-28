@@ -4,11 +4,17 @@ types
 values
 -- TODO Define values here
 instance variables
-	public name: String;
+	private name: String;
+	public static curUserID : int := 0;
+	public id : int := curUserID;
 operations
 
 	public User: seq of char ==> User
- 	User(newName) == (name := newName; return self)
+ 	User(newName) == (
+ 		name := newName;
+ 		curUserID := curUserID +1; 
+ 		return self
+ 	)
  	post name = newName;
  	
 functions
