@@ -9,8 +9,6 @@ operations
 	public Owner: (String) ==> Owner
  	Owner(String) == User(String)
 
-	public Owner: () ==> Owner
- 	Owner() == return self
 functions
 -- TODO Define functiones here
 traces
