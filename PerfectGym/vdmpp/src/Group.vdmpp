@@ -1,12 +1,60 @@
 class Group
 types
--- TODO Define types here
+	public String1 = seq1 of char;
 values
 -- TODO Define values here
 instance variables
--- TODO Define instance variables here
+	private clients: set of Client:= {};
+ 	private groupInbox: seq of String1 := [];
+ 	private offers: seq of String1 := [];
+	private club: [Club];
+	
 operations
--- TODO Define operations here
+	
+	-- constructor
+ 	public Group: () ==> Group
+ 	Group() == return self
+ 	post clients = {} and groupInbox = [] and offers = [];
+ 	
+ 	-- add a new client to the group
+ 	public addClient: Client ==> ()
+ 	addClient(client) == clients := clients union {client}
+ 	pre client not in set clients
+ 	post clients = clients~ union {client};
+
+	-- set groups club 	
+	public setClub: Club ==> ()
+	setClub(newClub) == club:= newClub
+	post club = newClub;
+ 	
+ 
+  -- remove a client from the group
+ 	public removeClient: Client ==> ()
+ 	removeClient(client) == clients := clients \ {client}
+ 	pre client in set clients
+ 	post clients = clients~ \ {client};
+ 	
+ 	-- add a new offer for the group
+ 	public receiveOffer: String1 ==> ()
+ 	receiveOffer(msg) == offers := [msg] ^ offers
+ 	post offers = msg ^ offers~;
+ 	
+ 	 -- add a new message to the group inbox
+ 	public sendMsg: User * String1 ==> ()
+ 	sendMsg(user, msg) == groupInbox := [msg] ^ groupInbox
+ 	pre user in set clients or (club <> nil and user = club.getOwner())
+ 	post groupInbox = msg ^ groupInbox~;
+ 
+  -- check the inbox (the client must belong to the group)
+ 	public checkInbox: Client ==> seq of String1
+ 	checkInbox(client) == return groupInbox
+ 	pre client in set clients;
+ 	
+ 	 -- check the offers the group received (the client must belong to the group)
+ 	public checkOffers: Client ==> seq of String1
+ 	checkOffers(client) == return offers
+ 	pre client in set clients;
+ 	
 functions
 -- TODO Define functiones here
 traces

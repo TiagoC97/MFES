@@ -6,12 +6,12 @@ values
 instance variables
 
 	
-	public trainees: set of Client := {};
+	private trainees: set of Client := {};
 	
 operations
 
 	public Trainer: (String) ==> Trainer
- 	Trainer(String) == User(String)
+ 	Trainer(String) == Employee(String)
  	post trainees = {};
 
 	public addTrainee: Client ==> ()

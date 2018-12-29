@@ -4,14 +4,21 @@ types
 values
 	
 instance variables
-	public receivedMessages: seq of String := [];
-	public receivedNewsletters: seq of String := [];
+
+	public trainer: Trainer := new Trainer();
+	
+	-- seq of seq or seq of seq1 ???	
 
 
 operations
 
 	public Client: String ==> Client
- 	Client(String) == User(String)
+ 	Client(String) == User(String);
+ 	
+	public addTrainer: Trainer ==> ()
+	addTrainer(newTrainer) == trainer := newTrainer
+	post trainer = newTrainer;
+	
 
 functions
 -- TODO Define functiones here

@@ -1,12 +1,15 @@
 class User
 types
 	public String = seq of char;
+	public String1 = seq1 of char;
 values
 -- TODO Define values here
 instance variables
 	private name: String;
 	public static curUserID : int := 0;
-	public id : int := curUserID;
+	private id : int := curUserID;
+	private inbox: seq of String1:= [];
+	private club: [Club];
 operations
 
 	public User: seq of char ==> User
@@ -16,6 +19,22 @@ operations
  		return self
  	)
  	post name = newName;
+ 	
+ 	-- puts the new message on the top of the inbox
+ 	
+ 	public receiveMessage: String1 ==> ()
+	receiveMessage(msg) == inbox := [msg] ^ inbox
+	pre len msg > 0
+	post inbox = msg ^ inbox~; 
+	
+	public setClub: Club ==> ()
+	setClub(newClub) == club:= newClub
+	post club = newClub;
+ 	
+ 	-- check the inbox
+ 	public checkInbox: User ==> seq of String1
+ 	checkInbox(user) == return inbox; 	
+ 	
  	
 functions
 -- TODO Define functiones here

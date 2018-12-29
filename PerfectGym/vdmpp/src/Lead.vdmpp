@@ -5,7 +5,7 @@ types
 values
 	
 instance variables
-	public name: String;
+	private name: String;
 operations
 	public Lead: seq of char ==> Lead
  	Lead(newName) == (name := newName; return self)

@@ -2,19 +2,22 @@ class Club
 types
 
 	public String = seq of char;
+	public String1 = seq1 of char;
 	
 values
 -- TODO Define values here
 instance variables
 
-	public name: String;
+	private name: String:= "";
+	private newsletter: String1 := "";
 
 	private clients: set of Client := {};
 	private salesRepresentatives: set of SalesRepresentative := {};
 	private trainers: set of Trainer := {};
-	private newsletters: set of Newsletter := {};
-	private crm: CRM;
-	private owner: Owner;
+	private groups: set of Group := {};
+	
+	private crm: CRM := new CRM();
+	private clubOwner: [Owner];
 	
 operations
 
@@ -23,24 +26,45 @@ operations
  	Club() == return self
  	post clients = {};
  	
+ 		-- add a new owner to the club
+		public addOwner: Owner ==> ()
+		addOwner(owner) == 
+		|| (clubOwner := owner, PerfectGym`getInstance().addUser(owner))
+		post clubOwner = owner;
+ 	
  		-- add a new client to the club
 		public addClient: Client ==> ()
 		addClient(client) == 
-		|| (clients := clients union {client}, PerfectGym`getInstance().addUser(client))
+		|| (clients := clients union {client}, PerfectGym`getInstance().addUser(client), client.setClub(self))
 		pre client not in set clients
 		post clients = clients~ union {client};
 		
 		-- add a new trainer to the club
 		public addTrainer: Trainer ==> ()
 		addTrainer(trainer) == 
-		|| (trainers := trainers union {trainer}, PerfectGym`getInstance().addUser(trainer))
+		|| (trainers := trainers union {trainer}, PerfectGym`getInstance().addUser(trainer), trainer.setClub(self))
 		pre trainer not in set trainers
 		post trainers = trainers~ union {trainer};
+		
+		-- add a new sales representative to the club
+		public addSalesRepresentative: SalesRepresentative ==> ()
+		addSalesRepresentative(salesRepresentative) == 
+		|| (salesRepresentatives := salesRepresentatives union {salesRepresentative}, PerfectGym`getInstance().addUser(salesRepresentative), salesRepresentative.setClub(self))
+		pre salesRepresentative not in set salesRepresentatives
+		post salesRepresentatives = salesRepresentatives~ union {salesRepresentative};
+		
+		-- add a new group to the club
+		public addGroup: Group ==> ()
+		addGroup(newGroup) == 
+		|| (groups := groups union {newGroup}, newGroup.setClub(self))
+		pre newGroup not in set groups
+		post groups = groups~ union {newGroup};
+ 	
 		
 		-- add a client of personal training to a trainer
 		public addPersonalTraining: Trainer * Client ==> ()
 		addPersonalTraining(trainer, client) ==
-		trainer.addTrainee(client)
+		|| (trainer.addTrainee(client), client.addTrainer(trainer))
 		pre 
 			-- trainer exists in the database			
 			trainer in set trainers and
@@ -48,6 +72,62 @@ operations
 			client in set clients and
 			-- client is not in the tariner trainees
 			client not in set trainer.trainees;
+			
+		-- add newsletter to the club
+		public addNewsletter: String1 ==> ()
+		addNewsletter(message) == newsletter := message
+		pre len newsletter > 0
+		post newsletter = message;
+		
+		-- send message to a client
+		public sendMessageClient: String1 * Client ==> ()
+		sendMessageClient(msg, client) == 
+		(
+			client.receiveMessage(msg);
+			client.receiveMessage(newsletter);
+		)
+		pre client in set clients and len msg > 0;
+		
+		-- send message to an employee
+		public sendMessageEmployee: String1 * Employee ==> ()
+		sendMessageEmployee(msg, employee) == employee.receiveMessage(msg)
+		pre (employee in set trainers or employee in set salesRepresentatives) and len msg > 0;
+		
+			
+		-- send message to all clients
+		public sendMessageAllClients: String1 ==> ()
+		sendMessageAllClients(msg) == 
+		(
+			for all client in set clients do
+			(
+				client.receiveMessage(msg);
+				client.receiveMessage(newsletter);
+			)
+		)
+		pre card clients > 0 and len msg > 0;
+				
+		-- send message to all trainers
+		public sendMessageAllTrainers: String1 ==> ()
+		sendMessageAllTrainers(msg) == 
+		(
+			for all trainer in set trainers do
+				trainer.receiveMessage(msg)		
+		)
+		pre card trainers > 0 and len msg > 0;
+		
+		-- send message to all sales representatives
+		public sendMessageAllSalesRepresentatives: String1 ==> ()
+		sendMessageAllSalesRepresentatives(msg) == 
+		(
+			for all salesRepresentative in set salesRepresentatives do
+				salesRepresentative.receiveMessage(msg)		
+		)
+		pre card salesRepresentatives > 0 and len msg > 0;
+		
+		
+		-- Returns club owner
+		public pure getOwner : () ==> User
+		getOwner() == return clubOwner;
  	
 functions
 -- TODO Define functiones here

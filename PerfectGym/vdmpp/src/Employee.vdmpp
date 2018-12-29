@@ -5,10 +5,10 @@ values
 -- TODO Define values here
 instance variables
 	
-	public receivedNotifications: seq of String := [];
 	
 operations
--- TODO Define operations here
+	public Employee: (String) ==> Employee
+ 	Employee(String) == User(String)
 functions
 -- TODO Define functiones here
 traces
