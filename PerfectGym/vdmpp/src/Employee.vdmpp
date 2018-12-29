@@ -8,7 +8,8 @@ instance variables
 	public receivedNotifications: seq of String := [];
 	
 operations
--- TODO Define operations here
+	public Employee: () ==> Employee
+ 	Employee() == return self
 functions
 -- TODO Define functiones here
 traces
