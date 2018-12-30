@@ -12,21 +12,21 @@ instance variables
 operations
 
 	-- constructor
- 	public Group: () ==> Group
- 	Group() == return self
- 	post clients = {} and groupInbox = [] and offers = [];
+ 	public Group: Client * Club  ==> Group
+ 	Group(client, newClub) == 
+	(
+ 		clients := {client};
+ 		club := newClub;
+ 		return self
+ 	)
+ 	pre client in set club.getClients()
+ 	post clients = {client} and groupInbox = [] and offers = [] and club = newClub;
 
  	-- add a new client to the group
  	public addClient: Client ==> ()
  	addClient(client) == clients := clients union {client}
  	pre client not in set clients
  	post clients = clients~ union {client};
-
-	-- set groups club
-	public setClub: Club ==> ()
-	setClub(newClub) == club:= newClub
-	post club = newClub;
-
 
   -- remove a client from the group
  	public removeClient: Client ==> ()
@@ -35,23 +35,23 @@ operations
  	post clients = clients~ \ {client};
 
  	-- add a new offer for the group
- 	public receiveOffer: String1 ==> ()
- 	receiveOffer(msg) == offers := [msg] ^ offers
- 	post offers = msg ^ offers~;
+ 	public sendOffer: String1 ==> ()
+ 	sendOffer(offer) == offers := [offer] ^ offers
+ 	post offers = offer ^ offers~;
 
  	 -- add a new message to the group inbox
- 	public sendMsg: User * String1 ==> ()
- 	sendMsg(user, msg) == groupInbox := [msg] ^ groupInbox
+ 	public sendMessage: User * String1 ==> ()
+ 	sendMessage(user, msg) == groupInbox := [msg] ^ groupInbox
  	pre user in set clients or (club <> nil and user = club.getOwner())
  	post groupInbox = msg ^ groupInbox~;
 
   -- check the inbox (the client must belong to the group)
- 	public checkInbox: Client ==> seq of String1
+ 	public pure checkInbox: Client ==> seq of String1
  	checkInbox(client) == return groupInbox
  	pre client in set clients;
 
  	 -- check the offers the group received (the client must belong to the group)
- 	public checkOffers: Client ==> seq of String1
+ 	public pure checkOffers: Client ==> seq of String1
  	checkOffers(client) == return offers
  	pre client in set clients;
 

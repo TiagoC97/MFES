@@ -5,10 +5,8 @@ values
 	
 instance variables
 
-	public trainer: Trainer := new Trainer();
+	private trainer: Trainer := new Trainer();
 	
-	-- seq of seq or seq of seq1 ???	
-
 
 operations
 

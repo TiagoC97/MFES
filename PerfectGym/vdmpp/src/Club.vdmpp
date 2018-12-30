@@ -14,23 +14,32 @@ instance variables
 	private clients: set of Client := {};
 	private salesRepresentatives: set of SalesRepresentative := {};
 	private trainers: set of Trainer := {};
-	private groups: set of Group := {};
+	private groups: map String1 to Group := {|->};
 	
-	private crm: CRM := new CRM();
+	private crm: [CRM];
 	private clubOwner: [Owner];
 	
 operations
 
 	-- constructor
- 	public Club: () ==> Club
- 	Club() == return self
- 	post clients = {};
- 	
- 		-- add a new owner to the club
-		public addOwner: Owner ==> ()
-		addOwner(owner) == 
-		|| (clubOwner := owner, PerfectGym`getInstance().addUser(owner))
-		post clubOwner = owner;
+ 	public Club: String * Owner ==> Club
+ 	Club(newName, owner) == 
+	(
+ 		name := newName;
+ 		clubOwner := owner;
+ 		clubOwner.setClub(self);
+ 		crm := new CRM();
+ 		return self
+	)
+ 	post 
+ 		name = newName and
+ 		newsletter = "" and
+ 		clients = {} and
+ 		salesRepresentatives = {} and
+ 		trainers = {} and
+ 		groups = {|->} and
+ 		crm <> nil and
+ 		clubOwner = owner;
  	
  		-- add a new client to the club
 		public addClient: Client ==> ()
@@ -54,12 +63,18 @@ operations
 		post salesRepresentatives = salesRepresentatives~ union {salesRepresentative};
 		
 		-- add a new group to the club
-		public addGroup: Group ==> ()
-		addGroup(newGroup) == 
-		|| (groups := groups union {newGroup}, newGroup.setClub(self))
-		pre newGroup not in set groups
-		post groups = groups~ union {newGroup};
- 	
+		public addGroup: String1 * Group ==> ()
+		addGroup(newName, newGroup) == 
+				groups := groups munion {newName |-> newGroup}
+		pre newName not in set dom groups
+		post groups = groups~ munion {newName |-> newGroup};
+		
+		-- add a new group, by giving its name and its first client, to the club
+		public addEmptyGroupByName: String1 * Client ==> ()
+		addEmptyGroupByName(newName, client) == 
+				groups := groups munion {newName |-> new Group(client, self)}
+		pre newName not in set dom groups and client in set clients
+		post groups = groups~ munion {newName |-> groups(newName)}; -- VERIFICAR SE ISTO É VÁLIDO!!!
 		
 		-- add a client of personal training to a trainer
 		public addPersonalTraining: Trainer * Client ==> ()
@@ -71,7 +86,7 @@ operations
 			-- client exists in the database
 			client in set clients and
 			-- client is not in the tariner trainees
-			client not in set trainer.trainees;
+			client not in set trainer.getTrainees();
 			
 		-- add newsletter to the club
 		public addNewsletter: String1 ==> ()
@@ -124,10 +139,32 @@ operations
 		)
 		pre card salesRepresentatives > 0 and len msg > 0;
 		
+		public sendMessageToGroup: String * String1 * User ==> ()
+		sendMessageToGroup(msg, groupName, user) == groups(groupName).sendMessage(user, msg)
+		pre user in set clients or user = clubOwner;
+		
+		public sendOfferToGroup : String * String1 ==> ()
+		sendOfferToGroup(offer, groupName) == groups(groupName).sendOffer(offer);
+		
+		-- Returns club name
+		public pure getName : () ==> String
+		getName() == return name;
 		
 		-- Returns club owner
 		public pure getOwner : () ==> User
 		getOwner() == return clubOwner;
+		
+		-- Returns club clients
+		public pure getClients : () ==> set of Client
+		getClients() == return clients;
+		
+		-- Returns club groups
+		public pure getGroups : () ==> map String1 to Group
+		getGroups() == return groups;
+		
+		-- Returns club group by name
+		public pure getGroupByName : String1 ==> Group
+		getGroupByName(groupName) == return groups(groupName);
  	
 functions
 -- TODO Define functiones here

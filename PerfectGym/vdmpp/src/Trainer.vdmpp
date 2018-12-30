@@ -18,6 +18,10 @@ operations
 	addTrainee(client) == trainees := trainees union {client}
 	pre client not in set trainees
 	post trainees = trainees~ union {client};
+	
+	-- Returns trainer trainees
+	public pure getTrainees : () ==> set of Client
+	getTrainees() == return trainees;
 		
 functions
 -- TODO Define functiones here

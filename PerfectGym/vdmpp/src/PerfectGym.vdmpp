@@ -6,7 +6,7 @@ values
 instance variables
 -- TODO Define instance variables here
 
-	private clubs: set of Club := {};
+	private clubs: map String to Club := {|->};
 	private users: set of User := {};
 	
 	private static perfectGym: PerfectGym := new PerfectGym();
@@ -15,7 +15,7 @@ operations
 		-- constructor
 		public PerfectGym: () ==> PerfectGym
 		PerfectGym() == (return self)
-		post clubs = {} and users = {};
+		post clubs = {|->} and users = {};
 		
 		-- singleton - return the existent instance
 		public pure static getInstance: () ==> PerfectGym
@@ -23,9 +23,16 @@ operations
 		
 		-- add a new club to the PerfectGym
 		public addClub: Club ==> ()
-		addClub(club) == clubs := clubs union {club}
-		pre club not in set clubs
-		post clubs = clubs~ union {club};
+		addClub(club) == 
+		(
+			dcl clubOwner : Owner := club.getOwner();
+			 
+			clubs := clubs munion {club.getName() |-> club};
+			if clubOwner not in set users then
+				users := users union {clubOwner};
+		)
+		pre club.getName() not in set dom clubs
+		post clubs = clubs~ munion {club.getName() |-> club};
 		
 		-- add a new user to the PerfectGym
 		public addUser: User ==> ()

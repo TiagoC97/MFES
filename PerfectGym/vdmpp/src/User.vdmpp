@@ -10,9 +10,10 @@ instance variables
 	private id : int := curUserID;
 	private inbox: seq of String1:= [];
 	private club: [Club];
+	
 operations
 
-	public User: seq of char ==> User
+	public User: String ==> User
  	User(newName) == (
  		name := newName;
  		curUserID := curUserID +1; 
@@ -20,20 +21,66 @@ operations
  	)
  	post name = newName;
  	
- 	-- puts the new message on the top of the inbox
+ 	public setClub: Club ==> ()
+ 	setClub(newClub) == club:= newClub
+ 	post club = newClub;
+
  	
+ 	-- puts the new message on the top of the inbox
  	public receiveMessage: String1 ==> ()
 	receiveMessage(msg) == inbox := [msg] ^ inbox
 	pre len msg > 0
 	post inbox = msg ^ inbox~; 
 	
-	public setClub: Club ==> ()
-	setClub(newClub) == club:= newClub
-	post club = newClub;
- 	
+	-- read last message
+	public readLastMessage: () ==> String1
+	readLastMessage() == return hd inbox
+	pre inbox <> []
+	post RESULT = hd inbox;
+	
+	-- delete last message
+	public deleteLastMessage: () ==> ()
+	deleteLastMessage() == inbox := tl inbox
+	pre inbox <> []
+	post inbox = tl inbox~;
+
+	-- read an n message
+	public readMessageN: nat ==> String1
+	readMessageN(n) == return inbox(n)
+	pre inbox <> [] and n in set inds inbox
+	post RESULT = inbox(n);
+	
+	-- delete an n message
+	public deleteMessageN: nat ==> ()
+	deleteMessageN(n) == inbox := inbox(1,..., n - 1) ^ inbox((n + 1),..., (len inbox)) 
+	pre inbox <> [] and n in set inds inbox
+	post inbox = inbox(1,..., n - 1) ^ inbox((n + 1),..., (len inbox));  -- CHECK THIS POST
+	
+
  	-- check the inbox
- 	public checkInbox: User ==> seq of String1
- 	checkInbox(user) == return inbox; 	
+ 	public checkInbox: () ==> seq of String1
+ 	checkInbox() == return inbox; 	
+ 	
+ 	-- get the messages from one of this user's groups
+ 	public pure readGroupMessages: String1 ==> seq of String1
+	readGroupMessages(groupName) == return club.getGroupByName(groupName).checkInbox(self)
+	pre self in set club.getClients() and
+	groupName in set dom club.getGroups();
+	
+	-- get the offers from one of this user's groups
+ 	public pure readGroupOffers: String1 ==> seq of String1
+	readGroupOffers(groupName) == return club.getGroupByName(groupName).checkOffers(self)
+	pre self in set club.getClients() and
+	groupName in set dom club.getGroups();
+	
+	-- get the n message from one of this user's groups
+ 	public pure readGroupMessageN: String1 * nat ==> String1
+	readGroupMessageN(groupName, n) == return club.getGroupByName(groupName).checkInbox(self)(n)
+	pre 
+		self in set club.getClients() and
+		groupName in set dom club.getGroups() and
+		club.getGroupByName(groupName).checkInbox(self) <> [] and
+		n in set inds club.getGroupByName(groupName).checkInbox(self);
  	
  	
 functions
