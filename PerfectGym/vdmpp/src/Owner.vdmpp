@@ -1,13 +1,13 @@
 class Owner is subclass of User
 types
-	public String = seq of char;
+	public String_= seq of char;
 values
 -- TODO Define values here
 instance variables
 -- TODO Define instance variables here
 operations
-	public Owner: (String) ==> Owner
- 	Owner(String) == User(String)
+	public Owner: (String_) ==> Owner
+ 	Owner(String_) == User(String_)
 
 functions
 -- TODO Define functiones here

@@ -5,21 +5,37 @@ values
 	
 instance variables
 
-	private trainer: Trainer := new Trainer();
+	private trainer: [Trainer];
 	
-
 operations
 
-	public Client: String ==> Client
- 	Client(String) == User(String);
- 	
+	/**
+	 * Client constructor
+	 */
+	public Client: String_ ==> Client
+	 Client(String_) == User(String_)
+	 post trainer = nil;
+	 
+	 /**
+	  * Adds a trainer to the client
+	  */
 	public addTrainer: Trainer ==> ()
 	addTrainer(newTrainer) == trainer := newTrainer
+	pre newTrainer in set club.getUsers()
 	post trainer = newTrainer;
+	
+	-- GETTERS
+	
+	/**
+	 * Gets the client trainer
+	 * 
+	 * @return trainer
+	 */
+	public getTrainer: () ==> Trainer
+	getTrainer() == return trainer
+	post RESULT = trainer;
 	
 
 functions
--- TODO Define functiones here
 traces
--- TODO Define Combinatorial Test Traces here
 end Client

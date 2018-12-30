@@ -1,16 +1,12 @@
 class Employee is subclass of User
 types
--- TODO Define types here
-values
--- TODO Define values here
+
 instance variables
 
-
 operations
-	public Employee: (String) ==> Employee
- 	Employee(String) == User(String)
-functions
--- TODO Define functiones here
-traces
--- TODO Define Combinatorial Test Traces here
+	/**
+	 * Employee constructor
+	 */
+	public Employee: (String_) ==> Employee
+ 	Employee(String_) == User(String_)
 end Employee

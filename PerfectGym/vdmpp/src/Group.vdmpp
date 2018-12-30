@@ -1,17 +1,20 @@
 class Group
 types
 	public String1 = seq1 of char;
-values
--- TODO Define values here
 instance variables
 	private clients: set of Client:= {};
- 	private groupInbox: seq of String1 := [];
+ 	private groupInbox: map String1 to seq of String1 := {|->};
  	private offers: seq of String1 := [];
 	private club: [Club];
+
+	-- There must be always (at least) one client in the group
+	inv card clients >= 1;
 	
 operations
 
-	-- constructor
+	/**
+	 * Group constructor
+	 */
  	public Group: Client * Club  ==> Group
  	Group(client, newClub) == 
 	(
@@ -20,35 +23,73 @@ operations
  		return self
  	)
  	pre client in set club.getClients()
- 	post clients = {client} and groupInbox = [] and offers = [] and club = newClub;
+ 	post clients = {client} and groupInbox = {|->} and offers = [] and club = newClub;
 
- 	-- add a new client to the group
+	 /**
+	  * Add a new client to the group
+	  */
  	public addClient: Client ==> ()
  	addClient(client) == clients := clients union {client}
  	pre client not in set clients
  	post clients = clients~ union {client};
 
-  -- remove a client from the group
+	/**
+	 * Remove a client from the group
+	 */
  	public removeClient: Client ==> ()
  	removeClient(client) == clients := clients \ {client}
- 	pre client in set clients
+ 	pre card clients > 1 and client in set clients
  	post clients = clients~ \ {client};
 
- 	-- add a new offer for the group
+	/**
+	 * Add a new offer for the group
+	 */
  	public sendOffer: String1 ==> ()
  	sendOffer(offer) == offers := [offer] ^ offers
- 	post offers = offer ^ offers~;
+ 	post offers = [offer] ^ offers~;
 
- 	 -- add a new message to the group inbox
+	/**
+	 * Add a new message, from a given user, to the group inbox
+	 */
  	public sendMessage: User * String1 ==> ()
- 	sendMessage(user, msg) == groupInbox := [msg] ^ groupInbox
- 	pre user in set clients or (club <> nil and user = club.getOwner())
- 	post groupInbox = msg ^ groupInbox~;
-
-  -- check the inbox (the client must belong to the group)
- 	public pure checkInbox: Client ==> seq of String1
+ 	sendMessage(user, msg) == 
+ 	(
+ 		if user.getName() not in set dom groupInbox then
+ 			groupInbox := {user.getName() |-> [msg]} munion groupInbox
+ 		else
+ 		(
+ 			dcl curMessagesFromUser: seq of String1 := groupInbox(user.getName());
+ 			groupInbox := {user.getName() |-> [msg] ^ curMessagesFromUser} munion groupInbox;
+ 		)
+ 	)
+	 pre user in set clients or user = club.getOwner();
+	 
+	 -- GETTERS
+	 
+	/**
+	 * Check the inbox (the client must belong to the group)
+	 * 
+	 * @return groupInbox
+	 */
+ 	public pure checkInbox: Client ==> map String1 to seq of String1
  	checkInbox(client) == return groupInbox
- 	pre client in set clients;
+	pre client in set clients
+	post RESULT = groupInbox;
+ 	
+ 	/**
+	  * Get group last message sent by a given user
+	  * 
+	  * @return hd groupInbox(senderName)
+	  */
+ 	public pure getLastMessageFromUser: String1 * Client ==> String1
+ 	getLastMessageFromUser(senderName, client) == return hd groupInbox(senderName)
+ 	pre senderName in set dom groupInbox and client in set clients;
+
+	-- get group messages sent by a given user
+ 	public pure getMessagesFromUser: String1 * Client ==> seq of String1
+ 	getMessagesFromUser(senderName, client) == return groupInbox(senderName)
+ 	pre senderName in set dom groupInbox and client in set clients;
+	
 
  	 -- check the offers the group received (the client must belong to the group)
  	public pure checkOffers: Client ==> seq of String1

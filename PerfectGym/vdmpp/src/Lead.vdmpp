@@ -1,11 +1,11 @@
 class Lead
 -- VAI SER SUBCALSS DO USER???
 types
-	public String = seq of char;
+	public String_ = seq of char;
 values
 	
 instance variables
-	private name: String;
+	private name: String_;
 operations
 	public Lead: seq of char ==> Lead
  	Lead(newName) == (name := newName; return self)

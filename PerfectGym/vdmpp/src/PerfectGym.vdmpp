@@ -1,13 +1,13 @@
 class PerfectGym
 types
-	public String = seq of char;	
+	public String_ = seq of char;	
 values
 -- TODO Define values here
 instance variables
 -- TODO Define instance variables here
 
-	private clubs: map String to Club := {|->};
-	private users: set of User := {};
+	private clubs: map String_ to Club := {|->};
+	-- private users: set of User := {};
 	
 	private static perfectGym: PerfectGym := new PerfectGym();
 operations
@@ -15,7 +15,8 @@ operations
 		-- constructor
 		public PerfectGym: () ==> PerfectGym
 		PerfectGym() == (return self)
-		post clubs = {|->} and users = {};
+		post clubs = {|->};
+		-- and users = {};
 		
 		-- singleton - return the existent instance
 		public pure static getInstance: () ==> PerfectGym
@@ -25,20 +26,20 @@ operations
 		public addClub: Club ==> ()
 		addClub(club) == 
 		(
-			dcl clubOwner : Owner := club.getOwner();
+			-- dcl clubOwner : Owner := club.getOwner();
 			 
 			clubs := clubs munion {club.getName() |-> club};
-			if clubOwner not in set users then
-				users := users union {clubOwner};
+			-- if clubOwner not in set users then
+				-- users := users union {clubOwner};
 		)
 		pre club.getName() not in set dom clubs
 		post clubs = clubs~ munion {club.getName() |-> club};
 		
 		-- add a new user to the PerfectGym
-		public addUser: User ==> ()
-		addUser(user) == users := users union {user}
-		pre user not in set users
-		post users = users~ union {user};
+		-- public addUser: User ==> ()
+		-- addUser(user) == users := users union {user}
+		-- pre user not in set users
+		-- post users = users~ union {user};
 		
 functions
 -- TODO Define functiones here

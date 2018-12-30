@@ -1,14 +1,14 @@
 class Product
 types
-	public String = seq of char;
+	public String_ = seq of char;
 values
 -- TODO Define values here
 instance variables
-	private name : String;
+	private name : String_;
 	private cost : real;
 	private quantity: nat;
 operations
-	public Product: String * real * nat ==> Product
+	public Product: String_ * real * nat ==> Product
  	Product(prod_name, prod_cost, prod_quantity) == 
  	(
  		name := prod_name;

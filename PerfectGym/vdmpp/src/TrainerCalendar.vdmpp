@@ -1,6 +1,6 @@
 class TrainerCalendar
 types
-	public String = seq of char;
+	public String_ = seq of char;
 values
 -- TODO Define values here
 instance variables
