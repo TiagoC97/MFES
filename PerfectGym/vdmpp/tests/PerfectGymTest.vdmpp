@@ -1,31 +1,27 @@
 class PerfectGymTest is subclass of MyTestCase
 
 instance variables
-	manufacturer1: Manufacturer := new Manufacturer("Citroën", 
-		"Citroën is one of the world's leading mainstream car manufacturers.",
-		<France>);
-	manufacturer2: Manufacturer := new Manufacturer("Toyota", 
-		"Toyota is one of the world’s best-known and most successful businesses, building cars and trucks in 26 countries for sale in more than 160 markets around the globe.",
-		<Japan>);	
-	manufacturer3: Manufacturer := new Manufacturer("Hyunday", 
-		"Hyundai Motor Company leads the Hyundai Motor Group, a wide-reaching business capable of processing resources from molten iron to finished cars.",
-		<SouthKorea>);
-		
-	car1: Car := new Car("Hyundai i20", manufacturer3, 370, 1250);
-	car2: Car := new Car("Citroën C3", manufacturer1, 400, 1300);
-	car3: Car := new Car("Toyota Yaris", manufacturer2, 480, 1200);
+
+  owner1: Owner := new Owner("Rui");
+	owner2: Owner := new Owner("Tiago");
+
+	club1: Club := new Club("Bombados", owner1);
+	club2: Club := new Club("PuxaFerro", owner2);	
+
+	perfectGym1: PerfectGym := new PerfectGym();	
+
 	
 operations
 	public Run: () ==> ()
 	Run() == (
-		IO`println("\nCar Tests");
+		IO`println("\nPerfectGym Tests");
+
+		perfectGym1.addClub(club1);
+		perfectGym1.addClub(club2);
 			
-		assertEqual("Hyundai i20", car1.GetModel());
-		assertEqual(manufacturer1, car2.GetManufacturer());
-		assertEqual(480, car3.GetHorsePower());
-		assertEqual(1300, car2.GetWeight());
+		assertEqual({"Bombados"|->club1, "PuxaFerro"|->club2}, perfectGym1.getClubs());
 			
-		IO`println("\nFinalizing Car Tests");
+		IO`println("\nFinalizing PerfectGym Tests");
 	);
 	
 end PerfectGymTest

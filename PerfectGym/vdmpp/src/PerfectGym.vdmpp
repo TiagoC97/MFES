@@ -35,6 +35,15 @@ operations
 		pre club.getName() not in set dom clubs
 		post clubs = clubs~ munion {club.getName() |-> club};
 		
+		/**
+		* get clubs
+		*/
+		public getClubs: () ==> map String_ to Club
+		getClubs() == 
+		(
+			return clubs;
+		);
+		
 		-- add a new user to the PerfectGym
 		-- public addUser: User ==> ()
 		-- addUser(user) == users := users union {user}
