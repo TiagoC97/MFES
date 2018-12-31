@@ -10,7 +10,7 @@ instance variables
 	
 operations
 
-	public Trainer: (String_) ==> Trainer
+	public Trainer: String_ ==> Trainer
  	Trainer(String_) == Employee(String_)
  	post trainees = {};
 

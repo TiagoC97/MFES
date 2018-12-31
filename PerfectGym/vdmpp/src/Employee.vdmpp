@@ -3,10 +3,13 @@ types
 
 instance variables
 
+	
+
 operations
 	/**
 	 * Employee constructor
 	 */
-	public Employee: (String_) ==> Employee
- 	Employee(String_) == User(String_)
+	public Employee: String_ ==> Employee
+ 	Employee(String_) == User(String_, <Employee>);
+ 	
 end Employee

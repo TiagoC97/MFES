@@ -62,7 +62,7 @@ operations
  			groupInbox := {user.getName() |-> [msg] ^ curMessagesFromUser} munion groupInbox;
  		)
  	)
-	 pre user in set clients or user = club.getOwner();
+	 pre user in set clients or user.getAccess() = <Owner>;
 	 
 	 -- GETTERS
 	 

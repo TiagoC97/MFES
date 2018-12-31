@@ -1,0 +1,60 @@
+class Session
+types
+	public String_ = seq of char;
+	public Date = DateAndHour`Date;
+	public Hour = DateAndHour`Hour;
+	public DayOfWeek = DateAndHour`DayOfWeek;
+values
+	
+instance variables
+	
+	protected trainer: Trainer;
+	protected date: Date; -- YYYYMMDD
+	protected dayOfWeek: DayOfWeek;
+	protected startHour: Hour; -- HHMM
+	protected endHour: Hour; -- HHMM
+	protected club: [Club];
+	
+operations
+	public Session: Trainer * DayOfWeek * Hour * Hour * Date * Club==> Session
+ 	Session(newTrainer, newDayOfWeek, newStartHour, newEndHour, newDate, newClub) == 
+ 	(
+		trainer := newTrainer;
+		dayOfWeek := newDayOfWeek;
+		startHour := newStartHour;
+		endHour := newEndHour;
+		date := newDate;
+		club := newClub;
+		return self;
+ 	)
+ 	pre newEndHour > newStartHour and newTrainer in set club.getTrainers()
+	post trainer = newTrainer and dayOfWeek = newDayOfWeek and 
+	 	startHour = newStartHour and endHour = newEndHour and date = newDate and club = newClub;
+	 	 	
+ 	-- GETTERS
+ 	 	
+ 	public getTrainer: () ==> Trainer
+ 	getTrainer() == return trainer
+	 post RESULT = trainer;
+	 
+	public getDate: () ==> Date
+ 	getDate() == return date
+ 	post RESULT = date;
+ 	 	
+ 	public getDayOfWeek: () ==> DayOfWeek
+ 	getDayOfWeek() == return dayOfWeek
+ 	post RESULT = dayOfWeek;
+ 	
+ 	public getStartHour: () ==> Hour
+ 	getStartHour() == return startHour
+ 	post RESULT = startHour;
+ 	
+ 	public getEndHour: () ==> Hour
+ 	getEndHour() == return endHour
+ 	post RESULT = endHour;
+	
+	public getClub: () ==> Club
+ 	getClub() == return club
+ 	post RESULT = club;
+
+end Session

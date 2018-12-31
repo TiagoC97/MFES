@@ -6,7 +6,7 @@ values
 instance variables
 -- TODO Define instance variables here
 operations
-	public SalesRepresentative: (String_) ==> SalesRepresentative
+	public SalesRepresentative: String_ ==> SalesRepresentative
  	SalesRepresentative(String_) == Employee(String_)
 functions
 -- TODO Define functiones here

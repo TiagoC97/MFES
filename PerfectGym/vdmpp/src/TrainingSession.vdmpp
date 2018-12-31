@@ -1,0 +1,28 @@
+class TrainingSession is subclass of Session
+types
+    public String_ = seq of char;
+	public Date = DateAndHour`Date;
+	public Hour = DateAndHour`Hour;
+	public DayOfWeek = DateAndHour`DayOfWeek;
+values
+
+instance variables
+
+    private trainee: Client;
+	
+operations
+
+   public TrainingSession: Trainer * Client * DayOfWeek * Hour * Hour * Date * Club==> TrainingSession
+ 	TrainingSession(newTrainer, client, newDayOfWeek, newStartHour, newEndHour, newDate, newClub) == 
+ 	(
+    trainee := client;
+ 		Session(newTrainer, newDayOfWeek, newStartHour, newEndHour, newDate, newClub);
+ 	)
+ 	pre client in set club.getClients()
+	post trainee = client;
+         
+functions
+-- TODO Define functiones here
+traces
+-- TODO Define Combinatorial Test Traces here
+end TrainingSession

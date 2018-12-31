@@ -6,6 +6,7 @@ values
 instance variables
 
 	private trainer: [Trainer];
+	private classes: set of GymClass := {};
 	
 operations
 
@@ -13,8 +14,12 @@ operations
 	 * Client constructor
 	 */
 	public Client: String_ ==> Client
-	 Client(String_) == User(String_)
-	 post trainer = nil;
+	 Client(String_) == 
+	 (
+	 	trainer := nil;
+	 	User(String_, <Client>);
+	 )
+	 post trainer = nil and classes = {};
 	 
 	 /**
 	  * Adds a trainer to the client
@@ -24,6 +29,54 @@ operations
 	pre newTrainer in set club.getUsers()
 	post trainer = newTrainer;
 	
+	-- MESSAGES TO/FROM GROUP
+	
+	 	/**
+	 * Send message to one of its groups
+	 */
+	public sendMessageToGroup: String1 * String1 ==> ()
+	sendMessageToGroup(msg, groupName) == club.getGroupByName(groupName).sendMessage(self, msg)
+	pre groupName in set dom club.getGroups() and self in set club.getClients();
+ 	
+ 	-- get the messages from one of its groups
+ 	public pure readGroupMessages: String1 ==> map String1 to seq of String1
+	readGroupMessages(groupName) == return club.getGroupByName(groupName).checkInbox(self)
+	pre self in set club.getClients() and
+	groupName in set dom club.getGroups();
+	
+	-- get the offers from one of its groups
+ 	public pure readGroupOffers: String1 ==> seq of String1
+	readGroupOffers(groupName) == return club.getGroupByName(groupName).checkOffers(self)
+	pre self in set club.getClients() and
+	groupName in set dom club.getGroups();
+	
+	-- get the messages, from one of its groups, sent by a given user
+ 	public pure readGroupMessagesFromUser: String1 * User ==> seq of String1
+	readGroupMessagesFromUser(groupName, user) == return club.getGroupByName(groupName).getMessagesFromUser(user.getName(), self)
+	pre 
+		self in set club.getClients() and
+		groupName in set dom club.getGroups() and
+		club.getGroupByName(groupName).getMessagesFromUser(user.getName(), self) <> [] and
+		user in set club.getUsers()
+	post RESULT = club.getGroupByName(groupName).getMessagesFromUser(user.getName(), self);
+	
+	-- get the last message, from one of its groups, sent by a given user
+ 	public pure readGroupLastMessageFromUser: String1 * User ==> String1
+	readGroupLastMessageFromUser(groupName, user) == return club.getGroupByName(groupName).getLastMessageFromUser(user.getName(), self)
+	pre 
+		self in set club.getClients() and
+		groupName in set dom club.getGroups() and
+		club.getGroupByName(groupName).getMessagesFromUser(user.getName(), self) <> [] and
+		user in set club.getUsers()
+	post RESULT = club.getGroupByName(groupName).getLastMessageFromUser(user.getName(), self);
+	
+	
+	-- GYM CLASSES
+	
+	public addGymClass: GymClass ==> ()
+	addGymClass(gymClass) == classes := classes union {gymClass}
+	pre gymClass not in set classes
+	post classes = classes~ union {gymClass};
 	-- GETTERS
 	
 	/**

@@ -2,7 +2,8 @@ class User
 types
 	public String_ = seq of char;
 	public String1 = seq1 of char;
-values
+	public Access = <Owner> | <Employee> | <Client>;
+	
 -- TODO Define values here
 instance variables
 	protected name: String_;
@@ -10,16 +11,23 @@ instance variables
 	protected id : int := curUserID;
 	protected inbox: map String1 to seq of String1 := {|->};
 	protected club: [Club];
+	protected access: Access;
 	
 operations
 
-	public User: String_ ==> User
- 	User(newName) == (
+	public User: String_ * Access ==> User
+ 	User(newName, acc) == (
+ 		club := nil;
  		name := newName;
- 		curUserID := curUserID +1; 
+ 		curUserID := curUserID +1;
+ 		access := acc; 
  		return self
  	)
- 	post name = newName;
+	pre newName <> ""
+ 	post name = newName and
+ 			 id = curUserID~ and
+ 			 access = acc and
+			 curUserID = curUserID~ + 1;
  	
  	public setClub: Club ==> ()
  	setClub(newClub) == club:= newClub
@@ -79,43 +87,18 @@ operations
  	public checkInbox: () ==> map String1 to seq of String1
  	checkInbox() == return inbox; 	
  	
- 	-- get the messages from one of its groups
- 	public pure readGroupMessages: String1 ==> map String1 to seq of String1
-	readGroupMessages(groupName) == return club.getGroupByName(groupName).checkInbox(self)
-	pre self in set club.getClients() and
-	groupName in set dom club.getGroups();
-	
-	-- get the offers from one of its groups
- 	public pure readGroupOffers: String1 ==> seq of String1
-	readGroupOffers(groupName) == return club.getGroupByName(groupName).checkOffers(self)
-	pre self in set club.getClients() and
-	groupName in set dom club.getGroups();
-	
-	-- get the messages, from one of its groups, sent by a given user
- 	public pure readGroupMessagesFromUser: String1 * User ==> seq of String1
-	readGroupMessagesFromUser(groupName, user) == return club.getGroupByName(groupName).getMessagesFromUser(user.getName(), self)
-	pre 
-		self in set club.getClients() and
-		groupName in set dom club.getGroups() and
-		club.getGroupByName(groupName).getMessagesFromUser(user.getName(), self) <> [] and
-		user in set club.getUsers()
-	post RESULT = club.getGroupByName(groupName).getMessagesFromUser(user.getName(), self);
-	
-	-- get the last message, from one of its groups, sent by a given user
- 	public pure readGroupLastMessageFromUser: String1 * User ==> String1
-	readGroupLastMessageFromUser(groupName, user) == return club.getGroupByName(groupName).getLastMessageFromUser(user.getName(), self)
-	pre 
-		self in set club.getClients() and
-		groupName in set dom club.getGroups() and
-		club.getGroupByName(groupName).getMessagesFromUser(user.getName(), self) <> [] and
-		user in set club.getUsers()
-	post RESULT = club.getGroupByName(groupName).getLastMessageFromUser(user.getName(), self);
+
 		
+		public setAccess: Access ==> ()
+		setAccess(newAccess) == access := newAccess;
 		
 		-- Returns user name
 		public pure getName : () ==> String_
 		getName() == return name;
  	
+ 			-- Returns user access to the club
+		public pure getAccess : () ==> Access
+		getAccess() == return access;
  	
 functions
 -- TODO Define functiones here

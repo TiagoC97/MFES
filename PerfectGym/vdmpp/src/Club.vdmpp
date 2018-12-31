@@ -3,6 +3,7 @@ types
 
 	public String_= seq of char;
 	public String1 = seq1 of char;
+	public Access = <Owner> | <Employee> | <User>;
 	
 instance variables
 
@@ -13,6 +14,7 @@ instance variables
 	private salesRepresentatives: set of SalesRepresentative := {};
 	private trainers: set of Trainer := {};
 	private groups: map String1 to Group := {|->};
+	private classes: set of GymClass := {};
 	
 	private crm: CRM;
 	private clubOwner: Owner;
@@ -25,13 +27,14 @@ operations
  	public Club: String_ * Owner ==> Club
  	Club(newName, owner) == 
 	(
+		newsletter := nil;
  		name := newName;
  		clubOwner := owner;
  		clubOwner.setClub(self);
  		crm := new CRM();
  		return self
 	)
-	pre len newName > 0
+	pre newName <> ""
  	post 
  		name = newName and
  		newsletter = nil and
@@ -39,73 +42,74 @@ operations
  		salesRepresentatives = {} and
  		trainers = {} and
  		groups = {|->} and
- 		clubOwner = owner;
+ 		clubOwner = owner and
+ 		classes = {};
  	
  		/**
 		  * Add a new client to the club
 		  */
-		public addClient: Client ==> ()
-		addClient(client) == 
+		public addClient: Client * User ==> ()
+		addClient(client, user) == 
 		(
 			clients := clients union {client};
 			-- if client not in set PerfectGym`getInstance().getUsers() then
 				-- PerfectGym`getInstance().addUser(client);
 			client.setClub(self);
 		)
-		pre client not in set clients
+		pre client not in set clients and (user.getAccess() = <Owner> or user.getAccess() = <Employee>)
 		post clients = clients~ union {client};
 		
 		/**
 		 * Add a new trainer to the club
 		 */
-		public addTrainer: Trainer ==> ()
-		addTrainer(trainer) == 
+		public addTrainer: Trainer * User ==> ()
+		addTrainer(trainer, user) == 
 		(
 			trainers := trainers union {trainer};
 			-- if trainer not in set PerfectGym`getInstance().getUsers() then
 				-- PerfectGym`getInstance().addUser(trainer);
 			trainer.setClub(self);
 		)
-		pre trainer not in set trainers
+		pre trainer not in set trainers and user.getAccess() = <Owner>
 		post trainers = trainers~ union {trainer};
 		
 		/**
 		 * Add a new sales representative to the club
 		 */
-		public addSalesRepresentative: SalesRepresentative ==> ()
-		addSalesRepresentative(salesRepresentative) == 
+		public addSalesRepresentative: SalesRepresentative * User ==> ()
+		addSalesRepresentative(salesRepresentative, user) == 
 		(
 			salesRepresentatives := salesRepresentatives union {salesRepresentative};
 			-- if salesRepresentative not in set PerfectGym`getInstance().getUsers() then
 				-- PerfectGym`getInstance().addUser(salesRepresentative);
 			salesRepresentative.setClub(self);
 		)
-		pre salesRepresentative not in set salesRepresentatives
+		pre salesRepresentative not in set salesRepresentatives and user.getAccess() = <Owner>
 		post salesRepresentatives = salesRepresentatives~ union {salesRepresentative};
 		
 		/**
 		 * Add a new group (already with at least one client) to the club
 		 */
-		public addGroup: String1 * Group ==> ()
-		addGroup(newName, newGroup) == 
+		public addGroup: String1 * Group * User==> ()
+		addGroup(newName, newGroup, user) == 
 				groups := groups munion {newName |-> newGroup}
-		pre newName not in set dom groups
+		pre newName <> "" and newName not in set dom groups and (user.getAccess() = <Owner> or user.getAccess() = <Employee>)
 		post groups = groups~ munion {newName |-> newGroup};
 		
 		/**
 		 * Add a new group, by giving its name and its first client, to the club
 		 */
-		public addEmptyGroupByName: String1 * Client ==> ()
-		addEmptyGroupByName(newName, client) == 
+		public addEmptyGroupByName: String1 * Client * User ==> ()
+		addEmptyGroupByName(newName, client, user) == 
 				groups := groups munion {newName |-> new Group(client, self)}
-		pre newName not in set dom groups and client in set clients
-		post groups = groups~ munion {newName |-> groups(newName)}; -- VERIFICAR SE ISTO E VALIDO!!!
+		pre newName <> "" and newName not in set dom groups and client in set clients and (user.getAccess() = <Owner> or user.getAccess() = <Employee>)
+		post groups = groups~ munion {newName |-> groups(newName)};
 		
 		/**
 		 * Add a client of personal training to a trainer
 		 */
-		public addPersonalTraining: Trainer * Client ==> ()
-		addPersonalTraining(trainer, client) ==
+		public addPersonalTraining: Trainer * Client * User ==> ()
+		addPersonalTraining(trainer, client, user) ==
 		(
 			trainer.addTrainee(client);
 			client.addTrainer(trainer);
@@ -113,81 +117,138 @@ operations
 		pre 
 			trainer in set trainers and
 			client in set clients and
-			client not in set trainer.getTrainees();
+			client not in set trainer.getTrainees()
+			and (user.getAccess() = <Owner> or user.getAccess() = <Employee>);
+			
+		public addGymClass: GymClass * User ==> ()
+		addGymClass(gymClass, user) == classes := classes union {gymClass}
+		pre (user.getAccess() = <Owner> or user.getAccess() = <Employee>)
+		post classes = classes~ union {gymClass};
 			
 		/**
 		 * Add newsletter to the club
 		 */
-		public addNewsletter: String1 ==> ()
-		addNewsletter(message) == newsletter := message
-		post newsletter = message;
-		
+		public addNewsletter: String1 * User==> ()
+		addNewsletter(message, user) == newsletter := message
+		pre user.getAccess() = <Owner>;
+				
 		/**
 		 * Send message to a client as club owner
 		 */
-		public sendMessageClient: String1 * Client ==> ()
-		sendMessageClient(msg, receiver) == 
+		public sendMessageClient: String1 * Client * User ==> ()
+		sendMessageClient(msg, receiver, user) == 
 		(
-			receiver.receiveMessage(msg, clubOwner);
+			receiver.receiveMessage(msg, user);
 			if newsletter <> nil then
-				receiver.receiveMessage(newsletter, clubOwner);
+				receiver.receiveMessage(newsletter, user);
 		)
-		pre receiver in set clients;
+		pre receiver in set clients and user.getAccess() = <Owner>;
 		
 		/**
 		 * Send message to an employee as club owner
 		 */
-		public sendMessageEmployee: String1 * Employee ==> ()
-		sendMessageEmployee(msg, receiver) == receiver.receiveMessage(msg, clubOwner)
-		pre (receiver in set trainers or receiver in set salesRepresentatives);
+		public sendMessageEmployee: String1 * Employee * User ==> ()
+		sendMessageEmployee(msg, receiver, user) == receiver.receiveMessage(msg, user)
+		pre (receiver in set trainers or receiver in set salesRepresentatives) and user.getAccess() = <Owner>;
 		
 		/**
 		 * Send message to all clients as club owner
 		 */
-		public sendMessageAllClients: String1 ==> ()
-		sendMessageAllClients(msg) == 
+		public sendMessageAllClients: String1 * User==> ()
+		sendMessageAllClients(msg, user) == 
 		(
 			for all client in set clients do
-				sendMessageClient(msg, client);
+				sendMessageClient(msg, client, user);
 		)
-		pre card clients > 0;
+		pre card clients > 0 and user.getAccess() = <Owner>;
 				
 		/**
-		 * Send message to all trainers
+		 * Send message to all trainers as club owner
 		 */
-		public sendMessageAllTrainers: String1 ==> ()
-		sendMessageAllTrainers(msg) == 
+		public sendMessageAllTrainers: String1 * User ==> ()
+		sendMessageAllTrainers(msg, user) == 
 		(
 			for all trainer in set trainers do
-				trainer.receiveMessage(msg, clubOwner)		
+				trainer.receiveMessage(msg, user)		
 		)
-		pre card trainers > 0 ;
+		pre card trainers > 0 and user.getAccess() = <Owner>;
 		
 		/**
 		 * Send message to all sales representatives
 		 */
-		public sendMessageAllSalesRepresentatives: String1 ==> ()
-		sendMessageAllSalesRepresentatives(msg) == 
+		public sendMessageAllSalesRepresentatives: String1 * User ==> ()
+		sendMessageAllSalesRepresentatives(msg, user) == 
 		(
 			for all salesRepresentative in set salesRepresentatives do
-				salesRepresentative.receiveMessage(msg, clubOwner)		
+				salesRepresentative.receiveMessage(msg, user)		
 		)
-		pre card salesRepresentatives > 0;
+		pre card salesRepresentatives > 0 and user.getAccess() = <Owner>;
 		
 		/**
 		 * Send message to a group
 		 */
 		public sendMessageToGroup: String1 * String1 * User ==> ()
 		sendMessageToGroup(msg, groupName, user) == groups(groupName).sendMessage(user, msg)
-		pre groupName in set dom groups and (user in set clients or user = clubOwner);
+		pre groupName in set dom groups and (user in set clients or user.getAccess() = <Owner>);
 		
 		/**
 		 * Send offer to a group
 		 */
-		public sendOfferToGroup : String1 * String1 ==> ()
-		sendOfferToGroup(offer, groupName) == groups(groupName).sendOffer(offer)
-		pre groupName in set dom groups;
-
+		public sendOfferToGroup : String1 * String1 * User ==> ()
+		sendOfferToGroup(offer, groupName, user) == groups(groupName).sendOffer(offer)
+		pre groupName in set dom groups and (user.getAccess() = <Owner> or user.getAccess() = <Employee>);
+		
+		/**
+		 * Add client to a group
+		 */
+	 	public addGroupClient: String1 * Client * User ==> ()
+	 	addGroupClient(groupName, client, user) == groups(groupName).addClient(client)
+	 	pre client in set clients and groupName in set dom groups and user.getAccess() = <Owner>;
+ 
+  	/**
+		 * Remove client from a group
+		 */
+	 	public removeGroupClient: String1 * Client * User ==> ()
+	 	removeGroupClient(groupName, client, user) == groups(groupName).removeClient(client)
+	 	pre client in set clients and groupName in set dom groups and user.getAccess() = <Owner>;
+	 
+  
+		
+		public getReportOnClubStatistics: User ==> ()
+		getReportOnClubStatistics(user) ==
+		(
+			dcl numClients: nat := card clients;
+			dcl numTrainers: nat := card trainers;
+			dcl numSalesRepresentatives: nat := card salesRepresentatives;
+			IO`println("********* CLUB STATISTICS *********");
+			IO`println("Number of clients: " ^ [numClients]);
+			IO`println("Number of trainers: " ^ [numTrainers]);
+			IO`println("Number of sales representatives: " ^ [numSalesRepresentatives]);
+			IO`println("");
+			IO`println("************************************");
+		)
+		pre user.getAccess() = <Owner>;
+		
+		public getReportOnClientActivity: User ==> ()
+		getReportOnClientActivity(user) ==
+		(
+			IO`println("********* CLIENT ACTIVITY*********");
+			
+			
+			
+			IO`println("**********************************");
+		
+		)
+		pre user.getAccess() = <Owner>;
+		
+		public setUserAccess: User * User * Access ==> ()
+		setUserAccess(user, targetUser, access) == targetUser.setAccess(access)
+		pre
+			user.getAccess() = <Owner> and 
+			targetUser.getAccess() <> <Owner> and
+			user in set getUsers() and 
+			targetUser in set getUsers();
+		
 		-- GETTERS
 		
 		/**

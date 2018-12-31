@@ -1,0 +1,49 @@
+class GymClass is subclass of Session
+types
+	public String_ = seq of char;
+	public Date = DateAndHour`Date;
+	public Hour = DateAndHour`Hour;
+	public DayOfWeek = DateAndHour`DayOfWeek;
+values
+	
+instance variables
+	private name: String_;
+	private attendees: set of Client := {};
+	
+operations
+	public GymClass: String_ * Trainer * DayOfWeek * Hour * Hour * Date * Club==> GymClass
+ 	GymClass(className, newTrainer, newDayOfWeek, newStartHour, newEndHour, newDate, newClub) == 
+ 	(
+		name := className;
+		Session(newTrainer, newDayOfWeek, newStartHour, newEndHour, newDate, newClub);
+ 	)
+ 	pre name <> ""
+	post name = className;
+	 	
+	
+	public addAttendee: Client ==> ()
+	addAttendee(client) == 
+	(
+		attendees:= attendees union {client};
+		client.addGymClass(self);
+	)
+	pre client in set club.getClients()
+	post attendees = attendees~ union {client};
+
+	public changeTrainer: Trainer ==> ()
+	changeTrainer(newTrainer) == trainer := newTrainer
+	pre trainer <> newTrainer
+	post trainer = newTrainer;
+ 	
+ 	-- GETTERS
+ 	
+ 	public getName: () ==> String_
+ 	getName() == return name
+ 	post RESULT = name;
+ 		
+	public getAttendees: () ==> set of Client
+ 	getAttendees() == return attendees
+ 	post RESULT = attendees;
+
+
+end GymClass
