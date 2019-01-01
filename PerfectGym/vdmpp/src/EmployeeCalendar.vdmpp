@@ -1,0 +1,49 @@
+class EmployeeCalendar
+types
+	public String1 = seq1 of char;
+	public Date = DateAndHour`Date;
+	public Hour = DateAndHour`Hour;
+	
+values
+instance variables
+	private calendar: map Date to seq of Task := {|->};
+
+	inv forall d in set dom calendar & not overlapsTasks(calendar(d));
+	
+operations
+	
+	public EmployeeCalendar: ()  ==> EmployeeCalendar
+ 	EmployeeCalendar() == return self
+ 	post calendar = {|->};
+ 	
+ 	public addTask: Task ==> ()
+ 	addTask(task) ==
+ 	(
+ 		dcl date: Date := task.getDate();
+ 		if date not in set dom calendar then
+ 			calendar:= calendar munion {date |-> [task]}
+ 		else
+ 			calendar(date) := calendar(date) ^ [task];
+ 	)
+ 	post not overlapsTasks(calendar(task.getDate()));
+ 	
+ 	public getTasks: () ==> map Date to seq of Task
+ 	getTasks() == return calendar
+ 	post RESULT = calendar;
+ 	 	
+functions
+
+	public static overlapsTasks(tasks: seq of Task) res:bool ==
+		exists i, j in set inds tasks & i <> j and overlapsTask(tasks(i).getStartHour(), tasks(i).getEndHour(), tasks(j).getStartHour(), tasks(j).getEndHour());
+		
+	public overlapsTask: Hour * Hour * Hour * Hour-> bool
+	overlapsTask(startHour1, endHour1, startHour2, endHour2) ==
+		if ((startHour1 >= startHour2 and startHour1 < endHour2) or
+			   (endHour1 > startHour2 and endHour1 <= endHour2) or
+			   (startHour1 <= startHour2 and endHour1 >= endHour2)) then
+			   true
+			else
+				false;
+
+traces
+end EmployeeCalendar

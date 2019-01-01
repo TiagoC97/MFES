@@ -3,6 +3,8 @@ types
 	public String_ = seq of char;
 	public String1 = seq1 of char;
 	public Access = <Owner> | <Employee> | <Client>;
+	public Date = DateAndHour`Date;
+	public Hour = DateAndHour`Hour;
 	
 -- TODO Define values here
 instance variables
@@ -92,11 +94,18 @@ operations
 		public setAccess: Access ==> ()
 		setAccess(newAccess) == access := newAccess;
 		
+		public getActivity: () ==> ()
+		getActivity() == skip;
+		
 		-- Returns user name
 		public pure getName : () ==> String_
 		getName() == return name;
+		
+		-- Returns user id
+		public pure getId : () ==> int
+		getId() == return id;
  	
- 			-- Returns user access to the club
+ 		-- Returns user access to the club
 		public pure getAccess : () ==> Access
 		getAccess() == return access;
  	

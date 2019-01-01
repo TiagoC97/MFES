@@ -2,12 +2,24 @@ class SalesRepresentative is subclass of Employee
 types
 	
 values
--- TODO Define values here
+	
 instance variables
--- TODO Define instance variables here
+	private leads: set of Lead := {};
 operations
 	public SalesRepresentative: String_ ==> SalesRepresentative
  	SalesRepresentative(String_) == Employee(String_)
+ 	post leads = {};
+ 	
+ 	public addLead: Lead ==> ()
+ 	addLead(lead) == leads := leads union {lead}
+ 	pre lead not in set leads
+ 	post leads= leads~ union {lead};
+ 	
+ 	public removeLead: Lead ==> ()
+ 	removeLead(lead) == leads := leads \ {lead}
+ 	pre lead in set leads
+ 	post leads= leads~ \ {lead};
+ 	
 functions
 -- TODO Define functiones here
 traces

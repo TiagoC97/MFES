@@ -5,8 +5,8 @@ instance variables
   owner1: Owner := new Owner("Rui");
 	owner2: Owner := new Owner("Tiago");
 
-	club1: Club := new Club("Bombados", owner1);
-	club2: Club := new Club("PuxaFerro", owner2);	
+	club1: Club := new Club("Bombados", owner1, 25);
+	club2: Club := new Club("PuxaFerro", owner2, 30);	
 
 	perfectGym1: PerfectGym := new PerfectGym();	
 

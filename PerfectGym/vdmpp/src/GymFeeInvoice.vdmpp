@@ -1,15 +1,14 @@
-class MarketingCampaign
+class GymFeeInvoice is subclass of Invoice
 types
-	public String_ = seq of char;
+-- TODO Define types here
 values
 -- TODO Define values here
 instance variables
 -- TODO Define instance variables here
 operations
-	public MarketingCampaign: () ==> MarketingCampaign
- 	MarketingCampaign() == return self
+-- TODO Define operations here
 functions
 -- TODO Define functiones here
 traces
 -- TODO Define Combinatorial Test Traces here
-end MarketingCampaign
+end GymFeeInvoice

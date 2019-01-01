@@ -1,0 +1,38 @@
+class ProductPayment is subclass of Payment
+types
+
+values
+-- TODO Define values here
+instance variables
+
+	private products: seq of Product := [];
+
+    inv len products >= 1;
+operations
+	/**
+	 * ProductPayment constructor
+	 */
+	public ProductPayment: seq of Product * Date * Hour==> ProductPayment
+ 	ProductPayment(newProducts, newDate, newHour) == 
+ 	(   
+        dcl sumValues: rat := 0;
+        dcl i: nat := 0;
+        products:= newProducts;
+        
+        while i < len products do
+            sumValues:= sumValues + products(i).getValue();
+            
+        Payment(newDate, newHour, sumValues);
+	)
+	pre len products >= 1
+   post products = products ;
+
+    public addProduct: Product ==> ()
+    addProduct(product) == 
+    (
+        products := products ^ [product];
+        amount:= amount + product.getValue();
+    );
+
+
+end ProductPayment

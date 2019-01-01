@@ -1,15 +1,30 @@
 class Lead
--- VAI SER SUBCALSS DO USER???
+
 types
 	public String_ = seq of char;
+	public String1 = seq1 of char;
 values
 	
 instance variables
 	private name: String_;
+	private club: Club;
 operations
-	public Lead: seq of char ==> Lead
- 	Lead(newName) == (name := newName; return self)
- 	post name = newName;
+	public Lead: String_ ==> Lead
+	Lead(newName) == 
+	(
+		name := newName; 
+		return self
+	)
+	post name = newName;
+	 
+	public pure getName: () ==> String_
+ 	getName() == return name
+	 post RESULT = name;
+
+	public setClub: Club ==> ()
+ 	setClub(newClub) == club:= newClub
+ 	post club = newClub;
+	 
 functions
 -- TODO Define functiones here
 traces

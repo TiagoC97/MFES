@@ -1,12 +1,63 @@
 class CRM
 types
-	public String_= seq of char;
+	public String_ = seq of char;
+	public String1 = seq1 of char;
 instance variables
--- TODO Define instance variables here
+	private leads: map Lead to [SalesRepresentative] := {|->};
+	private club: Club;
 operations
 	/**
 	 * CRM constructor
 	 */
-	public CRM: () ==> CRM
- 	CRM() == return self
+	public CRM: Club ==> CRM
+ 	CRM(newClub) == 
+ 	(
+ 		club:= newClub;
+ 		return self
+ 	)
+ 	post club = newClub and leads = {|->};
+ 	
+ 	public addLead: Lead ==> ()
+	addLead(lead) == 
+	(
+		lead.setClub(club);
+		leads := leads munion {lead |-> nil}
+	)
+ 	pre lead not in set dom leads
+ 	post leads = leads~ munion {lead |-> false};
+ 	
+ 	public addLeadWithSR: Lead * SalesRepresentative ==> ()
+	 addLeadWithSR(lead, sr) ==
+	 (
+		lead.setClub(club);
+		leads := leads munion {lead |-> sr}
+	 ) 
+ 	pre lead not in set dom leads and sr in set club.getSalesRepresentatives()
+ 	post leads = leads~ munion {lead |-> false};
+ 	
+ 	public setLeadSR: Lead * SalesRepresentative ==> ()
+ 	setLeadSR(lead, sr) == 
+ 	(
+ 		if leads(lead) <> nil then
+ 			leads(lead).removeLead(lead);
+ 		
+ 		leads(lead) := sr;
+ 		sr.addLead(lead);
+ 	)
+	 pre lead in set dom leads;
+	 
+	public removeLead: Lead ==> ()
+	removeLead(lead) == 
+	(
+		dcl newLeads: map Lead to [SalesRepresentative] := {|->};
+		for all l in set dom leads do
+			if(lead <> l) then
+				newLeads := newLeads munion {l|->leads(l)};
+
+		if leads(lead) <> nil then
+			leads(lead).removeLead(lead);
+	)
+	pre leads <> {|->} and lead in set dom leads;
+ 	
+ 	
 end CRM

@@ -3,13 +3,79 @@ types
 
 instance variables
 
-	
+	private calendar: EmployeeCalendar;
+	private classes: set of GymClass := {};
+	private trainingSessions: set of TrainingSession := {};
 
 operations
 	/**
 	 * Employee constructor
 	 */
 	public Employee: String_ ==> Employee
- 	Employee(String_) == User(String_, <Employee>);
+ 	Employee(String_) == 
+ 	(
+ 		calendar:= new EmployeeCalendar();
+ 		User(String_, <Employee>);
+	 )
+	 post classes = {} and trainingSessions = {};
  	
+ 	public addTask: Task ==> ()
+ 	addTask(task) == calendar.addTask(task);
+
+	 -- GYM CLASSES
+	
+	public addGymClass: GymClass ==> ()
+	addGymClass(gymClass) == classes := classes union {gymClass}
+	pre gymClass not in set classes
+	post classes = classes~ union {gymClass};
+
+	-- TRAINING SESSIONS
+	
+	public addTrainingSession: TrainingSession ==> ()
+	addTrainingSession(trainingSession) == trainingSessions := trainingSessions union {trainingSession}
+	pre trainingSession not in set trainingSessions
+	post trainingSessions = trainingSessions~ union {trainingSession};
+ 	
+ 	/**
+	 * Get client activity
+	 */
+
+	 public getActivity: bool ==> ()
+		getActivity(showAllTasks) ==
+		(
+			dcl numClasses: nat := card classes;
+			dcl numTrainingSessiosn: nat := card trainingSessions;
+			dcl tasks: map Date to seq of Task := calendar.getTasks();
+			dcl i: nat := 0;
+			dcl t: Task;
+
+			IO`println("********* CLIENT STATISTICS *********");
+			IO`println("Number of gym classes: " ^ [numClasses]);
+			IO`println("Number of training sessions: " ^ [numTrainingSessiosn]);
+			
+			if showAllTasks then
+				(
+					for all d in set dom tasks do
+					(
+						i := 0;
+						IO`println(d);	
+
+						while i < len tasks(d) do
+						( 
+							t := tasks(d)(i); 
+							IO`println("	Task: " ^ [t.getDescription()] ^ [" started at "] ^ [t.getStartHour()] ^ [" and ended at "] ^ [t.getEndHour()]);
+							i:= i + 1;
+						);
+						IO`println("");
+					)		
+				);
+			
+			IO`println("");
+			IO`println("************************************");
+		);
+ 	
+ 	public pure getCalendar: () ==> EmployeeCalendar
+ 	getCalendar() == return calendar
+ 	post RESULT = calendar;
+	 
 end Employee

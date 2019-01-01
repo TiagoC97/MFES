@@ -5,17 +5,28 @@ values
 -- TODO Define values here
 instance variables
 	private name : String_;
-	private cost : real;
+	private value : rat;
 	private quantity: nat;
 operations
 	public Product: String_ * real * nat ==> Product
- 	Product(prod_name, prod_cost, prod_quantity) == 
+ 	Product(prod_name, prod_value, prod_quantity) == 
  	(
  		name := prod_name;
-		cost := prod_cost;
+		value := prod_value;
 		quantity := prod_quantity;
 		return self;
- 	);
+ 	)
+	post name = prod_name and value = prod_value and quantity = prod_quantity;
+ 	
+ 	public getValue: () ==> rat
+ 	getValue() == return value;
+
+	public getName: () ==> String_
+ 	getName() == return name;
+
+	public getQuantity: () ==> rat
+ 	getQuantity() == return quantity;
+
  	
 functions
 -- TODO Define functiones here

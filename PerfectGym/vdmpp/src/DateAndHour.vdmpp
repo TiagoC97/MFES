@@ -7,8 +7,8 @@ types
   public Hour = nat
        inv h == IsValidHour(h div 100, h mod 100);
 
-	values
-    public MinimalDate = CreateDate(1,1,1);
+values
+    -- TIRAR????????? public MinimalDate = CreateDate(1,1,1);
 
   functions
 			
@@ -38,6 +38,9 @@ types
 			CreateDate(year, month, day) == 
 				year * 10000 + month * 100 + day
 			pre IsValidDate(year, month, day);
+
+		-- public static GetDateString: Date -> seq of char
+	 		-- GetDateString(d) == Day(d) ^ "/" ^ d.Month ^ ["/"] ^ d.Year;
  
  		public static Year: Date -> nat
 	 		Year(d) == 

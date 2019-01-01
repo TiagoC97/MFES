@@ -1,0 +1,30 @@
+class Invoice
+types
+    public String_ = seq of char;
+	public String1 = seq1 of char;
+	public Date = DateAndHour`Date;
+    public Hour = DateAndHour`Hour;
+values
+    
+instance variables
+  
+    public club: Club;
+
+operations
+
+    /**
+	 * Invoice constructor
+	 */
+	public Invoice: Club ==> Invoice
+ 	Invoice(newClub) == 
+ 	(
+ 		club:= newClub;
+ 		return self
+    )
+    post club = newClub;
+     
+functions
+-- TODO Define functiones here
+traces
+-- TODO Define Combinatorial Test Traces here
+end Invoice

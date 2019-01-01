@@ -1,9 +1,6 @@
 class TrainingSession is subclass of Session
 types
-    public String_ = seq of char;
-	public Date = DateAndHour`Date;
-	public Hour = DateAndHour`Hour;
-	public DayOfWeek = DateAndHour`DayOfWeek;
+
 values
 
 instance variables
@@ -12,14 +9,21 @@ instance variables
 	
 operations
 
-   public TrainingSession: Trainer * Client * DayOfWeek * Hour * Hour * Date * Club==> TrainingSession
- 	TrainingSession(newTrainer, client, newDayOfWeek, newStartHour, newEndHour, newDate, newClub) == 
+   public TrainingSession: String1 * Trainer * Client * DayOfWeek * Hour * Hour * Date * Club==> TrainingSession
+ 	TrainingSession(newDescription, newTrainer, client, newDayOfWeek, newStartHour, newEndHour, newDate, newClub) == 
  	(
-    trainee := client;
- 		Session(newTrainer, newDayOfWeek, newStartHour, newEndHour, newDate, newClub);
+		trainee := client;
+ 		Session(newDescription, newTrainer, newDayOfWeek, newStartHour, newEndHour, newDate, newClub);
  	)
  	pre client in set club.getClients()
 	post trainee = client;
+
+	-- GETTERS
+ 	
+ 	public getTrainee: () ==> Client
+ 	getTrainee() == return trainee
+ 	post RESULT = trainee;
+ 		
          
 functions
 -- TODO Define functiones here

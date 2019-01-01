@@ -1,15 +1,14 @@
-class TrainerCalendar
+class ProductPurchasesInvoice is subclass of Invoice
 types
-	public String_ = seq of char;
+-- TODO Define types here
 values
 -- TODO Define values here
 instance variables
 -- TODO Define instance variables here
 operations
-	public TrainerCalendar: () ==> TrainerCalendar
- 	TrainerCalendar() == return self
+-- TODO Define operations here
 functions
 -- TODO Define functiones here
 traces
 -- TODO Define Combinatorial Test Traces here
-end TrainerCalendar
+end ProductPurchasesInvoice

@@ -57,12 +57,9 @@ operations
  		if user.getName() not in set dom groupInbox then
  			groupInbox := {user.getName() |-> [msg]} munion groupInbox
  		else
- 		(
- 			dcl curMessagesFromUser: seq of String1 := groupInbox(user.getName());
- 			groupInbox := {user.getName() |-> [msg] ^ curMessagesFromUser} munion groupInbox;
- 		)
+ 			groupInbox(user.getName()) := groupInbox(user.getName()) ^ [msg];
  	)
-	 pre user in set clients or user.getAccess() = <Owner>;
+	pre user in set clients or user.getAccess() = <Owner>;
 	 
 	 -- GETTERS
 	 

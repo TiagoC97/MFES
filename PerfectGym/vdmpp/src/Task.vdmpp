@@ -1,0 +1,56 @@
+class Task
+types
+	public String_ = seq of char;
+	public String1 = seq1 of char;
+	public Date = DateAndHour`Date;
+	public Hour = DateAndHour`Hour;
+values
+-- TODO Define values here
+instance variables
+
+	protected description: String1;
+	protected startHour: Hour; -- HHMM
+	protected endHour: Hour; -- HHMM
+	protected date: Date; -- YYYYMMDD
+
+	inv endHour > startHour;
+	
+operations
+	public Task: String1 * Hour * Hour * Date ==> Task
+	Task(newDescription, newStartHour, newEndHour, newDate) == 
+	(
+		description:= newDescription;
+		startHour := newStartHour;
+		endHour := newEndHour;
+		date := newDate;
+		return self;
+	)
+	pre newEndHour > newStartHour
+	post description = newDescription and startHour = newStartHour and endHour = newEndHour and date = newDate;
+
+	-- GETTERS
+
+	public getDescription: () ==> String1
+	getDescription() == return description
+	post RESULT = description;
+
+	public pure getStartHour: () ==> Hour
+	getStartHour() == return startHour
+	post RESULT = startHour;
+
+	public pure getEndHour: () ==> Hour
+	getEndHour() == return endHour
+	post RESULT = endHour;
+	
+	public pure getDate: () ==> Date
+ 	getDate() == return date
+ 	post RESULT = date;
+	
+	
+functions
+
+	
+
+traces
+-- TODO Define Combinatorial Test Traces here
+end Task

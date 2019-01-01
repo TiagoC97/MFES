@@ -1,0 +1,34 @@
+class Payment
+types
+	public String1 = seq1 of char;
+	public Date = DateAndHour`Date;
+    public Hour = DateAndHour`Hour;
+values
+-- TODO Define values here
+instance variables
+
+	protected date: Date;
+	protected hour: Hour;
+	protected amount: rat := 0;
+	public static curPaymentID : int := 0;
+	protected id : int := curPaymentID;
+operations
+	/**
+	 * Payment constructor
+	 */
+	public Payment: Date * Hour * rat ==> Payment
+ 	Payment(newDate, newHour, newAmount) == 
+ 	(
+		date:= newDate;
+		hour:= newHour;
+		amount := newAmount;
+		curPaymentID := curPaymentID +1;
+ 		return self
+	)
+	pre newAmount > 0
+    post date = newDate and hour = newHour and amount = newAmount and curPaymentID = curPaymentID~ + 1;
+functions
+-- TODO Define functiones here
+traces
+-- TODO Define Combinatorial Test Traces here
+end Payment

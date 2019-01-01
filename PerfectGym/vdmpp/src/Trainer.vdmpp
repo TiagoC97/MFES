@@ -7,10 +7,10 @@ instance variables
 
 	
 	private trainees: set of Client := {};
-	
+
 operations
 
-	public Trainer: String_ ==> Trainer
+	public Trainer: String_  ==> Trainer
  	Trainer(String_) == Employee(String_)
  	post trainees = {};
 
@@ -22,6 +22,7 @@ operations
 	-- Returns trainer trainees
 	public pure getTrainees : () ==> set of Client
 	getTrainees() == return trainees;
+
 		
 functions
 -- TODO Define functiones here

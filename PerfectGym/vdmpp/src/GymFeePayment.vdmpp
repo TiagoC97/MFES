@@ -1,0 +1,25 @@
+class GymFeePayment is subclass of Payment
+types
+-- TODO Define types here
+values
+-- TODO Define values here
+instance variables
+    private fee: rat;
+operations
+    /**
+	 * GymFeePayment constructor
+	 */
+	public GymFeePayment: rat * Date * Hour==> GymFeePayment
+ 	GymFeePayment(newFee, newDate, newHour) == 
+ 	(
+		fee:= newFee;
+        Payment(newDate, newHour, newFee);
+    )
+    pre newFee >= 0
+    post fee = newFee ;
+
+functions
+-- TODO Define functiones here
+traces
+-- TODO Define Combinatorial Test Traces here
+end GymFeePayment

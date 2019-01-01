@@ -6,7 +6,19 @@ values
 instance variables
 
 	private trainer: [Trainer];
+	private personalTrainingFee: rat;
 	private classes: set of GymClass := {};
+	private trainingSessions: set of TrainingSession := {};
+	private gymAttendences: set of Date := {};
+	private productsBought: seq of Product := [];
+
+	private gymFeePayments: set of GymFeePayment := {};
+	private productPayments: set of ProductPayment := {};
+	private personalTrainingPayments: set of PersonalTrainingPayment := {};
+
+	private historicGymFeePayments: set of GymFeePayment := {};
+	private historicProductPayments: set of ProductPayment := {};
+	private historicPersonalTrainingPayments: set of PersonalTrainingPayment := {};
 	
 operations
 
@@ -19,14 +31,20 @@ operations
 	 	trainer := nil;
 	 	User(String_, <Client>);
 	 )
-	 post trainer = nil and classes = {};
+	 post trainer = nil and classes = {} and trainingSessions = {} and gymAttendences = {} and productsBought = [] and
+	 	gymFeePayments = {} and productPayments = {} and personalTrainingPayments = {} and historicGymFeePayments = {} and
+		historicProductPayments = {} and historicPersonalTrainingPayments = {};
 	 
 	 /**
 	  * Adds a trainer to the client
 	  */
-	public addTrainer: Trainer ==> ()
-	addTrainer(newTrainer) == trainer := newTrainer
-	pre newTrainer in set club.getUsers()
+	public addTrainer: Trainer * rat==> ()
+	addTrainer(newTrainer, fee) == 
+	(
+		trainer := newTrainer;
+		personalTrainingFee := fee;			
+	)
+	pre newTrainer in set club.getTrainers() and fee > 0
 	post trainer = newTrainer;
 	
 	-- MESSAGES TO/FROM GROUP
@@ -74,10 +92,150 @@ operations
 	-- GYM CLASSES
 	
 	public addGymClass: GymClass ==> ()
-	addGymClass(gymClass) == classes := classes union {gymClass}
+	addGymClass(gymClass) == 
+	(
+		dcl classDate: Date := gymClass.getDate();
+		classes := classes union {gymClass};
+		addGymAttendence(classDate);
+	)		
 	pre gymClass not in set classes
 	post classes = classes~ union {gymClass};
+
+	-- TRAINING SESSIONS
+	
+	public addTrainingSession: TrainingSession ==> ()
+	addTrainingSession(trainingSession) ==
+	(
+		dcl trainingSessionDate: Date := trainingSession.getDate();	
+		trainingSessions := trainingSessions union {trainingSession};  
+		addGymAttendence(trainingSessionDate);
+	) 
+	pre trainingSession not in set trainingSessions
+	post trainingSessions = trainingSessions~ union {trainingSession};
+
+	-- GYM ATTENDENCES
+
+	public addGymAttendence: Date ==> ()
+	addGymAttendence(date) == gymAttendences := gymAttendences union {date}
+	pre date not in set gymAttendences
+	post gymAttendences = gymAttendences~ union {date};
+
+	-- PAYMENTS
+
+	public addGymFeePayment: GymFeePayment ==> ()
+	addGymFeePayment(payment) == gymFeePayments := gymFeePayments union {payment};
+
+	public addProductPayment: ProductPayment ==> ()
+	addProductPayment(payment) == productPayments := productPayments union {payment};
+
+	public addPersonalTrainingPayment: PersonalTrainingPayment ==> ()
+	addPersonalTrainingPayment(payment) == personalTrainingPayments := personalTrainingPayments union {payment};
+
+	public addHistoricGymFeePayment: GymFeePayment ==> ()
+	addHistoricGymFeePayment(payment) == historicGymFeePayments := historicGymFeePayments union {payment};
+
+	public addHistoricProductPayment: ProductPayment ==> ()
+	addHistoricProductPayment(payment) == historicProductPayments := historicProductPayments union {payment};
+
+	public addHistoricPersonalTrainingPayment: PersonalTrainingPayment ==> ()
+	addHistoricPersonalTrainingPayment(payment) == historicPersonalTrainingPayments := historicPersonalTrainingPayments union {payment};
+	
+	public removeGymFeePayment: GymFeePayment ==> ()
+	removeGymFeePayment(payment) == gymFeePayments := gymFeePayments \ {payment}
+	pre gymFeePayments <> {} and payment in set gymFeePayments;
+
+	public removeProductPayment: ProductPayment ==> ()
+	removeProductPayment(payment) == productPayments := productPayments \ {payment}
+	pre productPayments <> {} and payment in set productPayments;
+
+	public removePersonalTrainingPayment: PersonalTrainingPayment ==> ()
+	removePersonalTrainingPayment(payment) == personalTrainingPayments := personalTrainingPayments \ {payment}
+	pre personalTrainingPayments <> {} and payment in set personalTrainingPayments;
+
+	public moveAllGymFeePaymentsToHistory: () ==> ()
+	moveAllGymFeePaymentsToHistory() == 
+	(
+		for all payment in set gymFeePayments do
+		(
+			addHistoricGymFeePayment(payment);
+			removeGymFeePayment(payment);
+		)
+	)
+	post gymFeePayments = {};
+
+	public moveAllProductPaymentsToHistory: () ==> ()
+	moveAllProductPaymentsToHistory() == 
+	(
+		for all payment in set productPayments do
+		(
+			addHistoricProductPayment(payment);
+			removeProductPayment(payment);
+		)
+	)
+	post productPayments = {};
+
+	public moveAllPersonalTrainingPaymentsToHistory: () ==> ()
+	moveAllPersonalTrainingPaymentsToHistory() == 
+	(
+		for all payment in set personalTrainingPayments do
+		(
+			addHistoricPersonalTrainingPayment(payment);
+			removePersonalTrainingPayment(payment);
+		);
+	)
+	post personalTrainingPayments = {};
+
+	public payGymFee: Date * Hour ==> ()
+	payGymFee(date, hour) == 
+	(
+		dcl payment: GymFeePayment := new GymFeePayment(club.getFee(), date, hour);
+		addGymFeePayment(payment);
+	);
+
+	public payPersonalTrainingFee: Date * Hour ==> ()
+	payPersonalTrainingFee(date, hour) == 
+	(
+		dcl payment: PersonalTrainingPayment := new PersonalTrainingPayment(club.getFee(), date, hour);
+		addPersonalTrainingPayment(payment);
+	);
+	-- PRODUCTS
+
+	public buyProducts: seq of Product * Date * Hour ==> ()
+	buyProducts(products, date, hour) == 
+	(
+		dcl payment: ProductPayment := new ProductPayment(products, date, hour);
+		addProductPayment(payment);
+		productsBought:= productsBought ^ products;
+	);
+
+	
+
 	-- GETTERS
+
+	/**
+	 * Get client activity
+	 */
+
+	 public getActivity: () ==> ()
+		getActivity() ==
+		(
+			dcl numClasses: nat := card classes;
+			dcl numTrainingSessiosn: nat := card trainingSessions;
+			dcl numAttendences: nat := card gymAttendences;
+			dcl personalTrainer: String_ := "None";
+			
+			if trainer <> nil then
+				personalTrainer:= trainer.getName();
+			
+
+			IO`println("********* CLIENT STATISTICS *********");
+			IO`println("Personal trainer: " ^ [personalTrainer]);
+			IO`println("Number of gym classes: " ^ [numClasses]);
+			IO`println("Number of training sessions: " ^ [numTrainingSessiosn]);
+			IO`println("Number of gym attendences: " ^ [numAttendences]);
+			IO`println("");
+			IO`println("************************************");
+		);
 	
 	/**
 	 * Gets the client trainer
@@ -88,6 +246,14 @@ operations
 	getTrainer() == return trainer
 	post RESULT = trainer;
 	
+	/**
+	 * Gets the client gym attendence dates
+	 * 
+	 * @return gymAttendences
+	 */
+	public getGymAttendences: () ==> set of Date
+	getGymAttendences() == return gymAttendences
+	post RESULT = gymAttendences;
 
 functions
 traces
