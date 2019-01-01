@@ -1,0 +1,17 @@
+class OwnerTest is subclass of MyTestCase
+
+instance variables
+
+  	owner1: Owner := new Owner("Rui");
+	
+operations
+	public Run: () ==> ()
+	Run() == (
+		IO`println("\nOwner Tests");
+			
+		assertEqual("Rui", owner1.getName());
+			
+		IO`println("\nFinalizing Owner Tests");
+	);
+	
+end OwnerTest
