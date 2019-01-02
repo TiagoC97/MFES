@@ -10,7 +10,7 @@ operations
 		new OwnerTest().Run();
 	    -- new UseCasesTest().Run();
 	    
-	    IO`println("Finalizing Test Runner");
+	    IO`println("\nFinalizing Test Runner");
 		);
 	
 end MyTestRunner

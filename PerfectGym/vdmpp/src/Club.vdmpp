@@ -101,19 +101,10 @@ operations
 		post salesRepresentatives = salesRepresentatives~ union {salesRepresentative};
 		
 		/**
-		 * Add a new group (already with at least one client) to the club
-		 */
-		public addGroup: String1 * Group * User==> ()
-		addGroup(newName, newGroup, user) == 
-				groups := groups munion {newName |-> newGroup}
-		pre newName <> "" and newName not in set dom groups and (isAtLeastEmployee(user))
-		post groups = groups~ munion {newName |-> newGroup};
-		
-		/**
 		 * Add a new group, by giving its name and its first client, to the club
 		 */
-		public addEmptyGroupByName: String1 * Client * User ==> ()
-		addEmptyGroupByName(newName, client, user) == 
+		public addGroup: String1 * Client * User ==> ()
+		addGroup(newName, client, user) == 
 				groups := groups munion {newName |-> new Group(client, self)}
 		pre newName <> "" and newName not in set dom groups and client in set clients and (isAtLeastEmployee(user))
 		post groups = groups~ munion {newName |-> groups(newName)};
@@ -271,17 +262,8 @@ operations
 		pre isAtLeastEmployee(user);
 
 
-		public addPaymentToInvoice: Invoice * Payment * User==> ()
-		addPaymentToInvoice(invoice, payment, user) == invoice.addPayment(payment)
-		pre isAtLeastEmployee(user);
-
-
 		public addPaymentToInvoice: Invoice * set of Payment * User==> ()
 		addPaymentToInvoice(invoice, payments, user) == invoice.addPayment(payments)
-		pre isAtLeastEmployee(user);
-
-		public removePaymentFromInvoice: Invoice * Payment * User==> ()
-		removePaymentFromInvoice(invoice, payment, user) == invoice.removePayment(payment)
 		pre isAtLeastEmployee(user);
 
 
@@ -315,7 +297,7 @@ operations
 		/**
 		 * Remove a lead from  a sales representative
 		 */
-		public removeSRLead: Lead * SalesRepresentative * User ==> ()
+		public removeLeadSR: Lead * SalesRepresentative * User ==> ()
 		removeSRLead(lead, sr, user) == sr.removeLead(lead)
 		pre sr in set salesRepresentatives and isAtLeastEmployee(user);
 
