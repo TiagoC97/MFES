@@ -56,6 +56,8 @@ operations
 
 		if leads(lead) <> nil then
 			leads(lead).removeLead(lead);
+
+		leads := newLeads;
 	)
 	pre leads <> {|->} and lead in set dom leads;
 

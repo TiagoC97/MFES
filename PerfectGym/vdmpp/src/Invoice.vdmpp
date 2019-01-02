@@ -66,13 +66,7 @@ operations
 	post club = newClub and payments = newPayments and date = newDate and hour = newHour and 
 		type = newType and client = newClient;
 
-	public addPayment : Payment ==> ()
-	addPayment(payment) == 
-	(
-		payments:= payments union {payment};
-		totalAmount := totalAmount + payment.getAmount();
-	)
-	pre payment not in set payments;
+
 
 	public addPayment : set of Payment ==> ()
 	addPayment(newPayments) == 
@@ -84,13 +78,7 @@ operations
 	)
 	pre card newPayments >= 1 and newPayments inter payments = {};
 
-	public removePayment: Payment ==> ()
-	removePayment(payment) ==
-	(
-		payments := payments \ {payment};
-		totalAmount := totalAmount - payment.getAmount();
-	)
-	pre payments <> {} and totalAmount > 0;
+
 
 	public removePayment: set of Payment ==> ()
 	removePayment(newPayments) ==

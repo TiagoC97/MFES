@@ -19,7 +19,6 @@ instance variables
 	protected gender: Gender;
 	protected nationality: String1;
 	
-	inv age >= 12;
 operations
 
 	public User: String_ * Access * nat * Gender * String1 ==> User
@@ -33,7 +32,7 @@ operations
  		access := acc; 
  		return self
  	)
-	pre newName <> ""
+	pre newName <> "" and age >= 12
  	post name = newName and
 		 age = newAge and
 		 gender = newGender and
@@ -58,10 +57,7 @@ operations
  		if user.getName() not in set dom inbox then
  			inbox := {user.getName() |-> [msg]} munion inbox
  		else
- 		(
- 			dcl curMessagesFromUser: seq of String1 := inbox(user.getName());
- 			inbox := {user.getName() |-> [msg] ^ curMessagesFromUser} munion inbox;
- 		)
+ 			inbox(user.getName()) := [msg] ^ inbox(user.getName()) ;
  	)
  	pre user in set club.getUsers();
  	

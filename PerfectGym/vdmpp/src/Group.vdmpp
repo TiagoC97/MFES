@@ -15,15 +15,14 @@ operations
 	/**
 	 * Group constructor
 	 */
- 	public Group: Client * Club  ==> Group
- 	Group(client, newClub) == 
+ 	public Group: set of Client * Club  ==> Group
+ 	Group(newClients, newClub) == 
 	(
- 		clients := {client};
+ 		clients := newClients;
  		club := newClub;
  		return self
  	)
- 	pre client in set club.getClients()
- 	post clients = {client} and groupInbox = {|->} and offers = [] and club = newClub;
+ 	post clients = newClients and groupInbox = {|->} and offers = [] and club = newClub;
 
 	 /**
 	  * Add a new client to the group

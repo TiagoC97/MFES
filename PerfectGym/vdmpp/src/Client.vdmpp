@@ -1,8 +1,5 @@
 class Client is subclass of User
-types
 
-values
-	
 instance variables
 
 	private trainer: [Trainer];
@@ -10,7 +7,7 @@ instance variables
 	private classes: set of GymClass := {};
 	private trainingSessions: set of TrainingSession := {};
 	private gymAttendences: set of Date := {};
-	private productsBought: seq of Product := [];
+	private productsBought: set of Product := {};
 
 	private gymFeePayments: set of GymFeePayment := {};
 	private productPayments: set of ProductPayment := {};
@@ -32,7 +29,7 @@ operations
 	 	personalTrainingFee := 0;
 	 	User(newName, <Client>, newAge, newGender, newNationality);
 	 )
-	 post trainer = nil and personalTrainingFee = 0 and classes = {} and trainingSessions = {} and gymAttendences = {} and productsBought = [] and
+	 post trainer = nil and personalTrainingFee = 0 and classes = {} and trainingSessions = {} and gymAttendences = {} and productsBought = {} and
 	 	gymFeePayments = {} and productPayments = {} and personalTrainingPayments = {} and historyGymFeePayments = {} and
 		historyProductPayments = {} and historyPersonalTrainingPayments = {};
 	 
@@ -50,48 +47,18 @@ operations
 	
 	-- MESSAGES TO/FROM GROUP
 	
-	 	/**
+	/**
 	 * Send message to one of its groups
 	 */
 	public sendMessageToGroup: String1 * String1 ==> ()
 	sendMessageToGroup(msg, groupName) == club.getGroupByName(groupName).sendMessage(self, msg)
 	pre groupName in set dom club.getGroups() and self in set club.getClients();
- 	
- 	-- get the messages from one of its groups
- 	public pure readGroupMessages: String1 ==> map String1 to seq of String1
-	readGroupMessages(groupName) == return club.getGroupByName(groupName).checkInbox(self)
-	pre self in set club.getClients() and
-	groupName in set dom club.getGroups();
-	
-	-- get the offers from one of its groups
- 	public pure readGroupOffers: String1 ==> seq of String1
-	readGroupOffers(groupName) == return club.getGroupByName(groupName).checkOffers(self)
-	pre self in set club.getClients() and
-	groupName in set dom club.getGroups();
-	
-	-- get the messages, from one of its groups, sent by a given user
- 	public pure readGroupMessagesFromUser: String1 * User ==> seq of String1
-	readGroupMessagesFromUser(groupName, user) == return club.getGroupByName(groupName).getMessagesFromUser(user.getName(), self)
-	pre 
-		self in set club.getClients() and
-		groupName in set dom club.getGroups() and
-		club.getGroupByName(groupName).getMessagesFromUser(user.getName(), self) <> [] and
-		user in set club.getUsers()
-	post RESULT = club.getGroupByName(groupName).getMessagesFromUser(user.getName(), self);
-	
-	-- get the last message, from one of its groups, sent by a given user
- 	public pure readGroupLastMessageFromUser: String1 * User ==> String1
-	readGroupLastMessageFromUser(groupName, user) == return club.getGroupByName(groupName).getLastMessageFromUser(user.getName(), self)
-	pre 
-		self in set club.getClients() and
-		groupName in set dom club.getGroups() and
-		club.getGroupByName(groupName).getMessagesFromUser(user.getName(), self) <> [] and
-		user in set club.getUsers()
-	post RESULT = club.getGroupByName(groupName).getLastMessageFromUser(user.getName(), self);
-	
 	
 	-- GYM CLASSES
 	
+	/**
+	 * Adds a gym class to this client
+	 */
 	public addGymClass: GymClass ==> ()
 	addGymClass(gymClass) == 
 	(
@@ -104,6 +71,9 @@ operations
 
 	-- TRAINING SESSIONS
 	
+	/**
+	 * Adds a training session to this client
+	 */
 	public addTrainingSession: TrainingSession ==> ()
 	addTrainingSession(trainingSession) ==
 	(
@@ -116,6 +86,9 @@ operations
 
 	-- GYM ATTENDENCES
 
+	/**
+	 * Adds a gym attendaence (date) to this client
+	 */
 	public addGymAttendence: Date ==> ()
 	addGymAttendence(date) == gymAttendences := gymAttendences union {date}
 	pre date not in set gymAttendences
@@ -123,48 +96,93 @@ operations
 
 	-- PAYMENTS
 
+	/**
+	 * Adds a gym fee payment to this client active payments
+	 */
 	public addGymFeePayment: GymFeePayment ==> ()
-	addGymFeePayment(payment) == gymFeePayments := gymFeePayments union {payment};
+	addGymFeePayment(payment) == gymFeePayments := gymFeePayments union {payment}
+	pre payment not in set gymFeePayments
+	post gymFeePayments = gymFeePayments~ union {payment};
 
+	/**
+	 * Adds a product payment to this client active payments
+	 */
 	public addProductPayment: ProductPayment ==> ()
-	addProductPayment(payment) == productPayments := productPayments union {payment};
+	addProductPayment(payment) == productPayments := productPayments union {payment}
+	pre payment not in set productPayments
+	post productPayments = productPayments~ union {payment};
 
+	/**
+	 * Adds a personal training payment to this client active payments
+	 */
 	public addPersonalTrainingPayment: PersonalTrainingPayment ==> ()
-	addPersonalTrainingPayment(payment) == personalTrainingPayments := personalTrainingPayments union {payment};
+	addPersonalTrainingPayment(payment) == personalTrainingPayments := personalTrainingPayments union {payment}
+	pre payment not in set personalTrainingPayments
+	post personalTrainingPayments = personalTrainingPayments~ union {payment};
 
+	/**
+	 * Adds a gym fee payment to this client history
+	 */
 	public addHistoryGymFeePayment: GymFeePayment ==> ()
-	addHistoryGymFeePayment(payment) == historyGymFeePayments := historyGymFeePayments union {payment};
+	addHistoryGymFeePayment(payment) == historyGymFeePayments := historyGymFeePayments union {payment}
+	pre payment not in set historyGymFeePayments
+	post historyGymFeePayments = historyGymFeePayments~ union {payment};
 
+	/**
+	 * Adds a product payment to this client history
+	 */
 	public addHistoryProductPayment: ProductPayment ==> ()
-	addHistoryProductPayment(payment) == historyProductPayments := historyProductPayments union {payment};
+	addHistoryProductPayment(payment) == historyProductPayments := historyProductPayments union {payment}
+	pre payment not in set historyProductPayments
+	post historyProductPayments = historyProductPayments~ union {payment};
 
+	/**
+	 * Adds a personal training payment to this client history
+	 */
 	public addHistoryPersonalTrainingPayment: PersonalTrainingPayment ==> ()
-	addHistoryPersonalTrainingPayment(payment) == historyPersonalTrainingPayments := historyPersonalTrainingPayments union {payment};
+	addHistoryPersonalTrainingPayment(payment) == historyPersonalTrainingPayments := historyPersonalTrainingPayments union {payment}
+	pre payment not in set historyPersonalTrainingPayments
+	post historyPersonalTrainingPayments = historyPersonalTrainingPayments~ union {payment};
 	
+	/**
+	 * Removes a gym fee payment from this client active payments and adds it to its history
+	 */
 	public removeGymFeePayment: GymFeePayment ==> ()
 	removeGymFeePayment(payment) == 
 	(
 		addHistoryGymFeePayment(payment);
 		gymFeePayments := gymFeePayments \ {payment};
 	)
-	pre gymFeePayments <> {} and payment in set gymFeePayments;
+	pre gymFeePayments <> {} and payment in set gymFeePayments
+	post gymFeePayments = gymFeePayments~ \ {payment};
 
+	/**
+	 * Removes a product payment from this client active payments and adds it to its history
+	 */
 	public removeProductPayment: ProductPayment ==> ()
 	removeProductPayment(payment) == 
 	(
 		addHistoryProductPayment(payment);		
 		productPayments := productPayments \ {payment};
 	)
-	pre productPayments <> {} and payment in set productPayments;
+	pre productPayments <> {} and payment in set productPayments
+	post productPayments = productPayments~ \ {payment};
 
+	/**
+	 * Removes a personal training payment from this client active payments and adds it to its history
+	 */
 	public removePersonalTrainingPayment: PersonalTrainingPayment ==> ()
 	removePersonalTrainingPayment(payment) == 
 	(
 		addHistoryPersonalTrainingPayment(payment);		
 		personalTrainingPayments := personalTrainingPayments \ {payment};
 	)
-	pre personalTrainingPayments <> {} and payment in set personalTrainingPayments;
+	pre personalTrainingPayments <> {} and payment in set personalTrainingPayments
+	post personalTrainingPayments = personalTrainingPayments~ \ {payment};
 
+	/**
+	 * Moves all gym fee payments from this client active payments and adds it to its history
+	 */
 	public moveAllGymFeePaymentsToHistory: () ==> ()
 	moveAllGymFeePaymentsToHistory() == 
 	(
@@ -173,6 +191,9 @@ operations
 	)
 	post gymFeePayments = {};
 
+	/**
+	 * Moves all product payments from this client active payments and adds it to its history
+	 */
 	public moveAllProductPaymentsToHistory: () ==> ()
 	moveAllProductPaymentsToHistory() == 
 	(
@@ -183,6 +204,9 @@ operations
 	)
 	post productPayments = {};
 
+	/**
+	 * Moves all personal training payments from this client active payments and adds it to its history
+	 */
 	public moveAllPersonalTrainingPaymentsToHistory: () ==> ()
 	moveAllPersonalTrainingPaymentsToHistory() == 
 	(
@@ -193,6 +217,9 @@ operations
 	)
 	post personalTrainingPayments = {};
 
+	/**
+	 * Create gym fee payment and add it to the active gym fee payments
+	 */
 	public payGymFee: Date * Hour ==> ()
 	payGymFee(date, hour) == 
 	(
@@ -200,29 +227,39 @@ operations
 		addGymFeePayment(payment);
 	);
 
+	/**
+	 * Create personal training payment and add it to the active personal training payments
+	 */
 	public payPersonalTrainingFee: Date * Hour ==> ()
 	payPersonalTrainingFee(date, hour) == 
 	(
 		dcl payment: PersonalTrainingPayment := new PersonalTrainingPayment(self, club.getFee(), date, hour);
 		addPersonalTrainingPayment(payment);
 	);
+
 	-- PRODUCTS
 
+	/**
+	 * Add a product bought to this client
+	 */
 	public addProductBought: Product ==> ()
 	addProductBought(product) == 
-		productsBought:= productsBought ^ [product];
+		productsBought:= productsBought union {product}
+	pre product not in set productsBought
+	post productsBought = productsBought~ union {product};
 	
+	/**
+	 * Add a product to a payment made by this client
+	 */
 	public addProductToPayment: ProductPayment * Product * nat ==> ()
-	addProductToPayment(payment, product, qtt) == payment.addProduct(product, qtt);
-
-	
+	addProductToPayment(payment, product, qtt) == payment.addProduct(product, qtt)
+	pre payment.getClient() = self;
 
 	-- GETTERS
 
 	/**
 	 * Get client activity
 	 */
-
 	 public getActivity: () ==> ()
 		getActivity() ==
 		(
@@ -292,9 +329,9 @@ operations
 	/**
 	 * Gets the client products bought
 	 * 
-	 * @return seq of Product
+	 * @return set of Product
 	 */
-	public pure getProductsBought: () ==> seq of Product
+	public pure getProductsBought: () ==> set of Product
 	getProductsBought() == return productsBought
 	post RESULT = productsBought;
 
@@ -352,6 +389,56 @@ operations
 	public pure getHistoryPersonalTrainingPayments: () ==> set of PersonalTrainingPayment
 	getHistoryPersonalTrainingPayments() == return historyPersonalTrainingPayments
 	post RESULT = historyPersonalTrainingPayments;
+
+	/**
+	 * Get the messages from one of its groups
+	 * 
+	 * @return map String1 to seq of String1
+	 */
+ 	public pure readGroupMessages: String1 ==> map String1 to seq of String1
+	readGroupMessages(groupName) == return club.getGroupByName(groupName).checkInbox(self)
+	pre self in set club.getClients() and
+		groupName in set dom club.getGroups()
+	post RESULT = club.getGroupByName(groupName).checkInbox(self);
+	
+	/**
+	 * Get the offers from one of its groups
+	 * 
+	 * @return seq of String1
+	 */
+ 	public pure readGroupOffers: String1 ==> seq of String1
+	readGroupOffers(groupName) == return club.getGroupByName(groupName).checkOffers(self)
+	pre self in set club.getClients() and
+		groupName in set dom club.getGroups()
+	post RESULT = club.getGroupByName(groupName).checkOffers(self);
+	
+	/**
+	 * Get the messages, from one of its groups, sent by a given user
+	 * 
+	 * @return seq of String1
+	 */
+ 	public pure readGroupMessagesFromUser: String1 * User ==> seq of String1
+	readGroupMessagesFromUser(groupName, user) == return club.getGroupByName(groupName).getMessagesFromUser(user.getName(), self)
+	pre 
+		self in set club.getClients() and
+		groupName in set dom club.getGroups() and
+		club.getGroupByName(groupName).getMessagesFromUser(user.getName(), self) <> [] and
+		user in set club.getUsers()
+	post RESULT = club.getGroupByName(groupName).getMessagesFromUser(user.getName(), self);
+	
+	/**
+	 * Get the last message, from one of its groups, sent by a given user
+	 * 
+	 * @return String1
+	 */
+ 	public pure readGroupLastMessageFromUser: String1 * User ==> String1
+	readGroupLastMessageFromUser(groupName, user) == return club.getGroupByName(groupName).getLastMessageFromUser(user.getName(), self)
+	pre 
+		self in set club.getClients() and
+		groupName in set dom club.getGroups() and
+		club.getGroupByName(groupName).getMessagesFromUser(user.getName(), self) <> [] and
+		user in set club.getUsers()
+	post RESULT = club.getGroupByName(groupName).getLastMessageFromUser(user.getName(), self);
 		
 	/**
 	 * Gets the client active payments of a given type

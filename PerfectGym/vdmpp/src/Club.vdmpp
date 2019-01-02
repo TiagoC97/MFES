@@ -26,6 +26,17 @@ instance variables
 	
 	private crm: CRM;
 	private clubOwner: Owner;
+
+	inv not exists c1, c2 in set classes &
+		c1 <> c2 and c1.getTrainer() = c2.getTrainer() and c1.getDate() = c2.getDate() and
+		overlaps(c1.getStartHour(), c1.getEndHour(), c2.getStartHour(), c2.getEndHour());
+
+	inv not exists t1, t2 in set trainingSessions &
+		t1 <> t2 and (t1.getTrainer() = t2.getTrainer() or t1.getTrainee() = t2.getTrainee()) and 
+		t1.getDate() = t2.getDate() and overlaps(t1.getStartHour(), t1.getEndHour(), t2.getStartHour(), t2.getEndHour());
+
+	inv not exists p1, p2 in set products &
+		p1 <> p2 and p1.getName() = p2.getName();
 	
 operations
 
@@ -65,11 +76,9 @@ operations
 		addClient(client, user) == 
 		(
 			clients := clients union {client};
-			-- if client not in set PerfectGym`getInstance().getUsers() then
-				-- PerfectGym`getInstance().addUser(client);
 			client.setClub(self);
 		)
-		pre client not in set clients and (isAtLeastEmployee(user))
+		pre client not in set clients and (isAtLeastEmployee(user)) and user in set getUsers()
 		post clients = clients~ union {client};
 		
 		/**
@@ -79,11 +88,9 @@ operations
 		addTrainer(trainer, user) == 
 		(
 			trainers := trainers union {trainer};
-			-- if trainer not in set PerfectGym`getInstance().getUsers() then
-				-- PerfectGym`getInstance().addUser(trainer);
 			trainer.setClub(self);
 		)
-		pre trainer not in set trainers and isOwner(user)
+		pre trainer not in set trainers and isOwner(user) and user in set getUsers()
 		post trainers = trainers~ union {trainer};
 		
 		/**
@@ -93,29 +100,20 @@ operations
 		addSalesRepresentative(salesRepresentative, user) == 
 		(
 			salesRepresentatives := salesRepresentatives union {salesRepresentative};
-			-- if salesRepresentative not in set PerfectGym`getInstance().getUsers() then
-				-- PerfectGym`getInstance().addUser(salesRepresentative);
 			salesRepresentative.setClub(self);
 		)
-		pre salesRepresentative not in set salesRepresentatives and isOwner(user)
+		pre salesRepresentative not in set salesRepresentatives and isOwner(user) and user in set getUsers()
 		post salesRepresentatives = salesRepresentatives~ union {salesRepresentative};
 		
-		/**
-		 * Add a new group (already with at least one client) to the club
-		 */
-		public addGroup: String1 * Group * User==> ()
-		addGroup(newName, newGroup, user) == 
-				groups := groups munion {newName |-> newGroup}
-		pre newName <> "" and newName not in set dom groups and (isAtLeastEmployee(user))
-		post groups = groups~ munion {newName |-> newGroup};
 		
 		/**
-		 * Add a new group, by giving its name and its first client, to the club
+		 * Add a new group, by giving its name and its first clients, to the club
 		 */
-		public addEmptyGroupByName: String1 * Client * User ==> ()
-		addEmptyGroupByName(newName, client, user) == 
-				groups := groups munion {newName |-> new Group(client, self)}
-		pre newName <> "" and newName not in set dom groups and client in set clients and (isAtLeastEmployee(user))
+		public addGroup: String1 * set of Client * User ==> ()
+		addGroup(newName, newClients, user) == 
+				groups := groups munion {newName |-> new Group(newClients, self)}
+		pre newName <> "" and newName not in set dom groups and user in set getUsers() and
+			forall c in set newClients & c in set clients and (isAtLeastEmployee(user))
 		post groups = groups~ munion {newName |-> groups(newName)};
 		
 		/**
@@ -130,8 +128,9 @@ operations
 		pre 
 			trainer in set trainers and
 			client in set clients and
-			client not in set trainer.getTrainees()
-			and (isAtLeastEmployee(user));
+			client not in set trainer.getTrainees() and
+			user in set getUsers() and
+			(isAtLeastEmployee(user));
 			
 		public addGymClass: GymClass * User ==> ()
 		addGymClass(gymClass, user) == 
@@ -142,7 +141,7 @@ operations
 			for all attendee in set gymClass.getAttendees() do
 				attendee.addGymClass(gymClass);
 		)
-		pre (isAtLeastEmployee(user))
+		pre (isAtLeastEmployee(user)) and user in set getUsers() and gymClass not in set classes
 		post classes = classes~ union {gymClass};
 
 		public addTrainingSession: TrainingSession * User ==> ()
@@ -153,24 +152,25 @@ operations
 			trainingSession.getTrainer().addTrainingSession(trainingSession);
 			trainingSession.getTrainee().addTrainingSession(trainingSession);
 		)
-		pre (isAtLeastEmployee(user))
+		pre (isAtLeastEmployee(user)) and user in set getUsers() and trainingSession not in set trainingSessions
 		post trainingSessions = trainingSessions~ union {trainingSession};
 
 
-		public setUserAccess: User * User * Access ==> ()
-		setUserAccess(user, targetUser, access) == targetUser.setAccess(access)
+		public setUserAccess: User * Employee * Access ==> ()
+		setUserAccess(user, targetEmployee, access) == targetEmployee.setAccess(access)
 		pre
 			isOwner(user) and 
-			targetUser.getAccess() <> <Owner> and
+			targetEmployee.getAccess() <> <Owner> and
 			user in set getUsers() and 
-			targetUser in set getUsers();
+			access = <Owner> and
+			targetEmployee in set getEmployees();
 		
 		/**
 		 * Add newsletter to the club
 		 */
 		public addNewsletter: String1 * User==> ()
 		addNewsletter(message, user) == newsletter := message
-		pre isOwner(user);
+		pre isOwner(user) and user in set getUsers();
 				
 		/**
 		 * Send message to a client as club owner
@@ -182,14 +182,14 @@ operations
 			if newsletter <> nil then
 				receiver.receiveMessage(newsletter, user);
 		)
-		pre receiver in set clients and isOwner(user);
+		pre receiver in set clients and isOwner(user) and user in set getUsers();
 		
 		/**
 		 * Send message to an employee as club owner
 		 */
 		public sendMessageEmployee: String1 * Employee * User ==> ()
 		sendMessageEmployee(msg, receiver, user) == receiver.receiveMessage(msg, user)
-		pre receiver in set getEmployees() and isOwner(user);
+		pre receiver in set getEmployees() and isOwner(user) and user in set getUsers();
 		
 		/**
 		 * Send message to all clients as club owner
@@ -200,7 +200,7 @@ operations
 			for all client in set clients do
 				sendMessageClient(msg, client, user);
 		)
-		pre card clients > 0 and isOwner(user);
+		pre card clients > 0 and isOwner(user) and user in set getUsers();
 				
 		/**
 		 * Send message to all trainers as club owner
@@ -211,7 +211,7 @@ operations
 			for all trainer in set trainers do
 				trainer.receiveMessage(msg, user)		
 		)
-		pre card trainers > 0 and isOwner(user);
+		pre card trainers > 0 and isOwner(user) and user in set getUsers();
 		
 		/**
 		 * Send message to all sales representatives
@@ -222,7 +222,7 @@ operations
 			for all salesRepresentative in set salesRepresentatives do
 				salesRepresentative.receiveMessage(msg, user)		
 		)
-		pre card salesRepresentatives > 0 and isOwner(user);
+		pre card salesRepresentatives > 0 and isOwner(user) and user in set getUsers();
 		
 		-- GROUPS
 		
@@ -231,63 +231,65 @@ operations
 		 */
 		public sendMessageToGroup: String1 * String1 * User ==> ()
 		sendMessageToGroup(msg, groupName, user) == groups(groupName).sendMessage(user, msg)
-		pre groupName in set dom groups and (user in set clients or isOwner(user));
+		pre groupName in set dom groups and (user in set clients or isOwner(user)) and user in set getUsers();
 		
 		/**
 		 * Send offer to a group
 		 */
 		public sendOfferToGroup : String1 * String1 * User ==> ()
 		sendOfferToGroup(offer, groupName, user) == groups(groupName).sendOffer(offer)
-		pre groupName in set dom groups and (isAtLeastEmployee(user));
+		pre groupName in set dom groups and (isAtLeastEmployee(user)) and user in set getUsers();
 		
 		/**
 		 * Add client to a group
 		 */
 	 	public addGroupClient: String1 * Client * User ==> ()
 	 	addGroupClient(groupName, client, user) == groups(groupName).addClient(client)
-	 	pre client in set clients and groupName in set dom groups and isOwner(user);
+	 	pre client in set clients and groupName in set dom groups and isOwner(user) and user in set getUsers();
  
-  	/**
+  		/**
 		 * Remove client from a group
 		 */
 	 	public removeGroupClient: String1 * Client * User ==> ()
 	 	removeGroupClient(groupName, client, user) == groups(groupName).removeClient(client)
-		 pre client in set clients and groupName in set dom groups and isOwner(user);
+		 pre client in set clients and groupName in set dom groups and isOwner(user) and user in set getUsers();
 		 
 		-- INVOICE
 
+		/**
+		 * Add an invoice of a type to the club
+		 */
 		public addInvoice: Client * set of Payment * Date * Hour * String1 * User ==> ()
 		addInvoice(client, payments, date, hour, type, user)==
 		(
 			invoices := invoices union {new Invoice(self, payments, date, hour, type, false, client)};
 		)
-		pre isAtLeastEmployee(user) and card payments >= 1 and not exists p1, p2 in set payments & p1.getClient() <> p2.getClient();
+		pre isAtLeastEmployee(user) and card payments >= 1 and 
+			not exists p1, p2 in set payments & p1.getClient() <> p2.getClient() and user in set getUsers();
 
+		/**
+		 * Add an invoice with all active payments of a client of a type to the club
+		 */
 		public addInvoiceWithAllActivePayments: Client * Date * Hour * String1 * User ==> ()
 		addInvoiceWithAllActivePayments(client, date, hour, type, user)==
 		(
 			invoices := invoices union {new Invoice(self, client.getPaymentsOfGivenType(type), date, hour, type, true, client)};
 		)
-		pre isAtLeastEmployee(user);
+		pre isAtLeastEmployee(user) and user in set getUsers();
 
-
-		public addPaymentToInvoice: Invoice * Payment * User==> ()
-		addPaymentToInvoice(invoice, payment, user) == invoice.addPayment(payment)
-		pre isAtLeastEmployee(user);
-
-
+		/**
+		 * Add multiple payments to an invoice
+		 */
 		public addPaymentToInvoice: Invoice * set of Payment * User==> ()
 		addPaymentToInvoice(invoice, payments, user) == invoice.addPayment(payments)
-		pre isAtLeastEmployee(user);
+		pre isAtLeastEmployee(user) and user in set getUsers();
 
-		public removePaymentFromInvoice: Invoice * Payment * User==> ()
-		removePaymentFromInvoice(invoice, payment, user) == invoice.removePayment(payment)
-		pre isAtLeastEmployee(user);
-
-
+		/**
+		 * Remove multiple payments from an invoice
+		 */
 		public removePaymentFromInvoice: Invoice * set of Payment * User==> ()
 		removePaymentFromInvoice(invoice, payments, user) == invoice.removePayment(payments)
-		pre isAtLeastEmployee(user);
+		pre isAtLeastEmployee(user) and user in set getUsers();
 	 
 	 	-- CRM
 	 
@@ -296,35 +298,35 @@ operations
 		 */
 		public addLeadToCRM: Lead * User==> ()
 		addLeadToCRM(lead, user) == crm.addLead(lead)
-		pre isAtLeastEmployee(user);
+		pre isAtLeastEmployee(user) and user in set getUsers();
 
 		/**
 		 * Add a lead to the crm attrubting sales representative
 		 */
-		public addLeadToCRM: Lead * SalesRepresentative * User ==> ()
-		addLeadToCRM(lead, sr, user) == crm.addLeadWithSR(lead, sr)
-		pre sr in set salesRepresentatives and isAtLeastEmployee(user);
+		public addLeadSRToCRM: Lead * SalesRepresentative * User ==> ()
+		addLeadSRToCRM(lead, sr, user) == crm.addLeadWithSR(lead, sr)
+		pre sr in set salesRepresentatives and isAtLeastEmployee(user) and user in set getUsers();
 
 		/**
 		 * Attribute a sales representative to a lead
 		 */
 		public setCRMLeadSR: Lead * SalesRepresentative * User ==> ()
 		setCRMLeadSR(lead, sr, user) == crm.setLeadSR(lead, sr)
-		pre sr in set salesRepresentatives and isAtLeastEmployee(user);
+		pre sr in set salesRepresentatives and isAtLeastEmployee(user) and user in set getUsers();
 		
 		/**
 		 * Remove a lead from  a sales representative
 		 */
-		public removeSRLead: Lead * SalesRepresentative * User ==> ()
-		removeSRLead(lead, sr, user) == sr.removeLead(lead)
-		pre sr in set salesRepresentatives and isAtLeastEmployee(user);
+		public removeLeadSR: Lead * SalesRepresentative * User ==> ()
+		removeLeadSR(lead, sr, user) == sr.removeLead(lead)
+		pre sr in set salesRepresentatives and isAtLeastEmployee(user) and user in set getUsers();
 
 		/**
 		 * Remove a lead from crm
 		 */
 		public removeCRMLead: Lead * User==> ()
 		removeCRMLead(lead, user) == crm.removeLead(lead)
-		pre isAtLeastEmployee(user);
+		pre isAtLeastEmployee(user) and user in set getUsers();
 
 		/**
 		 * Transforms a lead into a client
@@ -336,8 +338,11 @@ operations
 			crm.removeLead(lead);
 			addClient(client, user);
 		)
-		pre isAtLeastEmployee(user);
-  
+		pre isAtLeastEmployee(user) and user in set getUsers();
+
+		/**
+		 * Get report on club statistics
+		 */
 		public getReportOnClubStatistics: User ==> ()
 		getReportOnClubStatistics(user) ==
 		(
@@ -355,28 +360,32 @@ operations
 			IO`println("");
 			IO`println("************************************");
 		)
-		pre isAtLeastEmployee(user);
+		pre isAtLeastEmployee(user) and user in set getUsers();
+
+		/**
+		 * Get report on client activity
+		 */
 		
-		public getClientActivity: String_ * User ==> ()
-		getClientActivity(clientName, user) ==
-		(
-			let c in set getClients() be st c.getName() = clientName in c.getActivity();
-		)
-		pre isAtLeastEmployee(user) and exists c in set getClients() & c.getName() = clientName;
+		public getClientActivity: Client * User ==> ()
+		getClientActivity(client, user) == client.getActivity()
+		pre isAtLeastEmployee(user) and client in set clients and user in set getUsers();
 
 		-- EMPLOYEES
 
-		public getEmployeeActivity: String_ * bool * User ==> ()
-		getEmployeeActivity(employeeName, showAllTasks, user) ==
-		(
-			let e in set getEmployees() be st e.getName() = employeeName in e.getActivity(showAllTasks);
-		)
-		pre isAtLeastEmployee(user) and exists e in set getEmployees() & e.getName() = employeeName;
+		/**
+		 * Get employee activity
+		 */
+		public getEmployeeActivity: Employee * bool * User ==> ()
+		getEmployeeActivity(employee, showAllTasks, user) == employee.getActivity(showAllTasks)
+		pre isAtLeastEmployee(user) and employee in set getEmployees() and user in set getUsers();
 		
+		/**
+		 * Add a task to an employee
+		 */
 		public addTaskToEmployee: Employee * User * Task ==> ()
 		addTaskToEmployee(employee, user, task) == employee.addTask(task) 
-		pre employee in set getEmployees() and isOwner(user);	
-
+		pre employee in set getEmployees() and isOwner(user) and user in set getUsers();
+		
 		-- PRODUCTS
 
 		public addProduct: Product * nat ==> ()
@@ -470,34 +479,52 @@ operations
 		post RESULT = clients union trainers union salesRepresentatives;
 
 		/**
-		 * Gets client by name
+		 * Gets clients by name
 		 * 
-		 * @return Client
+		 * @return set of Client
 		 */
-		public pure getClientByName : String_ ==> Client
+		public pure getClientByName : String_ ==> set of Client
 		getClientByName(clientName) == 
-			let c in set getClients() be st c.getName() = clientName in return c
-		post exists c in set getClients() & c.getName() = clientName;
+		(
+			dcl retClients: set of Client := {};
+			for all c in set clients do
+			 	if(c.getName() = clientName) then
+			 		retClients := retClients union {c};
+			 return retClients;
+		)
+		pre clients <> {};
 		
 		/**
-		 * Gets employee by name
+		 * Gets employees by name
 		 * 
 		 * @return Employee
 		 */
-		public pure getEmployeeByName : String_ ==> Employee
+		public pure getEmployeeByName : String_ ==> set of Employee
 		getEmployeeByName(employeeName) == 
-			let e in set getEmployees() be st e.getName() = employeeName in return e
-		post exists e in set getEmployees() & e.getName() = employeeName;
+			(
+			dcl retEmployees: set of Employee := {};
+			for all e in set getEmployees() do
+			 	if(e.getName() = employeeName) then
+			 		retEmployees := retEmployees union {e};
+			 return retEmployees;
+		)
+		pre getEmployees() <> {};
 
 		/**
-		 * Gets user by name
+		 * Gets users by name
 		 * 
 		 * @return User
 		 */
-		public pure getUserByName : String_ ==> User
+		public pure getUserByName : String_ ==> set of User
 		getUserByName(userName) == 
-			let u in set getUsers() be st u.getName() = userName in return u
-		post exists u in set getUsers() & u.getName() = userName;
+		(
+			dcl retUsers: set of User := {};
+			for all u in set getUsers() do
+			 	if(u.getName() = userName) then
+			 		retUsers := retUsers union {u};
+			 return retUsers;
+		)
+		pre getUsers() <> {};
 
 		/**
 		 * Gets the club classes
@@ -567,10 +594,10 @@ operations
 		 * 
 		 * @return map Date to seq of Task
 		 */
-		public pure getEmployeeCalendar: String_ ==> map Date to seq of Task
-		getEmployeeCalendar(employeeName) ==
-			return getEmployeeByName(employeeName).getCalendar().getTasks()
-		post RESULT = getEmployeeByName(employeeName).getCalendar().getTasks();
+		public pure getEmployeeCalendar: Employee ==> map Date to seq of Task
+		getEmployeeCalendar(employee) ==
+			return employee.getCalendar().getTasks()
+		post RESULT = employee.getCalendar().getTasks();
 
 
 		/**
@@ -578,10 +605,10 @@ operations
 		 * 
 		 * @return seq of Task
 		 */
-		public getEmployeeTasksForGivenDate: String_ * Date ==> seq of Task
-		getEmployeeTasksForGivenDate(employeeName, date) == 
-			return getEmployeeByName(employeeName).getCalendar().getTasksForGivenDate(date)
-		post RESULT = getEmployeeByName(employeeName).getCalendar().getTasksForGivenDate(date);
+		public getEmployeeTasksForGivenDate: Employee * Date ==> seq of Task
+		getEmployeeTasksForGivenDate(employee, date) == 
+			return employee.getCalendar().getTasksForGivenDate(date)
+		post RESULT = employee.getCalendar().getTasksForGivenDate(date);
  
  functions
  	
@@ -590,4 +617,13 @@ operations
 		
 	public static isOwner(user: User) res:bool ==
 		user.getAccess() = <Owner>;
+
+	public static overlaps: Hour * Hour * Hour * Hour-> bool
+	overlaps(startHour1, endHour1, startHour2, endHour2) ==
+		if ((startHour1 >= startHour2 and startHour1 < endHour2) or
+			   (endHour1 > startHour2 and endHour1 <= endHour2) or
+			   (startHour1 <= startHour2 and endHour1 >= endHour2)) then
+			   true
+			else
+				false;
 end Club
