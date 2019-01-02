@@ -7,7 +7,6 @@ instance variables
  	private offers: seq of String1 := [];
 	private club: [Club];
 
-	-- There must be always (at least) one client in the group
 	inv card clients >= 1;
 
 operations

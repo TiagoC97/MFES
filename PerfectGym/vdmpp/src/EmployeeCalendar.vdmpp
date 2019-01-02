@@ -47,6 +47,9 @@ operations
  	 	
 functions
 
+	/**
+	 * Checks if there are any tasks that overlap 
+	 */
 	public static overlapsTasks(tasks: seq of Task) res:bool ==
 		exists i, j in set inds tasks & i <> j and overlapsTask(tasks(i).getStartHour(), tasks(i).getEndHour(), tasks(j).getStartHour(), tasks(j).getEndHour());
 		

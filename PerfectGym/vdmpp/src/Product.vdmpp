@@ -7,17 +7,15 @@ instance variables
 	private name : String_;
 	private value : rat;
 	private quantity: nat;
-	private club: Club;
 
 	inv quantity >= 0;
 operations
-	public Product: String_ * real * nat * Club==> Product
- 	Product(prod_name, prod_value, prod_quantity, newClub) == 
+	public Product: String_ * rat * nat ==> Product
+ 	Product(prod_name, prod_value, prod_quantity) == 
  	(
  		name := prod_name;
 		value := prod_value;
 		quantity := prod_quantity;
-		club := newClub;
 		return self;
  	)
 	post name = prod_name and value = prod_value and quantity = prod_quantity;
@@ -59,14 +57,5 @@ operations
 	public pure getQuantity: () ==> rat
 	getQuantity() == return quantity
 	post RESULT = quantity;
-
-	/**
-	 * Gets the product club
-	 * 
-	 * @return club
-	 */
-	public pure getClub: () ==> Club
- 	getClub() == return club
- 	post RESULT = club;
 
 end Product

@@ -121,10 +121,10 @@ operations
 		 * Add a client of personal training to a trainer
 		 */
 		public addPersonalTraining: Trainer * Client * rat * User ==> ()
-		addPersonalTraining(trainer, client, fee, user) ==
+		addPersonalTraining(trainer, client, newFee, user) ==
 		(
 			trainer.addTrainee(client);
-			client.addTrainer(trainer, fee);
+			client.addTrainer(trainer, newFee);
 		)
 		pre
 			trainer in set trainers and
@@ -133,6 +133,9 @@ operations
 			user in set getUsers() and
 			(isAtLeastEmployee(user));
 
+		/**
+		 * Add a new gym class to the club
+		 */
 		public addGymClass: String1 * String1 * Trainer * DayOfWeek * Hour * Hour * Date * User ==> ()
 		addGymClass(description, className, trainer, dayOfWeek, startHour, endHour, date, user) ==
 		(
@@ -147,6 +150,10 @@ operations
 		post not exists c1, c2 in set classes & c1 <> c2 and c1.getTrainer() = c2.getTrainer() and c1.getDate() = c2.getDate() and
 			overlaps(c1.getStartHour(), c1.getEndHour(), c2.getStartHour(), c2.getEndHour());
 
+			
+		/**
+		 * Add a new training session to the club
+		 */
 		public addTrainingSession: String1 * Trainer * Client * DayOfWeek * Hour * Hour * Date * User ==> ()
 		addTrainingSession(newDescription, newTrainer, client, newDayOfWeek, newStartHour, newEndHour, newDate, user) ==
 		(
@@ -394,13 +401,19 @@ operations
 
 		-- PRODUCTS
 
-		public addProduct: Product * nat ==> ()
-		addProduct(prod, qtt) ==
+		public addProduct: String_ * rat * nat ==> ()
+		addProduct(prod_name, prod_value, qtt) ==
 		(
-			prod.addQuantity(qtt);
+			dcl prod : Product := new Product(prod_name, prod_value, qtt);
 			products := products union {prod};
 		)
-		pre prod not in set products;
+		pre prod_value > 0 and qtt > 0
+		post not exists p1, p2 in set products &
+			p1 <> p2 and p1.getName() = p2.getName();
+
+		public addStockOfProduct: Product * nat ==> ()
+		addStockOfProduct(prod, qtt)== prod.addQuantity(qtt)
+		pre qtt > 0;
 
 		public removeProduct: Product ==> ()
 		removeProduct(prod) ==
@@ -481,8 +494,8 @@ operations
 		 * @return set of User
 		 */
 		public pure getUsers : () ==> set of User
-		getUsers() == return clients union trainers union salesRepresentatives
-		post RESULT = clients union trainers union salesRepresentatives;
+		getUsers() == return {clubOwner} union clients union trainers union salesRepresentatives
+		post RESULT = {clubOwner} union clients union trainers union salesRepresentatives;
 
 		/**
 		 * Gets clients by name

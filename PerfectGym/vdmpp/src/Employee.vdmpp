@@ -17,7 +17,9 @@ operations
  		User(newName, <Employee>, newAge, newGender, newNationality);
 	);
 
- 	
+ 	/**
+	 * Add task to employee
+	 */
  	public addTask: Task ==> ()
  	addTask(task) == calendar.addTask(task);
 	 

@@ -16,7 +16,10 @@ operations
  		return self
  	)
  	post club = newClub and leads = {|->};
- 	
+	 
+	 /**
+	  * Add lead
+	  */
  	public addLead: Lead ==> ()
 	addLead(lead) == 
 	(
@@ -25,7 +28,10 @@ operations
 	)
  	pre lead not in set dom leads
  	post leads = leads~ munion {lead |-> false};
- 	
+	 
+	/**
+	 * Add lead with sales representative
+	 */
  	public addLeadWithSR: Lead * SalesRepresentative ==> ()
 	 addLeadWithSR(lead, sr) ==
 	 (
@@ -34,7 +40,10 @@ operations
 	 ) 
  	pre lead not in set dom leads and sr in set club.getSalesRepresentatives()
  	post leads = leads~ munion {lead |-> false};
- 	
+	 
+	/**
+	 * Set lead with sales representative
+	 */
  	public setLeadSR: Lead * SalesRepresentative ==> ()
  	setLeadSR(lead, sr) == 
  	(
@@ -46,6 +55,9 @@ operations
  	)
 	 pre lead in set dom leads;
 	 
+	/**
+	 * Remove lead
+	 */
 	public removeLead: Lead ==> ()
 	removeLead(lead) == 
 	(
