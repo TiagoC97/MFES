@@ -5,7 +5,6 @@ instance variables
 	private clients: set of Client:= {};
  	private groupInbox: map String1 to seq of String1 := {|->};
  	private offers: seq of String1 := [];
-	private club: [Club];
 
 	inv card clients >= 1;
 
@@ -14,14 +13,13 @@ operations
 	/**
 	 * Group constructor
 	 */
- 	public Group: set of Client * Club  ==> Group
- 	Group(newClients, newClub) ==
+ 	public Group: set of Client  ==> Group
+ 	Group(newClients) ==
 	(
  		clients := newClients;
- 		club := newClub;
  		return self
  	)
- 	post clients = newClients and groupInbox = {|->} and offers = [] and club = newClub;
+ 	post clients = newClients and groupInbox = {|->} and offers = [];
 
 	 /**
 	  * Add a new client to the group
@@ -109,14 +107,5 @@ operations
  	public pure getClients: () ==> set of Client
  	getClients() == return clients
 	post RESULT = clients;
-
-	/**
-	 * Gets the group club
-	 *
-	 * @return club
-	 */
-	public pure getClub: () ==> Club
- 	getClub() == return club
-	 post RESULT = club;
 
 end Group

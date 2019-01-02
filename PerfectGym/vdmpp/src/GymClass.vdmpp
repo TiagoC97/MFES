@@ -8,16 +8,20 @@ instance variables
 	private attendees: set of Client := {};
 	
 operations
+	/**
+	 * GymClass constructor
+	 */
 	public GymClass: String1 * String1 * Trainer * DayOfWeek * Hour * Hour * Date * Club==> GymClass
  	GymClass(newDescription, className, newTrainer, newDayOfWeek, newStartHour, newEndHour, newDate, newClub) == 
  	(
 		name := className;
 		Session(newDescription, newTrainer, newDayOfWeek, newStartHour, newEndHour, newDate, newClub);
  	)
- 	pre name <> ""
 	post name = className;
 	 	
-	
+	/**
+	 * Add an attendee to this class
+	 */
 	public addAttendee: Client ==> ()
 	addAttendee(client) == 
 	(

@@ -10,7 +10,7 @@ operations
 	/**
 	 * Employee constructor
 	 */
-	public Employee: String_ * nat * Gender * String1 ==> Employee
+	public Employee: String1 * nat * Gender * String1 ==> Employee
  	Employee(newName, newAge, newGender, newNationality) == 
  	(
  		calendar:= new EmployeeCalendar();

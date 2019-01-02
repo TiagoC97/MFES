@@ -6,7 +6,7 @@ values
 instance variables
 -- TODO Define instance variables here
 operations
-	public Owner: String_ * nat * Gender * String1 ==> Owner
+	public Owner: String1 * nat * Gender * String1 ==> Owner
  	Owner(newName, newAge, newGender, newNationality) == User(newName,  <Owner>, newAge, newGender, newNationality);
 
 end Owner

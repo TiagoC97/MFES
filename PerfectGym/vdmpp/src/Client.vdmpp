@@ -22,7 +22,7 @@ operations
 	/**
 	 * Client constructor
 	 */
-	public Client: String_ * nat * Gender * String1 ==> Client
+	public Client: String1 * nat * Gender * String1 ==> Client
 	 Client(newName, newAge, newGender, newNationality) == 
 	 (
 	 	trainer := nil;
@@ -266,7 +266,7 @@ operations
 			dcl numClasses: nat := card classes;
 			dcl numTrainingSessiosn: nat := card trainingSessions;
 			dcl numAttendences: nat := card gymAttendences;
-			dcl personalTrainer: String_ := "None";
+			dcl personalTrainer: String1 := "None";
 			
 			if trainer <> nil then
 				personalTrainer:= trainer.getName();

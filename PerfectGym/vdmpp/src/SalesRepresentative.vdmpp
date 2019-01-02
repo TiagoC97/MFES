@@ -6,7 +6,7 @@ values
 instance variables
 	private leads: set of Lead := {};
 operations
-	public SalesRepresentative: String_ * nat * Gender * String1 ==> SalesRepresentative
+	public SalesRepresentative: String1 * nat * Gender * String1 ==> SalesRepresentative
  	SalesRepresentative(newName, newAge, newGender, newNationality) == Employee(newName, newAge, newGender, newNationality)
  	post leads = {};
  	

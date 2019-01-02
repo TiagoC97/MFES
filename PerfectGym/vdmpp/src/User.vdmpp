@@ -1,6 +1,6 @@
 class User
 types
-	public String_ = seq of char;
+	
 	public String1 = seq1 of char;
 	public Access = <Owner> | <Employee> | <Client>;
 	public Date = DateAndHour`Date;
@@ -9,7 +9,7 @@ types
 
 -- TODO Define values here
 instance variables
-	protected name: String_;
+	protected name: String1;
 	public static curUserID : int := 0;
 	protected id : int := curUserID;
 	protected inbox: map String1 to seq of String1 := {|->};
@@ -21,7 +21,7 @@ instance variables
 
 operations
 
-	public User: String_ * Access * nat * Gender * String1 ==> User
+	public User: String1 * Access * nat * Gender * String1 ==> User
  	User(newName, acc, newAge, newGender, newNationality) == (
  		club := nil;
  		name := newName;
@@ -32,7 +32,7 @@ operations
  		access := acc;
  		return self
  	)
-	pre newName <> "" and newAge >= 12
+	pre newAge >= 12
  	post name = newName and
 		 age = newAge and
 		 gender = newGender and
@@ -129,9 +129,9 @@ operations
 	/**
 	 * Gets the user name
 	 *
-	 * @return String_
+	 * @return String1
 	 */
-	public pure getName : () ==> String_
+	public pure getName : () ==> String1
 	getName() == return name
 	post RESULT = name;
 

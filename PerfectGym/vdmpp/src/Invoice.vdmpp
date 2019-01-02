@@ -1,14 +1,12 @@
 class Invoice
 types
-    public String_ = seq of char;
 	public String1 = seq1 of char;
 	public Date = DateAndHour`Date;
     public Hour = DateAndHour`Hour;
 values
     
 instance variables
-  
-  private club: Club;
+
 	private payments: set of Payment := {};
 	private totalAmount: rat := 0;
 	private date: Date;
@@ -24,11 +22,10 @@ operations
     /**
 	 * Invoice constructor
 	 */
-	public Invoice: Club * set of Payment * Date * Hour * String1 * bool * Client ==> Invoice
- 	Invoice(newClub, newPayments, newDate, newHour, newType, allActivePayments, newClient) == 
+	public Invoice: set of Payment * Date * Hour * String1 * bool * Client ==> Invoice
+ 	Invoice(newPayments, newDate, newHour, newType, allActivePayments, newClient) == 
  	(
 
- 		club:= newClub;
 		payments:= newPayments;
 		date := newDate;
 		hour := newHour;
@@ -63,7 +60,7 @@ operations
  		return self;
     )
 	pre card payments >= 1
-	post club = newClub and payments = newPayments and date = newDate and hour = newHour and 
+	post payments = newPayments and date = newDate and hour = newHour and 
 		type = newType and client = newClient;
 
 
@@ -90,15 +87,6 @@ operations
 	pre payments <> {} and totalAmount > 0 and card newPayments >= 1;
 
 	-- GETTERS
-
-	/**
-	 * Gets the invoice club
-	 * 
-	 * @return club
-	 */
-	public pure getClub: () ==> Club
- 	getClub() == return club
-	post RESULT = club;
 	 
 	/**
 	 * Gets the invoice payments

@@ -1,7 +1,6 @@
 class Club
 types
 
-	public String_= seq of char;
 	public String1 = seq1 of char;
 	public Access = <Owner> | <Employee> | <User>;
 	public Date = DateAndHour`Date;
@@ -10,7 +9,7 @@ types
 
 instance variables
 
-	private name: String_:= "";
+	private name: String1:= "";
 	private newsletter: [String1];
 
 	private clients: set of Client := {};
@@ -44,7 +43,7 @@ operations
 	/**
 	 * Club constructor
 	 */
- 	public Club: String_ * Owner * rat ==> Club
+ 	public Club: String1 * Owner * rat ==> Club
  	Club(newName, owner, newFee) ==
 	(
 		newsletter := nil;
@@ -55,7 +54,7 @@ operations
 		fee := newFee;
  		return self
 	)
-	pre newName <> "" and newFee > 0
+	pre newFee > 0
  	post
  		name = newName and
  		newsletter = nil and
@@ -112,8 +111,8 @@ operations
 		 */
 		public addGroup: String1 * set of Client * User ==> ()
 		addGroup(newName, newClients, user) ==
-				groups := groups munion {newName |-> new Group(newClients, self)}
-		pre newName <> "" and newName not in set dom groups and user in set getUsers() and
+				groups := groups munion {newName |-> new Group(newClients)}
+		pre newName not in set dom groups and user in set getUsers() and
 			forall c in set newClients & c in set clients and (isAtLeastEmployee(user))
 		post groups = groups~ munion {newName |-> groups(newName)};
 
@@ -275,7 +274,7 @@ operations
 		public addInvoice: Client * set of Payment * Date * Hour * String1 * User ==> ()
 		addInvoice(client, payments, date, hour, type, user)==
 		(
-			invoices := invoices union {new Invoice(self, payments, date, hour, type, false, client)};
+			invoices := invoices union {new Invoice(payments, date, hour, type, false, client)};
 		)
 		pre isAtLeastEmployee(user) and card payments >= 1 and
 			not exists p1, p2 in set payments & p1.getClient() <> p2.getClient() and user in set getUsers();
@@ -286,7 +285,7 @@ operations
 		public addInvoiceWithAllActivePayments: Client * Date * Hour * String1 * User ==> ()
 		addInvoiceWithAllActivePayments(client, date, hour, type, user)==
 		(
-			invoices := invoices union {new Invoice(self, client.getPaymentsOfGivenType(type), date, hour, type, true, client)};
+			invoices := invoices union {new Invoice( client.getPaymentsOfGivenType(type), date, hour, type, true, client)};
 		)
 		pre isAtLeastEmployee(user) and user in set getUsers();
 
@@ -401,7 +400,7 @@ operations
 
 		-- PRODUCTS
 
-		public addProduct: String_ * rat * nat ==> ()
+		public addProduct: String1 * rat * nat ==> ()
 		addProduct(prod_name, prod_value, qtt) ==
 		(
 			dcl prod : Product := new Product(prod_name, prod_value, qtt);
@@ -430,7 +429,7 @@ operations
 		 *
 		 * @return name
 		 */
-		public pure getName : () ==> String_
+		public pure getName : () ==> String1
 		getName() == return name
 		post RESULT = name;
 
@@ -502,7 +501,7 @@ operations
 		 *
 		 * @return set of Client
 		 */
-		public pure getClientByName : String_ ==> set of Client
+		public pure getClientByName : String1 ==> set of Client
 		getClientByName(clientName) ==
 		(
 			dcl retClients: set of Client := {};
@@ -518,7 +517,7 @@ operations
 		 *
 		 * @return Employee
 		 */
-		public pure getEmployeeByName : String_ ==> set of Employee
+		public pure getEmployeeByName : String1 ==> set of Employee
 		getEmployeeByName(employeeName) ==
 			(
 			dcl retEmployees: set of Employee := {};
@@ -534,7 +533,7 @@ operations
 		 *
 		 * @return User
 		 */
-		public pure getUserByName : String_ ==> set of User
+		public pure getUserByName : String1 ==> set of User
 		getUserByName(userName) ==
 		(
 			dcl retUsers: set of User := {};

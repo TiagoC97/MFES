@@ -1,13 +1,13 @@
 class Lead
 
 types
-	public String_ = seq of char;
+	
 	public String1 = seq1 of char;
 	public Gender = <Male> | <Female>;
 values
 	
 instance variables
-	private name: String_;
+	private name: String1;
 	private club: [Club];
 	private age: nat;
 	private gender: Gender;
@@ -16,7 +16,7 @@ instance variables
 	public id : int := curLeadID;
 
 operations
-	public Lead: String_ * nat * Gender * String1 ==> Lead
+	public Lead: String1 * nat * Gender * String1 ==> Lead
 	Lead(newName, newAge, newGender, newNationality) == 
 	(
 		name := newName; 
@@ -48,7 +48,7 @@ operations
 	 * 
 	 * @return name
 	 */
-	public pure getName: () ==> String_
+	public pure getName: () ==> String1
  	getName() == return name
 	post RESULT = name;
 

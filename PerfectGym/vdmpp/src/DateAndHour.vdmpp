@@ -61,6 +61,16 @@ functions
 	CreateDate(y, m, d) == 
 		y * 10000 + m * 100 + d
 	pre IsValidDate(y, m, d);
+
+	/**
+	* Creates a new instance of an Hour
+	* 
+	* @return Hour
+	*/
+	public static CreateHour: nat * nat -> Hour
+	CreateHour(h, m) == 
+		 h * 100 + m
+	pre IsValidHour(h, m);
  
 	/**
 	* Gets the year of a given date

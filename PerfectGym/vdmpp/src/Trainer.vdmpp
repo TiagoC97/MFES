@@ -1,6 +1,6 @@
 class Trainer is subclass of Employee
 types
-	public String_ = seq of char;
+	
 values
 -- TODO Define values here
 instance variables	
@@ -10,7 +10,7 @@ instance variables
 
 operations
 
-	public Trainer: String_ * nat * Gender * String1  ==> Trainer
+	public Trainer: String1 * nat * Gender * String1  ==> Trainer
  	Trainer(newName, newAge, newGender, newNationality) == Employee(newName, newAge, newGender, newNationality)
  	post trainees = {} and classes = {} and trainingSessions = {};
 

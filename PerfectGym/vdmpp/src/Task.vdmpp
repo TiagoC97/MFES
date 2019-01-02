@@ -1,6 +1,6 @@
 class Task
 types
-	public String_ = seq of char;
+	
 	public String1 = seq1 of char;
 	public Date = DateAndHour`Date;
 	public Hour = DateAndHour`Hour;

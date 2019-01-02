@@ -12,10 +12,16 @@ instance variables
 	
 operations
 	
+	/**
+	 * EmployeeCalendar constructor
+	 */
 	public EmployeeCalendar: ()  ==> EmployeeCalendar
  	EmployeeCalendar() == return self
  	post calendar = {|->};
- 	
+	 
+	/**
+	 * Add a task to the calendar
+	 */
  	public addTask: Task ==> ()
  	addTask(task) ==
  	(
