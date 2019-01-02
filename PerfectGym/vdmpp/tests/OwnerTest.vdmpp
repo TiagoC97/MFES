@@ -11,7 +11,7 @@ operations
 			
 		assertEqual("Rui", owner1.getName());
 			
-		IO`println("\nFinalizing Owner Tests");
+		IO`println("Finalizing Owner Tests");
 	);
 	
 end OwnerTest

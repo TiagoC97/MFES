@@ -21,7 +21,7 @@ operations
 
 		assertEqual({"Bombados"|->club1, "PuxaFerro"|->club2}, perfectGym1.getClubs());
 
-		IO`println("\nFinalizing PerfectGym Tests");
+		IO`println("Finalizing PerfectGym Tests");
 	);
 
 end PerfectGymTest

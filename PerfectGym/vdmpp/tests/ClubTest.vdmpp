@@ -71,7 +71,7 @@ operations
 		assertEqual(owner1, club1.getOwner());
 		assertEqual("Bombados", club1.getName());
 			
-		IO`println("\nFinalizing Club Tests");
+		IO`println("Finalizing Club Tests");
 	);
 	
 end ClubTest

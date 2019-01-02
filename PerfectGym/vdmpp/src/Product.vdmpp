@@ -11,7 +11,7 @@ instance variables
 	inv quantity >= 0;
 operations
 	public Product: String_ * rat * nat ==> Product
- 	Product(prod_name, prod_value, prod_quantity) == 
+ 	Product(prod_name, prod_value, prod_quantity) ==
  	(
  		name := prod_name;
 		value := prod_value;
@@ -33,7 +33,7 @@ operations
 
 	/**
 	 * Gets the product name
-	 * 
+	 *
 	 * @return name
 	 */
 	public pure getName: () ==> String_
@@ -42,7 +42,7 @@ operations
 
 	/**
 	 * Gets the product value
-	 * 
+	 *
 	 * @return value
 	 */
 	public pure getValue: () ==> rat
@@ -51,7 +51,7 @@ operations
 
 	/**
 	 * Gets the product quantity
-	 * 
+	 *
 	 * @return quantity
 	 */
 	public pure getQuantity: () ==> rat
