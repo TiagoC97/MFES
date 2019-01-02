@@ -6,6 +6,7 @@ types
 	public Access = <Owner> | <Employee> | <User>;
 	public Date = DateAndHour`Date;
 	public Hour= DateAndHour`Hour;
+	public DayOfWeek = DateAndHour`DayOfWeek;
 
 instance variables
 
@@ -132,28 +133,33 @@ operations
 			user in set getUsers() and
 			(isAtLeastEmployee(user));
 
-		public addGymClass: GymClass * User ==> ()
-		addGymClass(gymClass, user) ==
+		public addGymClass: String1 * String1 * Trainer * DayOfWeek * Hour * Hour * Date * User ==> ()
+		addGymClass(description, className, trainer, dayOfWeek, startHour, endHour, date, user) ==
 		(
+			dcl gymClass: GymClass := new GymClass(description, className, trainer, dayOfWeek, startHour, endHour, date, self);
 			classes := classes union {gymClass};
 			gymClass.getTrainer().addTask(gymClass);
 			gymClass.getTrainer().addGymClass(gymClass);
 			for all attendee in set gymClass.getAttendees() do
 				attendee.addGymClass(gymClass);
 		)
-		pre (isAtLeastEmployee(user)) and user in set getUsers() and gymClass not in set classes
-		post classes = classes~ union {gymClass};
+		pre (isAtLeastEmployee(user)) and user in set getUsers() 
+		post not exists c1, c2 in set classes & c1 <> c2 and c1.getTrainer() = c2.getTrainer() and c1.getDate() = c2.getDate() and
+			overlaps(c1.getStartHour(), c1.getEndHour(), c2.getStartHour(), c2.getEndHour());
 
-		public addTrainingSession: TrainingSession * User ==> ()
-		addTrainingSession(trainingSession, user) ==
+		public addTrainingSession: String1 * Trainer * Client * DayOfWeek * Hour * Hour * Date * User ==> ()
+		addTrainingSession(newDescription, newTrainer, client, newDayOfWeek, newStartHour, newEndHour, newDate, user) ==
 		(
+			dcl trainingSession: TrainingSession := new TrainingSession(newDescription, newTrainer, client, newDayOfWeek, newStartHour, newEndHour, newDate, self);
 			trainingSessions := trainingSessions union {trainingSession};
 			trainingSession.getTrainer().addTask(trainingSession);
 			trainingSession.getTrainer().addTrainingSession(trainingSession);
 			trainingSession.getTrainee().addTrainingSession(trainingSession);
 		)
-		pre (isAtLeastEmployee(user)) and user in set getUsers() and trainingSession not in set trainingSessions
-		post trainingSessions = trainingSessions~ union {trainingSession};
+		pre (isAtLeastEmployee(user)) and user in set getUsers() 
+		post not exists t1, t2 in set trainingSessions &
+			t1 <> t2 and (t1.getTrainer() = t2.getTrainer() or t1.getTrainee() = t2.getTrainee()) and
+			t1.getDate() = t2.getDate() and overlaps(t1.getStartHour(), t1.getEndHour(), t2.getStartHour(), t2.getEndHour());
 
 
 		public setUserAccess: User * Employee * Access ==> ()
