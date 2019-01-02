@@ -10,6 +10,9 @@ instance variables
 
 	inv quantity >= 0;
 operations
+	/**
+	 * Product constructor
+	 */
 	public Product: String1 * rat * nat ==> Product
  	Product(prod_name, prod_value, prod_quantity) ==
  	(
@@ -20,10 +23,16 @@ operations
  	)
 	post name = prod_name and value = prod_value and quantity = prod_quantity;
 
+	/**
+	 * Add quantiy of this product
+	 */
 	public addQuantity: nat ==> ()
 	addQuantity(qtt) == quantity:= quantity + qtt
 	pre qtt > 0;
 
+	/**
+	 * Remove quantity of this product
+	 */
 	public removeQuantity: nat ==> ()
 	removeQuantity(qtt) == quantity:= quantity - qtt
 	pre quantity > 0 and qtt <= quantity

@@ -1,8 +1,8 @@
 class Invoice
 types
 	public String1 = seq1 of char;
-	public Date = DateAndHour`Date;
-    public Hour = DateAndHour`Hour;
+	public Date = Utils`Date;
+    public Hour = Utils`Hour;
 values
     
 instance variables
@@ -64,7 +64,9 @@ operations
 		type = newType and client = newClient;
 
 
-
+    /**
+	 * Add payments to invoice
+	 */
 	public addPayment : set of Payment ==> ()
 	addPayment(newPayments) == 
 	(
@@ -76,7 +78,9 @@ operations
 	pre card newPayments >= 1 and newPayments inter payments = {};
 
 
-
+  	/**
+	 * Remove payments from invoice
+	 */
 	public removePayment: set of Payment ==> ()
 	removePayment(newPayments) ==
 	(

@@ -3,8 +3,8 @@ types
 	
 	public String1 = seq1 of char;
 	public Access = <Owner> | <Employee> | <Client>;
-	public Date = DateAndHour`Date;
-	public Hour = DateAndHour`Hour;
+	public Date = Utils`Date;
+	public Hour = Utils`Hour;
 	public Gender = <Male> | <Female>;
 
 -- TODO Define values here
@@ -20,7 +20,9 @@ instance variables
 	protected nationality: String1;
 
 operations
-
+	/**
+	 * User constructor
+	 */
 	public User: String1 * Access * nat * Gender * String1 ==> User
  	User(newName, acc, newAge, newGender, newNationality) == (
  		club := nil;

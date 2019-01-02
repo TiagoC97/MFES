@@ -8,30 +8,63 @@ instance variables
 	private classes: set of GymClass := {};
 	private trainingSessions: set of TrainingSession := {};
 
-operations
+	inv not exists c1, c2 in set classes &
+		c1 <> c2 and c1.getTrainer() = c2.getTrainer() and c1.getDate() = c2.getDate() and
+		Utils`overlaps(c1.getStartHour(), c1.getEndHour(), c2.getStartHour(), c2.getEndHour());
 
+	inv not exists t1, t2 in set trainingSessions &
+		t1 <> t2 and (t1.getTrainer() = t2.getTrainer() or t1.getTrainee() = t2.getTrainee()) and
+		t1.getDate() = t2.getDate() and Utils`overlaps(t1.getStartHour(), t1.getEndHour(), t2.getStartHour(), t2.getEndHour());
+
+operations
+	/**
+	 * Trainer constructor
+	 */
 	public Trainer: String1 * nat * Gender * String1  ==> Trainer
  	Trainer(newName, newAge, newGender, newNationality) == Employee(newName, newAge, newGender, newNationality)
  	post trainees = {} and classes = {} and trainingSessions = {};
 
+	/**
+	 * Add trainee to this trainer
+	 */
 	public addTrainee: Client ==> ()
 	addTrainee(client) == trainees := trainees union {client}
 	pre client not in set trainees
 	post trainees = trainees~ union {client};
 
+	/**
+	 * Remove trainee from this trainer
+	 */
+	public removeTrainee: Client ==> ()
+	removeTrainee(client) == trainees := trainees \ {client}
+	pre trainees <> {} and client in set trainees
+	post trainees = trainees~ \ {client};
+
 	 -- GYM CLASSES
 	
+	/**
+	 * Add gym class
+	 */
 	public addGymClass: GymClass ==> ()
 	addGymClass(gymClass) == classes := classes union {gymClass}
 	pre gymClass not in set classes
-	post classes = classes~ union {gymClass};
+	post classes = classes~ union {gymClass} and
+		not exists c1, c2 in set classes &
+		c1 <> c2 and c1.getTrainer() = c2.getTrainer() and c1.getDate() = c2.getDate() and
+		Utils`overlaps(c1.getStartHour(), c1.getEndHour(), c2.getStartHour(), c2.getEndHour());
 
 	-- TRAINING SESSIONS
 	
+	/**
+	 * Add training session
+	 */
 	public addTrainingSession: TrainingSession ==> ()
 	addTrainingSession(trainingSession) == trainingSessions := trainingSessions union {trainingSession}
 	pre trainingSession not in set trainingSessions
-	post trainingSessions = trainingSessions~ union {trainingSession};
+	post trainingSessions = trainingSessions~ union {trainingSession} and
+		not exists t1, t2 in set trainingSessions &
+		t1 <> t2 and (t1.getTrainer() = t2.getTrainer() or t1.getTrainee() = t2.getTrainee()) and
+		t1.getDate() = t2.getDate() and Utils`overlaps(t1.getStartHour(), t1.getEndHour(), t2.getStartHour(), t2.getEndHour());
 	
 	-- GETTERS
 	

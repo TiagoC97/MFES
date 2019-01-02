@@ -26,6 +26,9 @@ operations
 	pre len products >= 1
    post products = products ;
 
+    /**
+	 * Add product to this payment
+	 */
     public addProduct: Product * nat==> ()
     addProduct(product, qtt) == 
     (

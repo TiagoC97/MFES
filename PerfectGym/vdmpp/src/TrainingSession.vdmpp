@@ -8,25 +8,25 @@ instance variables
     private trainee: Client;
 	
 operations
-
-   public TrainingSession: String1 * Trainer * Client * DayOfWeek * Hour * Hour * Date * Club==> TrainingSession
- 	TrainingSession(newDescription, newTrainer, client, newDayOfWeek, newStartHour, newEndHour, newDate, newClub) == 
+	/**
+	 * TrainingSession constructor
+	 */
+   public TrainingSession: String1 * Trainer * Client * DayOfWeek * Hour * Hour * Date ==> TrainingSession
+ 	TrainingSession(newDescription, newTrainer, client, newDayOfWeek, newStartHour, newEndHour, newDate) == 
  	(
 		trainee := client;
- 		Session(newDescription, newTrainer, newDayOfWeek, newStartHour, newEndHour, newDate, newClub);
+ 		Session(newDescription, newTrainer, newDayOfWeek, newStartHour, newEndHour, newDate);
  	)
- 	pre client in set club.getClients()
 	post trainee = client;
 
 	-- GETTERS
- 	
+ 	/**
+	  * Get trainee
+	  * 
+	  * @return trainee
+	  */
  	public pure getTrainee: () ==> Client
  	getTrainee() == return trainee
  	post RESULT = trainee;
  		
-         
-functions
--- TODO Define functiones here
-traces
--- TODO Define Combinatorial Test Traces here
 end TrainingSession

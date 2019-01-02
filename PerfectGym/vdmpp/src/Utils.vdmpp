@@ -1,4 +1,4 @@
-class DateAndHour
+class Utils
 types
 	public DayOfWeek = <Monday> | <Tuesday> | <Wednesday> | <Thursday> | <Friday> | <Saturday> | <Sunday>;
 	public Date = nat
@@ -26,7 +26,7 @@ functions
 	*/	
 	public static IsValidHour: nat * nat -> bool
 		IsValidHour(h,m) ==
-			h >= 1 and h <= 24 and m >= 1 and m <= 60;
+			h >= 1 and h <= 24 and m >= 0 and m <= 60;
 		
 	/**
 	* Checks if an year is leap
@@ -115,6 +115,18 @@ functions
 	*/
  	public static Minutes: Hour -> nat
  		Minutes(h) == 
- 			h mod 100;			 			
+ 			h mod 100;		
+ 	
+ /**
+	* Verifies if two hours overlap
+	* 
+	* @return bool
+	*/
+ 	public static overlaps: Hour * Hour * Hour * Hour-> bool
+ 		overlaps(startHour1, endHour1, startHour2, endHour2) ==
+		((startHour1 >= startHour2 and startHour1 < endHour2) or
+			   (endHour1 > startHour2 and endHour1 <= endHour2) or
+			   (startHour1 <= startHour2 and endHour1 >= endHour2));
+			    			
 	 			
-end DateAndHour
+end Utils

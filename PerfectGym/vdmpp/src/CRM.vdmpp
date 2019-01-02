@@ -3,18 +3,13 @@ types
 	public String1 = seq1 of char;
 instance variables
 	private leads: map Lead to [SalesRepresentative] := {|->};
-	private club: Club;
 operations
 	/**
 	 * CRM constructor
 	 */
-	public CRM: Club ==> CRM
- 	CRM(newClub) == 
- 	(
- 		club:= newClub;
- 		return self
- 	)
- 	post club = newClub and leads = {|->};
+	public CRM: () ==> CRM
+ 	CRM() == return self
+ 	post leads = {|->};
 	 
 	 /**
 	  * Add lead
@@ -22,7 +17,6 @@ operations
  	public addLead: Lead ==> ()
 	addLead(lead) == 
 	(
-		lead.setClub(club);
 		leads := leads munion {lead |-> nil}
 	)
  	pre lead not in set dom leads
@@ -34,10 +28,9 @@ operations
  	public addLeadWithSR: Lead * SalesRepresentative ==> ()
 	 addLeadWithSR(lead, sr) ==
 	 (
-		lead.setClub(club);
 		leads := leads munion {lead |-> sr}
 	 ) 
- 	pre lead not in set dom leads and sr in set club.getSalesRepresentatives()
+ 	pre lead not in set dom leads
  	post leads = leads~ munion {lead |-> false};
 	 
 	/**
@@ -92,16 +85,6 @@ operations
 	getLeadSR(lead) == return leads(lead)
 	pre lead in set dom leads and leads(lead) <> nil
 	post RESULT = leads(lead);
-
-	/**
-	 * Gets the crm club
-	 * 
-	 * @return club
-	 */
-	public pure getClub: () ==> Club
- 	getClub() == return club
- 	post RESULT = club;
-
  	
  	
 end CRM

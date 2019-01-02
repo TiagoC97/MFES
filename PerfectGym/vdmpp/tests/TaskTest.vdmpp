@@ -3,9 +3,9 @@ class TaskTest is subclass of MyTestCase
 instance variables
 
   	task1: Task := new Task("Reunião com o patrão", 
-	  DateAndHour`CreateHour(09, 00), 
-	  DateAndHour`CreateHour(10, 00), 
-	  DateAndHour`CreateDate(2019, 01, 12));
+	  Utils`CreateHour(09, 00), 
+	  Utils`CreateHour(10, 00), 
+	  Utils`CreateDate(2019, 01, 12));
 	
 	
 operations
@@ -13,7 +13,7 @@ operations
 	Run() == (
 		IO`println("\nTask Tests");
 
-		assertEqual("Reunião com o patrão", task1.getDescritpion());
+		assertEqual("Reunião com o patrão", task1.getDescription());
 		assertEqual(0900, task1.getStartHour());
 		assertEqual(1000, task1.getEndHour());
 		assertEqual(20190112, task1.getDate());

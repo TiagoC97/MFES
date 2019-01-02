@@ -3,13 +3,13 @@ types
 
 	public String1 = seq1 of char;
 	public Access = <Owner> | <Employee> | <User>;
-	public Date = DateAndHour`Date;
-	public Hour= DateAndHour`Hour;
-	public DayOfWeek = DateAndHour`DayOfWeek;
+	public Date = Utils`Date;
+	public Hour= Utils`Hour;
+	public DayOfWeek = Utils`DayOfWeek;
 
 instance variables
 
-	private name: String1:= "";
+	private name: String1;
 	private newsletter: [String1];
 
 	private clients: set of Client := {};
@@ -29,11 +29,11 @@ instance variables
 
 	inv not exists c1, c2 in set classes &
 		c1 <> c2 and c1.getTrainer() = c2.getTrainer() and c1.getDate() = c2.getDate() and
-		overlaps(c1.getStartHour(), c1.getEndHour(), c2.getStartHour(), c2.getEndHour());
+		Utils`overlaps(c1.getStartHour(), c1.getEndHour(), c2.getStartHour(), c2.getEndHour());
 
 	inv not exists t1, t2 in set trainingSessions &
 		t1 <> t2 and (t1.getTrainer() = t2.getTrainer() or t1.getTrainee() = t2.getTrainee()) and
-		t1.getDate() = t2.getDate() and overlaps(t1.getStartHour(), t1.getEndHour(), t2.getStartHour(), t2.getEndHour());
+		t1.getDate() = t2.getDate() and Utils`overlaps(t1.getStartHour(), t1.getEndHour(), t2.getStartHour(), t2.getEndHour());
 
 	inv not exists p1, p2 in set products &
 		p1 <> p2 and p1.getName() = p2.getName();
@@ -50,7 +50,7 @@ operations
  		name := newName;
  		clubOwner := owner;
  		clubOwner.setClub(self);
-		crm := new CRM(self);
+		crm := new CRM();
 		fee := newFee;
  		return self
 	)
@@ -133,12 +133,19 @@ operations
 			(isAtLeastEmployee(user));
 
 		/**
+		 * Remove trainee from trainer
+		 */
+		public removeTraineeFromTrainer: Trainer * Client ==> ()
+		removeTraineeFromTrainer(trainer, client) == trainer.removeTrainee(client)
+		pre trainer in set trainers and client in set clients;
+
+		/**
 		 * Add a new gym class to the club
 		 */
 		public addGymClass: String1 * String1 * Trainer * DayOfWeek * Hour * Hour * Date * User ==> ()
 		addGymClass(description, className, trainer, dayOfWeek, startHour, endHour, date, user) ==
 		(
-			dcl gymClass: GymClass := new GymClass(description, className, trainer, dayOfWeek, startHour, endHour, date, self);
+			dcl gymClass: GymClass := new GymClass(description, className, trainer, dayOfWeek, startHour, endHour, date);
 			classes := classes union {gymClass};
 			gymClass.getTrainer().addTask(gymClass);
 			gymClass.getTrainer().addGymClass(gymClass);
@@ -147,8 +154,14 @@ operations
 		)
 		pre (isAtLeastEmployee(user)) and user in set getUsers() 
 		post not exists c1, c2 in set classes & c1 <> c2 and c1.getTrainer() = c2.getTrainer() and c1.getDate() = c2.getDate() and
-			overlaps(c1.getStartHour(), c1.getEndHour(), c2.getStartHour(), c2.getEndHour());
+			Utils`overlaps(c1.getStartHour(), c1.getEndHour(), c2.getStartHour(), c2.getEndHour());
 
+		/**
+		 * Add a trainee to a class
+		 */
+		public addAttendeeToGymClass: GymClass * Client * User ==> ()
+		addAttendeeToGymClass(gymClass, client, user) == gymClass.addAttendee(client)
+		pre client in set getClients() and (isAtLeastEmployee(user)) and user in set getUsers();
 			
 		/**
 		 * Add a new training session to the club
@@ -156,7 +169,7 @@ operations
 		public addTrainingSession: String1 * Trainer * Client * DayOfWeek * Hour * Hour * Date * User ==> ()
 		addTrainingSession(newDescription, newTrainer, client, newDayOfWeek, newStartHour, newEndHour, newDate, user) ==
 		(
-			dcl trainingSession: TrainingSession := new TrainingSession(newDescription, newTrainer, client, newDayOfWeek, newStartHour, newEndHour, newDate, self);
+			dcl trainingSession: TrainingSession := new TrainingSession(newDescription, newTrainer, client, newDayOfWeek, newStartHour, newEndHour, newDate);
 			trainingSessions := trainingSessions union {trainingSession};
 			trainingSession.getTrainer().addTask(trainingSession);
 			trainingSession.getTrainer().addTrainingSession(trainingSession);
@@ -165,7 +178,7 @@ operations
 		pre (isAtLeastEmployee(user)) and user in set getUsers() 
 		post not exists t1, t2 in set trainingSessions &
 			t1 <> t2 and (t1.getTrainer() = t2.getTrainer() or t1.getTrainee() = t2.getTrainee()) and
-			t1.getDate() = t2.getDate() and overlaps(t1.getStartHour(), t1.getEndHour(), t2.getStartHour(), t2.getEndHour());
+			t1.getDate() = t2.getDate() and Utils`overlaps(t1.getStartHour(), t1.getEndHour(), t2.getStartHour(), t2.getEndHour());
 
 
 		public setUserAccess: User * Employee * Access ==> ()
@@ -637,13 +650,4 @@ operations
 
 	public static isOwner(user: User) res:bool ==
 		user.getAccess() = <Owner>;
-
-	public static overlaps: Hour * Hour * Hour * Hour-> bool
-	overlaps(startHour1, endHour1, startHour2, endHour2) ==
-		if ((startHour1 >= startHour2 and startHour1 < endHour2) or
-			   (endHour1 > startHour2 and endHour1 <= endHour2) or
-			   (startHour1 <= startHour2 and endHour1 >= endHour2)) then
-			   true
-			else
-				false;
 end Club

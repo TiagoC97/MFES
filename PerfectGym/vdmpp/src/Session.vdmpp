@@ -1,7 +1,7 @@
 class Session is subclass of Task
 types
 
-	public DayOfWeek = DateAndHour`DayOfWeek;
+	public DayOfWeek = Utils`DayOfWeek;
 values
 	
 instance variables
@@ -9,29 +9,21 @@ instance variables
 	protected trainer: Trainer;
 	
 	protected dayOfWeek: DayOfWeek;
-	protected club: [Club];
 
-	
-	
 operations
-	public Session: String1 * Trainer * DayOfWeek * Hour * Hour * Date * Club==> Session
- 	Session(newDescription, newTrainer, newDayOfWeek, newStartHour, newEndHour, newDate, newClub) == 
+	/**
+	 * Session constructor
+	 */
+	public Session: String1 * Trainer * DayOfWeek * Hour * Hour * Date ==> Session
+ 	Session(newDescription, newTrainer, newDayOfWeek, newStartHour, newEndHour, newDate) == 
  	(
 		trainer := newTrainer;
 		dayOfWeek := newDayOfWeek;
-		club := newClub;
 		Task(newDescription, newStartHour, newEndHour, newDate);
  	)
- 	pre newEndHour > newStartHour and newTrainer in set club.getTrainers()
+ 	pre newEndHour > newStartHour
 	post trainer = newTrainer and dayOfWeek = newDayOfWeek and 
-	 	startHour = newStartHour and endHour = newEndHour and date = newDate and club = newClub;
-	
-
-	-- public changeTrainer: Trainer ==> ()
-	-- changeTrainer(newTrainer) == trainer := newTrainer
-	-- pre trainer <> newTrainer and newTrainer in set club.getTrainers()
-	-- post trainer = newTrainer;
-	
+	 	startHour = newStartHour and endHour = newEndHour and date = newDate;
 	
  	-- GETTERS
  	 	
@@ -52,14 +44,4 @@ operations
  	public pure getDayOfWeek: () ==> DayOfWeek
  	getDayOfWeek() == return dayOfWeek
  	post RESULT = dayOfWeek;
- 		
-	/**
-	 * Gets the session club
-	 * 
-	 * @return club
-	 */ 	
-	public pure getClub: () ==> Club
- 	getClub() == return club
- 	post RESULT = club;
-
 end Session

@@ -11,11 +11,11 @@ operations
 	/**
 	 * GymClass constructor
 	 */
-	public GymClass: String1 * String1 * Trainer * DayOfWeek * Hour * Hour * Date * Club==> GymClass
- 	GymClass(newDescription, className, newTrainer, newDayOfWeek, newStartHour, newEndHour, newDate, newClub) == 
+	public GymClass: String1 * String1 * Trainer * DayOfWeek * Hour * Hour * Date==> GymClass
+ 	GymClass(newDescription, className, newTrainer, newDayOfWeek, newStartHour, newEndHour, newDate) == 
  	(
 		name := className;
-		Session(newDescription, newTrainer, newDayOfWeek, newStartHour, newEndHour, newDate, newClub);
+		Session(newDescription, newTrainer, newDayOfWeek, newStartHour, newEndHour, newDate);
  	)
 	post name = className;
 	 	
@@ -28,7 +28,6 @@ operations
 		attendees:= attendees union {client};
 		client.addGymClass(self);
 	)
-	pre client in set club.getClients()
 	post attendees = attendees~ union {client};
 
  	

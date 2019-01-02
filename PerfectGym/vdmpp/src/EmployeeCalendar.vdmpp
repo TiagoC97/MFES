@@ -1,8 +1,8 @@
 class EmployeeCalendar
 types
 	public String1 = seq1 of char;
-	public Date = DateAndHour`Date;
-	public Hour = DateAndHour`Hour;
+	public Date = Utils`Date;
+	public Hour = Utils`Hour;
 	
 values
 instance variables

@@ -6,19 +6,28 @@ values
 instance variables
 	private leads: set of Lead := {};
 operations
+	/**
+	 * SalesRepresentative constructor
+	 */
 	public SalesRepresentative: String1 * nat * Gender * String1 ==> SalesRepresentative
  	SalesRepresentative(newName, newAge, newGender, newNationality) == Employee(newName, newAge, newGender, newNationality)
  	post leads = {};
  	
+	/**
+	 * Add a lead to this sales representative
+	 */
  	public addLead: Lead ==> ()
  	addLead(lead) == leads := leads union {lead}
  	pre lead not in set leads
  	post leads= leads~ union {lead};
  	
+	/**
+	 * Remove a lead from this sales representative
+	 */
  	public removeLead: Lead ==> ()
  	removeLead(lead) == leads := leads \ {lead}
  	pre lead in set leads
- 	post leads= leads~ \ {lead};
+ 	post leads <> {} and leads= leads~ \ {lead};
 
 	-- GETTERS
 

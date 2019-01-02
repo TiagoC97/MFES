@@ -2,8 +2,8 @@ class Task
 types
 	
 	public String1 = seq1 of char;
-	public Date = DateAndHour`Date;
-	public Hour = DateAndHour`Hour;
+	public Date = Utils`Date;
+	public Hour = Utils`Hour;
 values
 -- TODO Define values here
 instance variables
@@ -16,6 +16,9 @@ instance variables
 	inv endHour > startHour;
 	
 operations
+	/**
+	 * Task constructor
+	 */
 	public Task: String1 * Hour * Hour * Date ==> Task
 	Task(newDescription, newStartHour, newEndHour, newDate) == 
 	(

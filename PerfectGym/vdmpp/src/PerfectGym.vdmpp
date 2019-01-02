@@ -1,21 +1,22 @@
 class PerfectGym
 types
 	public String1= seq1 of char;
-values
--- TODO Define values here
 instance variables
--- TODO Define instance variables here
 
 	private clubs: map String1 to Club := {|->};
 	
 	private static perfectGym: PerfectGym := new PerfectGym();
 operations
-	-- constructor
+	/**
+	 * PerfectGym constructor
+	 */
 	public PerfectGym: () ==> PerfectGym
 	PerfectGym() == (return self)
 	post clubs = {|->};		
 		
-	-- add a new club to the PerfectGym
+	/**
+	 * Add a new club to the PerfectGym
+	 */
 	public addClub: Club ==> ()
 	addClub(club) == clubs := clubs munion {club.getName() |-> club}
 	pre club.getName() not in set dom clubs
