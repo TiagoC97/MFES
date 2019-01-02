@@ -6,6 +6,8 @@ operations
 			IO`println("Initializing Test Runner");
 			
 	    new PerfectGymTest().Run();
+		new ClubTest().Run();
+		new OwnerTest().Run();
 	    -- new UseCasesTest().Run();
 	    
 	    IO`println("Finalizing Test Runner");

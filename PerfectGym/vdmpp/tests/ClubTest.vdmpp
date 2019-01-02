@@ -1,0 +1,43 @@
+class ClubTest is subclass of MyTestCase
+
+instance variables
+
+  	owner1: Owner := new Owner("Rui");
+
+	club1: Club := new Club("Bombados", owner1);
+
+	client1: Client := new Client("Maria");
+	client2: Client := new Client("Jorge");
+
+	trainer1: Trainer := new Trainer("Vasco");
+	trainer2: Trainer := new Trainer("Alex");
+
+	salesRepresentative1: SalesRepresentative := new SalesRepresentative("Joana");
+	salesRepresentative2: SalesRepresentative := new SalesRepresentative("Manuel");
+
+	
+operations
+	public Run: () ==> ()
+	Run() == (
+		IO`println("\nClub Tests");
+
+		club1.addClient(client1, owner1);
+		club1.addClient(client2, owner1);
+
+		club1.addTrainer(trainer1, owner1);
+		club1.addTrainer(trainer2, owner1);
+
+		club1.addSalesRepresentative(salesRepresentative1, owner1);
+		club1.addSalesRepresentative(salesRepresentative2, owner1);
+
+		assertEqual([client1, client2], club1.getClients());
+		assertEqual([trainer1, trainer2], club1.getTrainers());
+		assertEqual([salesRepresentative1, salesRepresentative2], club1.getSalesRepresentatives());
+			
+		assertEqual(owner1, club1.getOwner());
+		assertEqual("Bombados", club1.getName());
+			
+		IO`println("\nFinalizing Club Tests");
+	);
+	
+end ClubTest
