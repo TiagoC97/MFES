@@ -9,14 +9,14 @@ instance variables
 
 	-- There must be always (at least) one client in the group
 	inv card clients >= 1;
-	
+
 operations
 
 	/**
 	 * Group constructor
 	 */
  	public Group: set of Client * Club  ==> Group
- 	Group(newClients, newClub) == 
+ 	Group(newClients, newClub) ==
 	(
  		clients := newClients;
  		club := newClub;
@@ -51,7 +51,7 @@ operations
 	 * Add a new message, from a given user, to the group inbox
 	 */
  	public sendMessage: User * String1 ==> ()
- 	sendMessage(user, msg) == 
+ 	sendMessage(user, msg) ==
  	(
  		if user.getName() not in set dom groupInbox then
  			groupInbox := {user.getName() |-> [msg]} munion groupInbox
@@ -59,22 +59,22 @@ operations
  			groupInbox(user.getName()) := groupInbox(user.getName()) ^ [msg];
  	)
 	pre user in set clients or user.getAccess() = <Owner>;
-	 
+
 	 -- GETTERS
-	 
+
 	/**
 	 * Gets the inbox (the client must belong to the group)
-	 * 
+	 *
 	 * @return groupInbox
 	 */
  	public pure checkInbox: Client ==> map String1 to seq of String1
  	checkInbox(client) == return groupInbox
 	pre client in set clients
 	post RESULT = groupInbox;
- 	
+
  	/**
 	  * Get group last message sent by a given user
-	  * 
+	  *
 	  * @return String1
 	  */
  	public pure getLastMessageFromUser: String1 * Client ==> String1
@@ -84,7 +84,7 @@ operations
 
 	 /**
 	  * Get group messages sent by a given user
-	  * 
+	  *
 	  * @return seq of String1
 	  */
  	public pure getMessagesFromUser: String1 * Client ==> seq of String1
@@ -94,17 +94,17 @@ operations
 
  	/**
 	 * Gets the group offers
-	 * 
+	 *
 	 * @return offers
 	 */
  	public pure checkOffers: Client ==> seq of String1
  	checkOffers(client) == return offers
 	pre client in set clients
 	post RESULT = offers;
-	 
+
 	/**
 	 * Gets the group clients
-	 * 
+	 *
 	 * @return clients
 	 */
  	public pure getClients: () ==> set of Client
@@ -113,11 +113,11 @@ operations
 
 	/**
 	 * Gets the group club
-	 * 
+	 *
 	 * @return club
 	 */
 	public pure getClub: () ==> Club
  	getClub() == return club
 	 post RESULT = club;
-	 
+
 end Group
