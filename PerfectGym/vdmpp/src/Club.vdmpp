@@ -9,7 +9,7 @@ types
 
 instance variables
 
-	private name: String1:= "";
+	private name: String1;
 	private newsletter: [String1];
 
 	private clients: set of Client := {};

@@ -13,10 +13,12 @@ operations
 	Run() == (
 		IO`println("\nTask Tests");
 
-		assertEqual("Reunião com o patrão", task1.getDescritpion());
+		assertEqual("Reunião com o patrão", task1.getDescription());
 		assertEqual(0900, task1.getStartHour());
 		assertEqual(1000, task1.getEndHour());
 		assertEqual(20190112, task1.getDate());
+
+		IO`println("Finalizing Task Tests");
 
 	);
 	

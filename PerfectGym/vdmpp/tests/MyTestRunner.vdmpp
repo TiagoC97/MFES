@@ -8,6 +8,8 @@ operations
 	    new PerfectGymTest().Run();
 		new ClubTest().Run();
 		new ProductTest().Run();
+		new TaskTest().Run();
+		new GroupTest().Run();
 		new OwnerTest().Run();
 	    -- new UseCasesTest().Run();
 	    
