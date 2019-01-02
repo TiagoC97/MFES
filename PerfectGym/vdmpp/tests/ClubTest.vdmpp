@@ -60,6 +60,8 @@ operations
 		--club1.addPaymentToInvoice();
 		--club1.removePaymentFromInvoice();
 
+		
+
 
 
 		assertEqual({client1, client2}, club1.getClients());
