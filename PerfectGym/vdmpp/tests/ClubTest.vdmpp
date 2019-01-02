@@ -70,7 +70,9 @@ operations
 			
 		assertEqual(owner1, club1.getOwner());
 		assertEqual("Bombados", club1.getName());
-			
+		
+		assertEqual(club1, owner1.getClub());
+
 		IO`println("Finalizing Club Tests");
 	);
 	
