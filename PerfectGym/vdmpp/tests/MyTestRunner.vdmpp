@@ -8,7 +8,8 @@ operations
 	    new PerfectGymTest().Run();
 		new ClubTest().Run();
 		new ProductTest().Run();
-		new OwnerTest().Run();
+		new TaskTest().Run();
+		new GroupTest().Run();
 	    -- new UseCasesTest().Run();
 	    
 	    IO`println("\nFinalizing Test Runner");

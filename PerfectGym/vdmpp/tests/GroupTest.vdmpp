@@ -1,0 +1,35 @@
+class GroupTest is subclass of MyTestCase
+
+instance variables
+
+	client1: Client := new Client("Maria", 23, <Female>, "portuguese");
+	client2: Client := new Client("Jorge", 25, <Male>, "spanish");
+
+	group1: Group := new Group({client1});
+	
+operations
+	public Run: () ==> ()
+	Run() == (
+		IO`println("\nGroup Tests");
+
+		group1.addClient(client2);
+		assertEqual({client1, client2}, group1.getClients());
+		group1.removeClient(client2);
+		assertEqual({client1}, group1.getClients());
+
+		group1.sendOffer("Descontos muito bonitos");
+		group1.sendMessage(client1, "Feliz Natal Amigos");
+
+		assertEqual({"Maria" |-> ["Feliz Natal Amigos"]}, group1.checkInbox(client1));
+
+		assertEqual("Feliz Natal Amigos", group1.getLastMessageFromUser("Maria", client1));
+
+		assertEqual(["Feliz Natal Amigos"], group1.getMessagesFromUser("Maria", client1));
+
+		assertEqual(["Descontos muito bonitos"], group1.checkOffers(client1));
+
+		IO`println("Finalizing Group Tests");
+
+	);
+	
+end GroupTest
