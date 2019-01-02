@@ -39,7 +39,7 @@ operations
 		--club1.addTrainingSession();
 		--club1.setUserAccess(owner1, );
 
-		club1.addNewsLetter("Sales", owner1);
+		club1.addNewsletter("Sales", owner1);
 
 		club1.sendMessageClient("Bom Ano", client1, owner1);
 
@@ -52,8 +52,8 @@ operations
 		club1.sendMessageToGroup("Feliz Natal", "PuxadoresDeFerro", owner1);
 		club1.sendOfferToGroup("Prota com 10% de desconto esta semana!! :O", "PuxadoresDeFerro", owner1);
 
-		club1.addGroupClient("PuxadoresDeFerro", client2, owner);
-		club1.removeGroupClient("PuxadoresDeFerro", client2, owner);
+		club1.addGroupClient("PuxadoresDeFerro", client2, owner1);
+		club1.removeGroupClient("PuxadoresDeFerro", client2, owner1);
 
 		--club1.addInvoice(client1, {} );
 		--club1.addInvoiceWithAllActivePayments();

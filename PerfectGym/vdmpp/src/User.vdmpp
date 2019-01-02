@@ -62,8 +62,7 @@ operations
  			dcl curMessagesFromUser: seq of String1 := inbox(user.getName());
  			inbox := {user.getName() |-> [msg] ^ curMessagesFromUser} munion inbox;
  		)
- 	)
- 	pre user in set club.getUsers();
+ 	);
  	
  	
 	

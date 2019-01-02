@@ -298,7 +298,7 @@ operations
 		 * Remove a lead from  a sales representative
 		 */
 		public removeLeadSR: Lead * SalesRepresentative * User ==> ()
-		removeSRLead(lead, sr, user) == sr.removeLead(lead)
+		removeLeadSR(lead, sr, user) == sr.removeLead(lead)
 		pre sr in set salesRepresentatives and isAtLeastEmployee(user);
 
 		/**

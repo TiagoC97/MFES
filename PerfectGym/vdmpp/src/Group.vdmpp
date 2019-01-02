@@ -22,7 +22,7 @@ operations
  		club := newClub;
  		return self
  	)
- 	pre client in set club.getClients()
+ 	pre client in set newClub.getClients()
  	post clients = {client} and groupInbox = {|->} and offers = [] and club = newClub;
 
 	 /**
