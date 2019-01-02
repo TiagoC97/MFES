@@ -597,6 +597,7 @@ operations
 		public pure getEmployeeCalendar: Employee ==> map Date to seq of Task
 		getEmployeeCalendar(employee) ==
 			return employee.getCalendar().getTasks()
+		pre employee in set getEmployees()
 		post RESULT = employee.getCalendar().getTasks();
 
 
@@ -608,6 +609,7 @@ operations
 		public getEmployeeTasksForGivenDate: Employee * Date ==> seq of Task
 		getEmployeeTasksForGivenDate(employee, date) ==
 			return employee.getCalendar().getTasksForGivenDate(date)
+			pre employee in set getEmployees()
 		post RESULT = employee.getCalendar().getTasksForGivenDate(date);
 
  functions
