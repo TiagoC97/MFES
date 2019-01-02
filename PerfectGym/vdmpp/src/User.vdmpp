@@ -127,7 +127,7 @@ operations
 	/**
 	 * Gets the user activity
 	 */
-	public pure getActivity: () ==> ()
+	public getActivity: () ==> ()
 	getActivity() == skip;
 		
 	/**
@@ -163,7 +163,7 @@ operations
 	 * @return age
 	 */
 	public pure getAge : () ==> nat
-	getAge() == return age;
+	getAge() == return age
 	post RESULT = age;
 
 	/**

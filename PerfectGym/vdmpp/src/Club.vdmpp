@@ -20,7 +20,7 @@ instance variables
 	private trainingSessions: set of TrainingSession := {};
 
 	private invoices: set of Invoice := {};
-	private products: set of Products := {};
+	private products: set of Product := {};
 
 	private fee: rat;
 	
@@ -385,7 +385,7 @@ operations
 			prod.addQuantity(qtt);
 			products := products union {prod};
 		)
-		pre prod not in products;
+		pre prod not in set products;
 
 		public removeProduct: Product ==> ()
 		removeProduct(prod) == 
@@ -393,7 +393,7 @@ operations
 			prod.removeQuantity(prod.getQuantity());
 			products := products \ {prod};
 		)
-		pre products <> {} and prod in products;
+		pre products <> {} and prod in set products;
 		
 		-- GETTERS
 		

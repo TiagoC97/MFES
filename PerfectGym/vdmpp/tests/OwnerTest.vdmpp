@@ -2,7 +2,7 @@ class OwnerTest is subclass of MyTestCase
 
 instance variables
 
-  	owner1: Owner := new Owner("Rui");
+  	owner1: Owner := new Owner("Rui", 23, <Male>, "portuguese");
 	
 operations
 	public Run: () ==> ()

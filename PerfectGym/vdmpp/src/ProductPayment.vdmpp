@@ -17,8 +17,11 @@ operations
  	(   
         products:= [newProduct];
         newProduct.removeQuantity(qtt);
+
+        newClient.addProductPayment(self);
+        newClient.addProductBought(newProduct);
     
-        Payment(newClient, newDate, newHour, products(i).getValue());
+        Payment(newClient, newDate, newHour, newProduct.getValue());
 	)
 	pre len products >= 1
    post products = products ;
@@ -28,7 +31,8 @@ operations
     (
         products := products ^ [product];
         amount:= amount + product.getValue();
-        newProduct.removeQuantity(qtt);
+        product.removeQuantity(qtt);
+        client.addProductBought(product);
     );
 
     -- GETTERS

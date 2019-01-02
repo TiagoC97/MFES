@@ -208,13 +208,12 @@ operations
 	);
 	-- PRODUCTS
 
-	public buyProducts: seq of Product * Date * Hour ==> ()
-	buyProducts(products, date, hour) == 
-	(
-		dcl payment: ProductPayment := new ProductPayment(self, products, date, hour);
-		addProductPayment(payment);
-		productsBought:= productsBought ^ products;
-	);
+	public addProductBought: Product ==> ()
+	addProductBought(product) == 
+		productsBought:= productsBought ^ [product];
+	
+	public addProductToPayment: ProductPayment * Product * nat ==> ()
+	addProductToPayment(payment, product, qtt) == payment.addProduct(product, qtt);
 
 	
 

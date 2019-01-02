@@ -3,7 +3,7 @@ types
 
 instance variables
 
-	private calendar: EmployeeCalendar;
+	protected calendar: EmployeeCalendar;
 	
 
 operations
@@ -23,43 +23,12 @@ operations
 	 
 	-- GETTERS
 
- 	/**
-	 * Get client activity
+	/**
+	 * Get trainer activity
 	 */
-
-	 public getActivity: bool ==> ()
-		getActivity(showAllTasks) ==
-		(
-			dcl numClasses: nat := card classes;
-			dcl numTrainingSessiosn: nat := card trainingSessions;
-			dcl tasks: map Date to seq of Task := calendar.getTasks();
-			dcl i: nat := 0;
-			dcl t: Task;
-
-			IO`println("********* CLIENT STATISTICS *********");
-			IO`println("Number of gym classes: " ^ [numClasses]);
-			IO`println("Number of training sessions: " ^ [numTrainingSessiosn]);
-			
-			if showAllTasks then
-				(
-					for all d in set dom tasks do
-					(
-						i := 0;
-						IO`println(d);	
-
-						while i < len tasks(d) do
-						( 
-							t := tasks(d)(i); 
-							IO`println("	Task: " ^ [t.getDescription()] ^ [" started at "] ^ [t.getStartHour()] ^ [" and ended at "] ^ [t.getEndHour()]);
-							i:= i + 1;
-						);
-						IO`println("");
-					)		
-				);
-			
-			IO`println("");
-			IO`println("************************************");
-		);
+		public getActivity: bool ==> ()
+		getActivity(showAllTasks) == skip;
+ 	
  	/**
 	 * Get client calendar
 	 * 
