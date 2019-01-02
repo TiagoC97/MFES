@@ -20,7 +20,7 @@ operations
 
 	-- GETTERS
  	
- 	public getTrainee: () ==> Client
+ 	public pure getTrainee: () ==> Client
  	getTrainee() == return trainee
  	post RESULT = trainee;
  		

@@ -4,38 +4,25 @@ types
 instance variables
 
 	private calendar: EmployeeCalendar;
-	private classes: set of GymClass := {};
-	private trainingSessions: set of TrainingSession := {};
+	
 
 operations
 	/**
 	 * Employee constructor
 	 */
-	public Employee: String_ ==> Employee
- 	Employee(String_) == 
+	public Employee: String_ * nat * Gender * String1 ==> Employee
+ 	Employee(newName, newAge, newGender, newNationality) == 
  	(
  		calendar:= new EmployeeCalendar();
- 		User(String_, <Employee>);
-	 )
-	 post classes = {} and trainingSessions = {};
+ 		User(newName, <Employee>, newAge, newGender, newNationality);
+	);
+
  	
  	public addTask: Task ==> ()
  	addTask(task) == calendar.addTask(task);
+	 
+	-- GETTERS
 
-	 -- GYM CLASSES
-	
-	public addGymClass: GymClass ==> ()
-	addGymClass(gymClass) == classes := classes union {gymClass}
-	pre gymClass not in set classes
-	post classes = classes~ union {gymClass};
-
-	-- TRAINING SESSIONS
-	
-	public addTrainingSession: TrainingSession ==> ()
-	addTrainingSession(trainingSession) == trainingSessions := trainingSessions union {trainingSession}
-	pre trainingSession not in set trainingSessions
-	post trainingSessions = trainingSessions~ union {trainingSession};
- 	
  	/**
 	 * Get client activity
 	 */
@@ -73,9 +60,15 @@ operations
 			IO`println("");
 			IO`println("************************************");
 		);
- 	
+ 	/**
+	 * Get client calendar
+	 * 
+	 * @return calendar
+	 */
  	public pure getCalendar: () ==> EmployeeCalendar
  	getCalendar() == return calendar
- 	post RESULT = calendar;
+	post RESULT = calendar;
+	 
+
 	 
 end Employee

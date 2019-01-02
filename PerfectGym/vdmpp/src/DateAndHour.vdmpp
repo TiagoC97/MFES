@@ -7,60 +7,104 @@ types
   public Hour = nat
        inv h == IsValidHour(h div 100, h mod 100);
 
-values
-    -- TIRAR????????? public MinimalDate = CreateDate(1,1,1);
 
-  functions
+functions
 			
-		public static IsValidDate: nat * nat * nat -> bool
-			IsValidDate(y, m, d) ==
-				y >= 1 and m >= 1 and m <= 12 and d >= 1 and d <= DaysOfMonth(y, m);
+	/**
+	* Checks if a date is valid
+	* 
+	* @return bool
+	*/	
+	public static IsValidDate: nat * nat * nat -> bool
+		IsValidDate(y, m, d) ==
+			y >= 1 and m >= 1 and m <= 12 and d >= 1 and d <= DaysOfMonth(y, m);
+
+	/**
+	* Checks if an hour is valid
+	* 
+	* @return bool
+	*/	
+	public static IsValidHour: nat * nat -> bool
+		IsValidHour(h,m) ==
+			h >= 1 and h <= 24 and m >= 1 and m <= 60;
 		
-		public static IsValidHour: nat * nat -> bool
-			IsValidHour(h,m) ==
-				h >= 1 and h <= 24 and m >= 1 and m <= 60;
-		
-		public static IsLeapYear: nat -> bool
-			IsLeapYear(year) == 
-				year mod 4 = 0 and year mod 100 <> 0 or year mod 400 = 0;
+	/**
+	* Checks if an year is leap
+	* 
+	* @return bool
+	*/	
+	public static IsLeapYear: nat -> bool
+		IsLeapYear(year) == 
+			year mod 4 = 0 and year mod 100 <> 0 or year mod 400 = 0;
 
-    public static DaysOfMonth: nat * nat -> nat
-	    DaysOfMonth(y, m) == (
-	    	cases m :
-	        1, 3, 5, 7, 8, 10, 12 -> 31,
-	        4, 6, 9, 11 -> 30,
-	        2 -> if IsLeapYear(y) then 29 else 28
-	      end
-	     )
-	    pre m >= 1 and m <= 12;
+	/**
+	* Gets the number of days in a given month
+	* 
+	* @return nat
+	*/	
+   	public static DaysOfMonth: nat * nat -> nat
+    DaysOfMonth(y, m) == (
+    	cases m :
+        1, 3, 5, 7, 8, 10, 12 -> 31,
+        4, 6, 9, 11 -> 30,
+        2 -> if IsLeapYear(y) then 29 else 28
+      end
+     )
+    pre m >= 1 and m <= 12;
 
-		public static CreateDate: nat * nat * nat -> Date
-			CreateDate(year, month, day) == 
-				year * 10000 + month * 100 + day
-			pre IsValidDate(year, month, day);
-
-		-- public static GetDateString: Date -> seq of char
-	 		-- GetDateString(d) == Day(d) ^ "/" ^ d.Month ^ ["/"] ^ d.Year;
+	/**
+	* Creates a new instance of a Date
+	* 
+	* @return Date
+	*/
+	public static CreateDate: nat * nat * nat -> Date
+	CreateDate(y, m, d) == 
+		y * 10000 + m * 100 + d
+	pre IsValidDate(y, m, d);
  
- 		public static Year: Date -> nat
-	 		Year(d) == 
-	 			d div 10000;
- 			
- 		public static Month: Date -> nat
-	 		Month(d) == 
-	 			(d div 100) mod 100;
- 			
- 		public static Day: Date -> nat
-	 		Day(d) == 
-	 			d mod 100;	
-	 			
-	 	public static Hours: Hour -> nat
-	 		Hours(h) == 
-	 			h div 100;	
-	 	
-	 	public static Minutes: Hour -> nat
-	 		Minutes(h) == 
-	 			h mod 100;		
-	 			
+	/**
+	* Gets the year of a given date
+	* 
+	* @return nat
+	*/	
+	public static Year: Date -> nat
+ 		Year(d) == 
+			d div 10000;
+
+	/**
+	* Gets the month of a given date
+	* 
+	* @return nat
+	*/		
+	public static Month: Date -> nat
+ 		Month(d) == 
+ 			(d div 100) mod 100;
+
+	/**
+	* Gets the day of a given date
+	* 
+	* @return nat
+	*/	
+	public static Day: Date -> nat
+		Day(d) == 
+ 			d mod 100;	
+
+	/**
+	* Gets the hours of a given hour
+	* 
+	* @return nat
+	*/	 			
+ 	public static Hours: Hour -> nat
+ 		Hours(h) == 
+ 			h div 100;	
+ 	
+	/**
+	* Gets the minutes of a given hour
+	* 
+	* @return nat
+	*/
+ 	public static Minutes: Hour -> nat
+ 		Minutes(h) == 
+ 			h mod 100;			 			
 	 			
 end DateAndHour

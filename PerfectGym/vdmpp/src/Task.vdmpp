@@ -30,18 +30,38 @@ operations
 
 	-- GETTERS
 
-	public getDescription: () ==> String1
+	/**
+	 * Gets the task description
+	 * 
+	 * @return description
+	 */ 
+	public pure getDescription: () ==> String1
 	getDescription() == return description
 	post RESULT = description;
 
+	/**
+	 * Gets the task startHour
+	 * 
+	 * @return startHour
+	 */ 
 	public pure getStartHour: () ==> Hour
 	getStartHour() == return startHour
 	post RESULT = startHour;
 
+	/**
+	 * Gets the task endHour
+	 * 
+	 * @return endHour
+	 */ 
 	public pure getEndHour: () ==> Hour
 	getEndHour() == return endHour
 	post RESULT = endHour;
 	
+	/**
+	 * Gets the task date
+	 * 
+	 * @return date
+	 */ 
 	public pure getDate: () ==> Date
  	getDate() == return date
  	post RESULT = date;

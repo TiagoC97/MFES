@@ -35,15 +35,30 @@ operations
 	
  	-- GETTERS
  	 	
- 	public getTrainer: () ==> Trainer
+	/**
+	 * Gets the session trainer
+	 * 
+	 * @return trainer
+	 */
+ 	public pure getTrainer: () ==> Trainer
  	getTrainer() == return trainer
-	 post RESULT = trainer;
- 	 	
- 	public getDayOfWeek: () ==> DayOfWeek
+	post RESULT = trainer;
+
+	/**
+	 * Gets the session dayOfWeek
+	 * 
+	 * @return dayOfWeek
+	 */ 	
+ 	public pure getDayOfWeek: () ==> DayOfWeek
  	getDayOfWeek() == return dayOfWeek
  	post RESULT = dayOfWeek;
  		
-	public getClub: () ==> Club
+	/**
+	 * Gets the session club
+	 * 
+	 * @return club
+	 */ 	
+	public pure getClub: () ==> Club
  	getClub() == return club
  	post RESULT = club;
 

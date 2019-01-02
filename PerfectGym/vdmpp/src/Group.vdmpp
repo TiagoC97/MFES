@@ -64,7 +64,7 @@ operations
 	 -- GETTERS
 	 
 	/**
-	 * Check the inbox (the client must belong to the group)
+	 * Gets the inbox (the client must belong to the group)
 	 * 
 	 * @return groupInbox
 	 */
@@ -76,25 +76,49 @@ operations
  	/**
 	  * Get group last message sent by a given user
 	  * 
-	  * @return hd groupInbox(senderName)
+	  * @return String1
 	  */
  	public pure getLastMessageFromUser: String1 * Client ==> String1
  	getLastMessageFromUser(senderName, client) == return hd groupInbox(senderName)
- 	pre senderName in set dom groupInbox and client in set clients;
+	 pre senderName in set dom groupInbox and client in set clients
+	 post RESULT = hd groupInbox(senderName);
 
-	-- get group messages sent by a given user
+	 /**
+	  * Get group messages sent by a given user
+	  * 
+	  * @return seq of String1
+	  */
  	public pure getMessagesFromUser: String1 * Client ==> seq of String1
  	getMessagesFromUser(senderName, client) == return groupInbox(senderName)
- 	pre senderName in set dom groupInbox and client in set clients;
-	
+	 pre senderName in set dom groupInbox and client in set clients
+	 post RESULT = groupInbox(senderName);
 
- 	 -- check the offers the group received (the client must belong to the group)
+ 	/**
+	 * Gets the group offers
+	 * 
+	 * @return offers
+	 */
  	public pure checkOffers: Client ==> seq of String1
  	checkOffers(client) == return offers
- 	pre client in set clients;
+	pre client in set clients
+	post RESULT = offers;
+	 
+	/**
+	 * Gets the group clients
+	 * 
+	 * @return clients
+	 */
+ 	public pure getClients: () ==> set of Client
+ 	getClients() == return clients
+	post RESULT = clients;
 
-functions
--- TODO Define functiones here
-traces
--- TODO Define Combinatorial Test Traces here
+	/**
+	 * Gets the group club
+	 * 
+	 * @return club
+	 */
+	public pure getClub: () ==> Club
+ 	getClub() == return club
+	 post RESULT = club;
+	 
 end Group

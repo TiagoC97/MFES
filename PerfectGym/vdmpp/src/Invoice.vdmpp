@@ -8,23 +8,162 @@ values
     
 instance variables
   
-    public club: Club;
+  private club: Club;
+	private payments: set of Payment := {};
+	private totalAmount: rat := 0;
+	private date: Date;
+	private hour: Hour;
+	private type: String1;
+	private client: Client;
+
+	inv card payments >= 1;
+
 
 operations
 
     /**
 	 * Invoice constructor
 	 */
-	public Invoice: Club ==> Invoice
- 	Invoice(newClub) == 
+	public Invoice: Club * set of Payment * Date * Hour * String1 * bool * Client ==> Invoice
+ 	Invoice(newClub, newPayments, newDate, newHour, newType, allActivePayments, newClient) == 
  	(
+
  		club:= newClub;
- 		return self
+		payments:= newPayments;
+		date := newDate;
+		hour := newHour;
+		type := newType;
+
+		client := newClient;
+
+		if allActivePayments = true then
+		(
+			cases type:
+				"product" -> client.moveAllGymFeePaymentsToHistory(),
+				"gymFee" -> client.moveAllProductPaymentsToHistory(),
+				"personalTraining" -> client.moveAllPersonalTrainingPaymentsToHistory()
+			end;
+
+			for all p in set payments do
+				totalAmount:= totalAmount + p.getAmount();
+			
+		)else
+		(
+			for all p in set payments do
+			(
+				totalAmount:= totalAmount + p.getAmount();
+				cases type:
+					"product" -> client.removeProductPayment(p),
+					"gymFee" -> client.removeGymFeePayment(p),
+					"personalTraining" -> client.removePersonalTrainingPayment(p)
+				end;
+			)
+		);
+        
+ 		return self;
     )
-    post club = newClub;
-     
-functions
--- TODO Define functiones here
-traces
--- TODO Define Combinatorial Test Traces here
+	pre card payments >= 1
+	post club = newClub and payments = newPayments and date = newDate and hour = newHour and 
+		type = newType and client = newClient;
+
+	public addPayment : Payment ==> ()
+	addPayment(payment) == 
+	(
+		payments:= payments union {payment};
+		totalAmount := totalAmount + payment.getAmount();
+	)
+	pre payment not in set payments;
+
+	public addPayment : set of Payment ==> ()
+	addPayment(newPayments) == 
+	(
+		payments:= payments union newPayments;
+		for all p in set newPayments do
+           totalAmount:= totalAmount + p.getAmount();
+
+	)
+	pre card newPayments >= 1 and newPayments inter payments = {};
+
+	public removePayment: Payment ==> ()
+	removePayment(payment) ==
+	(
+		payments := payments \ {payment};
+		totalAmount := totalAmount - payment.getAmount();
+	)
+	pre payments <> {} and totalAmount > 0;
+
+	public removePayment: set of Payment ==> ()
+	removePayment(newPayments) ==
+	(
+		payments := payments \ newPayments;
+		for all p in set newPayments do
+           totalAmount:= totalAmount - p.getAmount();
+	)
+	pre payments <> {} and totalAmount > 0 and card newPayments >= 1;
+
+	-- GETTERS
+
+	/**
+	 * Gets the invoice club
+	 * 
+	 * @return club
+	 */
+	public pure getClub: () ==> Club
+ 	getClub() == return club
+	post RESULT = club;
+	 
+	/**
+	 * Gets the invoice payments
+	 * 
+	 * @return set of Payment
+	 */
+	public pure getPayments: () ==> set of Payment
+ 	getPayments() == return payments
+	post RESULT = payments;
+	 
+	/**
+	 * Gets the invoice total amount
+	 * 
+	 * @return totalAmount
+	 */
+	public pure getTotalAmount: () ==> rat
+ 	getTotalAmount() == return totalAmount
+	post RESULT = totalAmount;
+
+	/**
+	 * Gets the invoice date
+	 * 
+	 * @return date
+	 */
+	public pure getDate: () ==> Date
+ 	getDate() == return date
+	post RESULT = date;
+
+	/**
+	 * Gets the invoice hour
+	 * 
+	 * @return hour
+	 */
+	public pure getHour: () ==> Hour
+ 	getHour() == return hour
+	post RESULT = hour;
+
+	/**
+	 * Gets the invoice type
+	 * 
+	 * @return type
+	 */
+	public pure getType: () ==> String1
+ 	getType() == return type
+	post RESULT = type;
+
+	/**
+	 * Gets the invoice client
+	 * 
+	 * @return client
+	 */
+	public pure getClient: () ==> Client
+ 	getClient() == return client
+	post RESULT = client;
+
 end Invoice

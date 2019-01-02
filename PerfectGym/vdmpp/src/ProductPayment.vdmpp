@@ -12,27 +12,35 @@ operations
 	/**
 	 * ProductPayment constructor
 	 */
-	public ProductPayment: seq of Product * Date * Hour==> ProductPayment
- 	ProductPayment(newProducts, newDate, newHour) == 
+	public ProductPayment: Client * Product * nat * Date * Hour==> ProductPayment
+ 	ProductPayment(newClient, newProduct, qtt , newDate, newHour) == 
  	(   
-        dcl sumValues: rat := 0;
-        dcl i: nat := 0;
-        products:= newProducts;
-        
-        while i < len products do
-            sumValues:= sumValues + products(i).getValue();
-            
-        Payment(newDate, newHour, sumValues);
+        products:= [newProduct];
+        newProduct.removeQuantity(qtt);
+    
+        Payment(newClient, newDate, newHour, products(i).getValue());
 	)
 	pre len products >= 1
    post products = products ;
 
-    public addProduct: Product ==> ()
-    addProduct(product) == 
+    public addProduct: Product * nat==> ()
+    addProduct(product, qtt) == 
     (
         products := products ^ [product];
         amount:= amount + product.getValue();
+        newProduct.removeQuantity(qtt);
     );
+
+    -- GETTERS
+
+    /**
+	 * Gets the productPayment products
+	 * 
+	 * @return seq of Product
+	 */
+	public pure getProducts: () ==> seq of Product
+ 	getProducts() == return products
+ 	post RESULT = products;
 
 
 end ProductPayment

@@ -3,25 +3,64 @@ types
 	public String_ = seq of char;
 values
 -- TODO Define values here
-instance variables
-
-	
+instance variables	
 	private trainees: set of Client := {};
+	private classes: set of GymClass := {};
+	private trainingSessions: set of TrainingSession := {};
 
 operations
 
-	public Trainer: String_  ==> Trainer
- 	Trainer(String_) == Employee(String_)
- 	post trainees = {};
+	public Trainer: String_ * nat * Gender * String1  ==> Trainer
+ 	Trainer(newName, newAge, newGender, newNationality) == Employee(newName, newAge, newGender, newNationality)
+ 	post trainees = {} and classes = {} and trainingSessions = {};;
 
 	public addTrainee: Client ==> ()
 	addTrainee(client) == trainees := trainees union {client}
 	pre client not in set trainees
 	post trainees = trainees~ union {client};
+
+	 -- GYM CLASSES
 	
-	-- Returns trainer trainees
+	public addGymClass: GymClass ==> ()
+	addGymClass(gymClass) == classes := classes union {gymClass}
+	pre gymClass not in set classes
+	post classes = classes~ union {gymClass};
+
+	-- TRAINING SESSIONS
+	
+	public addTrainingSession: TrainingSession ==> ()
+	addTrainingSession(trainingSession) == trainingSessions := trainingSessions union {trainingSession}
+	pre trainingSession not in set trainingSessions
+	post trainingSessions = trainingSessions~ union {trainingSession};
+	
+	-- GETTERS
+
+	/**
+	 * Gets the trainer trainees
+	 * 
+	 * @return set of Client
+	 */
 	public pure getTrainees : () ==> set of Client
-	getTrainees() == return trainees;
+	getTrainees() == return trainees
+	post RESULT = trainees;
+
+	/**
+	 * Gets the trainer classes
+	 * 
+	 * @return set of GymClass
+	 */
+	public pure getClasses: () ==> set of GymClass
+	getClasses() == return classes
+	post RESULT = classes;
+
+	/**
+	 * Gets the trainer training sessions
+	 * 
+	 * @return set of TrainingSession
+	 */
+	public pure getTrainingSessions: () ==> set of TrainingSession
+	getTrainingSessions() == return trainingSessions
+	post RESULT = trainingSessions;
 
 		
 functions

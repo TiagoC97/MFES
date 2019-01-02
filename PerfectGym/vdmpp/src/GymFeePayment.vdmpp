@@ -9,14 +9,25 @@ operations
     /**
 	 * GymFeePayment constructor
 	 */
-	public GymFeePayment: rat * Date * Hour==> GymFeePayment
- 	GymFeePayment(newFee, newDate, newHour) == 
+	public GymFeePayment: Client * rat * Date * Hour==> GymFeePayment
+ 	GymFeePayment(newClient, newFee, newDate, newHour) == 
  	(
 		fee:= newFee;
-        Payment(newDate, newHour, newFee);
+        Payment(newClient, newDate, newHour, newFee);
     )
     pre newFee >= 0
     post fee = newFee ;
+
+    -- GETTERS
+
+	/**
+	 * Gets the GymFeePayment fee
+	 * 
+	 * @return fee
+	 */
+	public pure getFee : () ==> rat
+	getFee() == return fee
+	post RESULT = fee;    
 
 functions
 -- TODO Define functiones here

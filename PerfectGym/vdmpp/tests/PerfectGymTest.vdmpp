@@ -2,8 +2,8 @@ class PerfectGymTest is subclass of MyTestCase
 
 instance variables
 
-  owner1: Owner := new Owner("Rui");
-	owner2: Owner := new Owner("Tiago");
+  owner1: Owner := new Owner("Rui", 21, <Male>, "portuguese");
+	owner2: Owner := new Owner("Tiago", 21, <Male>, "portuguese");
 
 	club1: Club := new Club("Bombados", owner1, 25);
 	club2: Club := new Club("PuxaFerro", owner2, 30);	

@@ -16,24 +16,25 @@ instance variables
 	private productPayments: set of ProductPayment := {};
 	private personalTrainingPayments: set of PersonalTrainingPayment := {};
 
-	private historicGymFeePayments: set of GymFeePayment := {};
-	private historicProductPayments: set of ProductPayment := {};
-	private historicPersonalTrainingPayments: set of PersonalTrainingPayment := {};
+	private historyGymFeePayments: set of GymFeePayment := {};
+	private historyProductPayments: set of ProductPayment := {};
+	private historyPersonalTrainingPayments: set of PersonalTrainingPayment := {};
 	
 operations
 
 	/**
 	 * Client constructor
 	 */
-	public Client: String_ ==> Client
-	 Client(String_) == 
+	public Client: String_ * nat * Gender * String1 ==> Client
+	 Client(newName, newAge, newGender, newNationality) == 
 	 (
 	 	trainer := nil;
-	 	User(String_, <Client>);
+	 	personalTrainingFee := 0;
+	 	User(newName, <Client>, newAge, newGender, newNationality);
 	 )
-	 post trainer = nil and classes = {} and trainingSessions = {} and gymAttendences = {} and productsBought = [] and
-	 	gymFeePayments = {} and productPayments = {} and personalTrainingPayments = {} and historicGymFeePayments = {} and
-		historicProductPayments = {} and historicPersonalTrainingPayments = {};
+	 post trainer = nil and personalTrainingFee = 0 and classes = {} and trainingSessions = {} and gymAttendences = {} and productsBought = [] and
+	 	gymFeePayments = {} and productPayments = {} and personalTrainingPayments = {} and historyGymFeePayments = {} and
+		historyProductPayments = {} and historyPersonalTrainingPayments = {};
 	 
 	 /**
 	  * Adds a trainer to the client
@@ -131,35 +132,44 @@ operations
 	public addPersonalTrainingPayment: PersonalTrainingPayment ==> ()
 	addPersonalTrainingPayment(payment) == personalTrainingPayments := personalTrainingPayments union {payment};
 
-	public addHistoricGymFeePayment: GymFeePayment ==> ()
-	addHistoricGymFeePayment(payment) == historicGymFeePayments := historicGymFeePayments union {payment};
+	public addHistoryGymFeePayment: GymFeePayment ==> ()
+	addHistoryGymFeePayment(payment) == historyGymFeePayments := historyGymFeePayments union {payment};
 
-	public addHistoricProductPayment: ProductPayment ==> ()
-	addHistoricProductPayment(payment) == historicProductPayments := historicProductPayments union {payment};
+	public addHistoryProductPayment: ProductPayment ==> ()
+	addHistoryProductPayment(payment) == historyProductPayments := historyProductPayments union {payment};
 
-	public addHistoricPersonalTrainingPayment: PersonalTrainingPayment ==> ()
-	addHistoricPersonalTrainingPayment(payment) == historicPersonalTrainingPayments := historicPersonalTrainingPayments union {payment};
+	public addHistoryPersonalTrainingPayment: PersonalTrainingPayment ==> ()
+	addHistoryPersonalTrainingPayment(payment) == historyPersonalTrainingPayments := historyPersonalTrainingPayments union {payment};
 	
 	public removeGymFeePayment: GymFeePayment ==> ()
-	removeGymFeePayment(payment) == gymFeePayments := gymFeePayments \ {payment}
+	removeGymFeePayment(payment) == 
+	(
+		addHistoryGymFeePayment(payment);
+		gymFeePayments := gymFeePayments \ {payment};
+	)
 	pre gymFeePayments <> {} and payment in set gymFeePayments;
 
 	public removeProductPayment: ProductPayment ==> ()
-	removeProductPayment(payment) == productPayments := productPayments \ {payment}
+	removeProductPayment(payment) == 
+	(
+		addHistoryProductPayment(payment);		
+		productPayments := productPayments \ {payment};
+	)
 	pre productPayments <> {} and payment in set productPayments;
 
 	public removePersonalTrainingPayment: PersonalTrainingPayment ==> ()
-	removePersonalTrainingPayment(payment) == personalTrainingPayments := personalTrainingPayments \ {payment}
+	removePersonalTrainingPayment(payment) == 
+	(
+		addHistoryPersonalTrainingPayment(payment);		
+		personalTrainingPayments := personalTrainingPayments \ {payment};
+	)
 	pre personalTrainingPayments <> {} and payment in set personalTrainingPayments;
 
 	public moveAllGymFeePaymentsToHistory: () ==> ()
 	moveAllGymFeePaymentsToHistory() == 
 	(
 		for all payment in set gymFeePayments do
-		(
-			addHistoricGymFeePayment(payment);
 			removeGymFeePayment(payment);
-		)
 	)
 	post gymFeePayments = {};
 
@@ -168,7 +178,6 @@ operations
 	(
 		for all payment in set productPayments do
 		(
-			addHistoricProductPayment(payment);
 			removeProductPayment(payment);
 		)
 	)
@@ -179,7 +188,6 @@ operations
 	(
 		for all payment in set personalTrainingPayments do
 		(
-			addHistoricPersonalTrainingPayment(payment);
 			removePersonalTrainingPayment(payment);
 		);
 	)
@@ -188,14 +196,14 @@ operations
 	public payGymFee: Date * Hour ==> ()
 	payGymFee(date, hour) == 
 	(
-		dcl payment: GymFeePayment := new GymFeePayment(club.getFee(), date, hour);
+		dcl payment: GymFeePayment := new GymFeePayment(self, club.getFee(), date, hour);
 		addGymFeePayment(payment);
 	);
 
 	public payPersonalTrainingFee: Date * Hour ==> ()
 	payPersonalTrainingFee(date, hour) == 
 	(
-		dcl payment: PersonalTrainingPayment := new PersonalTrainingPayment(club.getFee(), date, hour);
+		dcl payment: PersonalTrainingPayment := new PersonalTrainingPayment(self, club.getFee(), date, hour);
 		addPersonalTrainingPayment(payment);
 	);
 	-- PRODUCTS
@@ -203,7 +211,7 @@ operations
 	public buyProducts: seq of Product * Date * Hour ==> ()
 	buyProducts(products, date, hour) == 
 	(
-		dcl payment: ProductPayment := new ProductPayment(products, date, hour);
+		dcl payment: ProductPayment := new ProductPayment(self, products, date, hour);
 		addProductPayment(payment);
 		productsBought:= productsBought ^ products;
 	);
@@ -242,19 +250,125 @@ operations
 	 * 
 	 * @return trainer
 	 */
-	public getTrainer: () ==> Trainer
+	public pure getTrainer: () ==> Trainer
 	getTrainer() == return trainer
 	post RESULT = trainer;
-	
+
 	/**
-	 * Gets the client gym attendence dates
+	 * Gets the client personal training fee
 	 * 
-	 * @return gymAttendences
+	 * @return personalTrainingFee
 	 */
-	public getGymAttendences: () ==> set of Date
+	public pure getPersonalTrainingFee: () ==> rat
+	getPersonalTrainingFee() == return personalTrainingFee
+	post RESULT = personalTrainingFee;
+
+	/**
+	 * Gets the client classes
+	 * 
+	 * @return set of GymClass
+	 */
+	public pure getClasses: () ==> set of GymClass
+	getClasses() == return classes
+	post RESULT = classes;
+
+	/**
+	 * Gets the client training sessions
+	 * 
+	 * @return set of TrainingSession
+	 */
+	public pure getTrainingSessions: () ==> set of TrainingSession
+	getTrainingSessions() == return trainingSessions
+	post RESULT = trainingSessions;
+
+	/**
+	 * Gets the client gym attendences
+	 * 
+	 * @return set of Date
+	 */
+	public pure getGymAttendences: () ==> set of Date
 	getGymAttendences() == return gymAttendences
 	post RESULT = gymAttendences;
 
-functions
-traces
+	/**
+	 * Gets the client products bought
+	 * 
+	 * @return seq of Product
+	 */
+	public pure getProductsBought: () ==> seq of Product
+	getProductsBought() == return productsBought
+	post RESULT = productsBought;
+
+	/**
+	 * Gets the client gym fee paymenrs
+	 * 
+	 * @return set of GymFeePayment
+	 */
+	public pure getGymFeePayments: () ==> set of GymFeePayment
+	getGymFeePayments() == return gymFeePayments
+	post RESULT = gymFeePayments;
+
+	/**
+	 * Gets the client product payments
+	 * 
+	 * @return set of ProductPayment
+	 */
+	public pure getProductPayments: () ==> set of ProductPayment
+	getProductPayments() == return productPayments
+	post RESULT = productPayments;
+	
+	/**
+	 * Gets the client personal training payments
+	 * 
+	 * @return set of PersonalTrainingPayment
+	 */
+	public pure getPersonalTrainingPayments: () ==> set of PersonalTrainingPayment
+	getPersonalTrainingPayments() == return personalTrainingPayments
+	post RESULT = personalTrainingPayments;
+
+
+	/**
+	 * Gets the client history of gym fee payments
+	 * 
+	 * @return set of GymFeePayment
+	 */
+	public pure getHistoryGymFeePayments: () ==> set of GymFeePayment
+	getHistoryGymFeePayments() == return historyGymFeePayments
+	post RESULT = historyGymFeePayments;
+
+	/**
+	 * Gets the client history of product payments
+	 * 
+	 * @return set of ProductPayment
+	 */
+	public pure getHistoryProductPayments: () ==> set of ProductPayment
+	getHistoryProductPayments() == return historyProductPayments
+	post RESULT = historyProductPayments;
+
+	/**
+	 * Gets the client history of personal training payments
+	 * 
+	 * @return set of PersonalTrainingPayment
+	 */
+	public pure getHistoryPersonalTrainingPayments: () ==> set of PersonalTrainingPayment
+	getHistoryPersonalTrainingPayments() == return historyPersonalTrainingPayments
+	post RESULT = historyPersonalTrainingPayments;
+		
+	/**
+	 * Gets the client active payments of a given type
+	 * 
+	 * @return set of Payment
+	 */
+	public pure getPaymentsOfGivenType: String1 ==> set of Payment
+	getPaymentsOfGivenType(type) ==
+	(
+		cases type:
+			"product" -> return productPayments,
+			"gymFee" -> return gymFeePayments,
+			"personalTraining" -> return personalTrainingPayments
+		end;
+		return {};
+	)
+	pre type in set {"product", "gymFee", "personalTraining"};
+
 end Client

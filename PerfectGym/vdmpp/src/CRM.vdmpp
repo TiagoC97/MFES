@@ -58,6 +58,37 @@ operations
 			leads(lead).removeLead(lead);
 	)
 	pre leads <> {|->} and lead in set dom leads;
+
+	-- GETTERS
+
+	/**
+	 * Gets the client leads
+	 * 
+	 * @return map Lead to [SalesRepresentative]
+	 */
+	public pure  getLeads: () ==> map Lead to [SalesRepresentative]
+	getLeads() == return leads
+	post RESULT = leads;
+
+	/**
+	 * Gets one of the client leads sales representative
+	 * 
+	 * @return SalesRepresentative
+	 */
+	public pure getLeadSR: Lead ==> SalesRepresentative
+	getLeadSR(lead) == return leads(lead)
+	pre lead in set dom leads and leads(lead) <> nil
+	post RESULT = leads(lead);
+
+	/**
+	 * Gets the crm club
+	 * 
+	 * @return club
+	 */
+	public pure getClub: () ==> Club
+ 	getClub() == return club
+ 	post RESULT = club;
+
  	
  	
 end CRM

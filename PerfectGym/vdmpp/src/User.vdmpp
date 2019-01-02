@@ -5,6 +5,7 @@ types
 	public Access = <Owner> | <Employee> | <Client>;
 	public Date = DateAndHour`Date;
 	public Hour = DateAndHour`Hour;
+	public Gender = <Male> | <Female>;
 	
 -- TODO Define values here
 instance variables
@@ -14,22 +15,32 @@ instance variables
 	protected inbox: map String1 to seq of String1 := {|->};
 	protected club: [Club];
 	protected access: Access;
+	protected age: nat;
+	protected gender: Gender;
+	protected nationality: String1;
 	
+	inv age >= 12;
 operations
 
-	public User: String_ * Access ==> User
- 	User(newName, acc) == (
+	public User: String_ * Access * nat * Gender * String1 ==> User
+ 	User(newName, acc, newAge, newGender, newNationality) == (
  		club := nil;
  		name := newName;
+ 		age := newAge;
+ 		gender := newGender;
+ 		nationality := newNationality;
  		curUserID := curUserID +1;
  		access := acc; 
  		return self
  	)
 	pre newName <> ""
  	post name = newName and
- 			 id = curUserID~ and
- 			 access = acc and
-			 curUserID = curUserID~ + 1;
+		 age = newAge and
+		 gender = newGender and
+		 nationality = newNationality and
+ 		 id = curUserID~ and
+ 		 access = acc and
+		 curUserID = curUserID~ + 1;
  	
  	public setClub: Club ==> ()
  	setClub(newClub) == club:= newClub
@@ -54,17 +65,7 @@ operations
  	)
  	pre user in set club.getUsers();
  	
- 	-- read last message from a given user
-	public readMessagesFromUser: User ==> seq of String1
-	readMessagesFromUser(user) == return inbox(user.getName())
-	pre user.getName() in set dom inbox and user in set club.getUsers()
-	post RESULT = inbox(user.getName());
-	
-	-- read last message from a given user
-	public readLastMessageFromUser: User ==> String1
-	readLastMessageFromUser(user) == return hd inbox(user.getName())
-	pre user.getName() in set dom inbox and user in set club.getUsers()
-	post RESULT = hd inbox(user.getName());
+ 	
 	
 	-- delete last message from a given user
 	public deleteLastMessageFromUser: User ==> ()
@@ -85,29 +86,112 @@ operations
 	post inbox(user.getName()) = inbox(user.getName())(1,..., n - 1) ^ inbox(user.getName())((n + 1),..., (len inbox(user.getName())));  -- CHECK THIS POST
 	
 
- 	-- check the inbox
- 	public checkInbox: () ==> map String1 to seq of String1
- 	checkInbox() == return inbox; 	
+ 	
  	
 
 		
-		public setAccess: Access ==> ()
-		setAccess(newAccess) == access := newAccess;
+	public setAccess: Access ==> ()
+	setAccess(newAccess) == access := newAccess;
+
+	-- GETTERS
+
+	/**
+	 * Gets the user inbox
+	 * 
+	 * @return map String1 to seq of String1
+	 */
+ 	public pure checkInbox: () ==> map String1 to seq of String1
+	checkInbox() == return inbox
+	post RESULT = inbox;	
+	 
+	 /**
+	 * Gets the last messages from a given user
+	 * 
+	 * @return seq of String1
+	 */
+	public pure readMessagesFromUser: User ==> seq of String1
+	readMessagesFromUser(user) == return inbox(user.getName())
+	pre user.getName() in set dom inbox and user in set club.getUsers()
+	post RESULT = inbox(user.getName());
+	
+	/**
+	 * Gets the last message from a given user
+	 * 
+	 * @return String1
+	 */
+	public pure readLastMessageFromUser: User ==> String1
+	readLastMessageFromUser(user) == return hd inbox(user.getName())
+	pre user.getName() in set dom inbox and user in set club.getUsers()
+	post RESULT = hd inbox(user.getName());
 		
-		public getActivity: () ==> ()
-		getActivity() == skip;
+	/**
+	 * Gets the user activity
+	 */
+	public pure getActivity: () ==> ()
+	getActivity() == skip;
 		
-		-- Returns user name
-		public pure getName : () ==> String_
-		getName() == return name;
+	/**
+	 * Gets the user name
+	 * 
+	 * @return String_
+	 */
+	public pure getName : () ==> String_
+	getName() == return name
+	post RESULT = name;	
 		
-		-- Returns user id
-		public pure getId : () ==> int
-		getId() == return id;
+	/**
+	 * Gets the user id
+	 * 
+	 * @return int
+	 */
+	public pure getId : () ==> int
+	getId() == return id
+	post RESULT = id;	
  	
- 		-- Returns user access to the club
-		public pure getAccess : () ==> Access
-		getAccess() == return access;
+ 	/**
+	 * Gets the user acces to the club
+	 * 
+	 * @return Access
+	 */
+	public pure getAccess : () ==> Access
+	getAccess() == return access
+	post RESULT = access;	
+
+	/**
+	 * Gets the user age
+	 * 
+	 * @return age
+	 */
+	public pure getAge : () ==> nat
+	getAge() == return age;
+	post RESULT = age;
+
+	/**
+	 * Gets the user nationality
+	 * 
+	 * @return gender
+	 */
+	public pure getGender : () ==> Gender
+	getGender() == return gender
+	post RESULT = gender;
+
+	/**
+	 * Gets the user nationality
+	 * 
+	 * @return nationality
+	 */
+	public pure getNationality : () ==> String1
+	getNationality() == return nationality
+	post RESULT = nationality;
+
+	/**
+	 * Gets the user club
+	 * 
+	 * @return club
+	 */
+	public pure getClub: () ==> Club
+ 	getClub() == return club
+ 	post RESULT = club;
  	
 functions
 -- TODO Define functiones here

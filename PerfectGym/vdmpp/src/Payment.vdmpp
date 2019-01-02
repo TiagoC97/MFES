@@ -12,13 +12,15 @@ instance variables
 	protected amount: rat := 0;
 	public static curPaymentID : int := 0;
 	protected id : int := curPaymentID;
+	protected client: Client;
 operations
 	/**
 	 * Payment constructor
 	 */
-	public Payment: Date * Hour * rat ==> Payment
- 	Payment(newDate, newHour, newAmount) == 
+	public Payment: Client * Date * Hour * rat ==> Payment
+ 	Payment(newClient, newDate, newHour, newAmount) == 
  	(
+		client := newClient;
 		date:= newDate;
 		hour:= newHour;
 		amount := newAmount;
@@ -26,7 +28,55 @@ operations
  		return self
 	)
 	pre newAmount > 0
-    post date = newDate and hour = newHour and amount = newAmount and curPaymentID = curPaymentID~ + 1;
+    post client = newClient and date = newDate and hour = newHour and amount = newAmount and curPaymentID = curPaymentID~ + 1;
+
+	-- GETTERS
+
+	/**
+	 * Gets the payment date
+	 * 
+	 * @return date
+	 */
+	public pure getDate: () ==> Date
+ 	getDate() == return date
+	post RESULT = date;
+
+	/**
+	 * Gets the payment hour
+	 * 
+	 * @return hour
+	 */
+	public pure getHour: () ==> Hour
+ 	getHour() == return hour
+	post RESULT = hour;
+
+	/**
+	 * Gets the payment amount
+	 * 
+	 * @return amount
+	 */
+	public getAmount: () ==> rat
+	getAmount() == return amount
+	post RESULT = amount;
+
+	/**
+	 * Gets the payment client
+	 * 
+	 * @return client
+	 */
+	public pure getClient: () ==> Client
+	getClient() == return client
+	post RESULT = client;
+
+	/**
+	 * Gets the payment id
+	 * 
+	 * @return id
+	 */
+	public pure getID: () ==> int
+	getID() == return id
+	post RESULT = id;
+
 functions
 -- TODO Define functiones here
 traces

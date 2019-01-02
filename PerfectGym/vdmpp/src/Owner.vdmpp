@@ -6,11 +6,7 @@ values
 instance variables
 -- TODO Define instance variables here
 operations
-	public Owner: String_ ==> Owner
- 	Owner(String_) == User(String_, <Owner>);
- 	
-functions
--- TODO Define functiones here
-traces
--- TODO Define Combinatorial Test Traces here
+	public Owner: String_ * nat * Gender * String1 ==> Owner
+ 	Owner(newName, newAge, newGender, newNationality) == User(newName,  <Owner>, newAge, newGender, newNationality);
+
 end Owner

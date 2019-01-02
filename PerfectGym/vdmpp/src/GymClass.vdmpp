@@ -29,12 +29,22 @@ operations
 
  	
  	-- GETTERS
- 	
+	 
+	/**
+	 * Gets the gym class name
+	 * 
+	 * @return String1
+	 */
  	public pure getName: () ==> String1
  	getName() == return name
  	post RESULT = name;
- 		
-	public getAttendees: () ==> set of Client
+		 
+	/**
+	 * Gets the gym class attendees
+	 * 
+	 * @return set of Client
+	 */
+	public pure getAttendees: () ==> set of Client
  	getAttendees() == return attendees
  	post RESULT = attendees;
 

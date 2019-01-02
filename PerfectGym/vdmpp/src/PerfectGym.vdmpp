@@ -7,51 +7,39 @@ instance variables
 -- TODO Define instance variables here
 
 	private clubs: map String_ to Club := {|->};
-	-- private users: set of User := {};
 	
 	private static perfectGym: PerfectGym := new PerfectGym();
 operations
--- TODO Define operations here
-		-- constructor
-		public PerfectGym: () ==> PerfectGym
-		PerfectGym() == (return self)
-		post clubs = {|->};
-		-- and users = {};
+	-- constructor
+	public PerfectGym: () ==> PerfectGym
+	PerfectGym() == (return self)
+	post clubs = {|->};		
 		
-		-- singleton - return the existent instance
-		public pure static getInstance: () ==> PerfectGym
-		getInstance() == return perfectGym;
+	-- add a new club to the PerfectGym
+	public addClub: Club ==> ()
+	addClub(club) == clubs := clubs munion {club.getName() |-> club}
+	pre club.getName() not in set dom clubs
+	post clubs = clubs~ munion {club.getName() |-> club};
+
+	-- GETTERS
+
+	/**
+	 * Gets the perfectGym instance (Singleton)
+	 * 
+	 * @return perfectGym
+	 */
+	public pure static getInstance: () ==> PerfectGym
+	getInstance() == return perfectGym
+	post RESULT = perfectGym;
 		
-		-- add a new club to the PerfectGym
-		public addClub: Club ==> ()
-		addClub(club) == 
-		(
-			-- dcl clubOwner : Owner := club.getOwner();
-			 
-			clubs := clubs munion {club.getName() |-> club};
-			-- if clubOwner not in set users then
-				-- users := users union {clubOwner};
-		)
-		pre club.getName() not in set dom clubs
-		post clubs = clubs~ munion {club.getName() |-> club};
+	/**
+	 * Gets the perfectGym clubs
+	 * 
+	 * @return clubs
+	 */
+	public pure getClubs: () ==> map String_ to Club
+	getClubs() == return clubs
+	post RESULT = clubs;
 		
-		/**
-		* get clubs
-		*/
-		public getClubs: () ==> map String_ to Club
-		getClubs() == 
-		(
-			return clubs;
-		);
-		
-		-- add a new user to the PerfectGym
-		-- public addUser: User ==> ()
-		-- addUser(user) == users := users union {user}
-		-- pre user not in set users
-		-- post users = users~ union {user};
-		
-functions
--- TODO Define functiones here
-traces
--- TODO Define Combinatorial Test Traces here
+
 end PerfectGym

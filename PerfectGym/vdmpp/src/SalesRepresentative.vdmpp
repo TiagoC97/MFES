@@ -6,8 +6,8 @@ values
 instance variables
 	private leads: set of Lead := {};
 operations
-	public SalesRepresentative: String_ ==> SalesRepresentative
- 	SalesRepresentative(String_) == Employee(String_)
+	public SalesRepresentative: String_ * nat * Gender * String1 ==> SalesRepresentative
+ 	SalesRepresentative(newName, newAge, newGender, newNationality) == Employee(newName, newAge, newGender, newNationality)
  	post leads = {};
  	
  	public addLead: Lead ==> ()
@@ -19,9 +19,16 @@ operations
  	removeLead(lead) == leads := leads \ {lead}
  	pre lead in set leads
  	post leads= leads~ \ {lead};
- 	
-functions
--- TODO Define functiones here
-traces
--- TODO Define Combinatorial Test Traces here
+
+	-- GETTERS
+
+    /**
+	 * Gets the SalesRepresentative leads
+	 * 
+	 * @return set of Lead
+	 */
+	public pure getLeads: () ==> set of Lead
+ 	getLeads() == return leads
+ 	post RESULT = leads;
+
 end SalesRepresentative
