@@ -481,8 +481,8 @@ operations
 		 * @return set of User
 		 */
 		public pure getUsers : () ==> set of User
-		getUsers() == return clients union trainers union salesRepresentatives
-		post RESULT = clients union trainers union salesRepresentatives;
+		getUsers() == return {clubOwner} union clients union trainers union salesRepresentatives
+		post RESULT = {clubOwner} union clients union trainers union salesRepresentatives;
 
 		/**
 		 * Gets clients by name

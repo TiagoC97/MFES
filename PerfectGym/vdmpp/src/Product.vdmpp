@@ -11,7 +11,7 @@ instance variables
 
 	inv quantity >= 0;
 operations
-	public Product: String_ * real * nat * Club==> Product
+	public Product: String_ * rat * nat * Club==> Product
  	Product(prod_name, prod_value, prod_quantity, newClub) == 
  	(
  		name := prod_name;

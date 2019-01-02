@@ -32,7 +32,7 @@ operations
  		access := acc;
  		return self
  	)
-	pre newName <> "" and age >= 12
+	pre newName <> "" and newAge >= 12
  	post name = newName and
 		 age = newAge and
 		 gender = newGender and
