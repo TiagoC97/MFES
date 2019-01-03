@@ -333,7 +333,7 @@ operations
 		pre isAtLeastEmployee(user) and user in set getUsers();
 
 		/**
-		 * Add a lead to the crm attrubting sales representative
+		 * Add a lead to the crm attributing sales representative
 		 */
 		public addLeadSRToCRM: Lead * SalesRepresentative * User ==> ()
 		addLeadSRToCRM(lead, sr, user) == crm.addLeadWithSR(lead, sr)
