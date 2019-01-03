@@ -1,0 +1,29 @@
+class GymClassTest is subclass of MyTestCase
+
+instance variables
+
+	trainer1: Trainer := new Trainer("Vasco", 25, <Male>, "brazilian");
+
+	client1: Client := new Client("Maria", 23, <Female>, "portuguese");
+
+  	gymClass1: GymClass := new GymClass("Aula de baixa intensidade", "Pilates", trainer1, <Tuesday>, 
+		Utils`CreateHour(09, 00), 
+		Utils`CreateHour(10, 00), 
+		Utils`CreateDate(2019, 01, 15));
+	
+	
+operations
+	public Run: () ==> ()
+	Run() == (
+		IO`println("\nGymClass Tests");
+
+		gymClass1.addAttendee(client1);
+
+		assertEqual("Pilates", gymClass1.getName());
+		assertEqual({client1}, gymClass1.getAttendees());
+
+		IO`println("Finalizing GymClass Tests");
+
+	);
+	
+end GymClassTest

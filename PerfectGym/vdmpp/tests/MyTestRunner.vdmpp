@@ -6,11 +6,14 @@ operations
 			IO`println("Initializing Test Runner");
 			
 	    new PerfectGymTest().Run();
-		new ClubTest().Run();
 		new ProductTest().Run();
 		new TaskTest().Run();
+		new SessionTest().Run();
+		new GymClassTest().Run();
+		new TrainingSessionTest().Run();
 		new GroupTest().Run();
 		new LeadTest().Run();
+		-- new ClubTest().Run();
 	    -- new UseCasesTest().Run();
 	    
 	    IO`println("\nFinalizing Test Runner");
