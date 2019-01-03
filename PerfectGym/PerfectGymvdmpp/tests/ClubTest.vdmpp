@@ -14,6 +14,16 @@ instance variables
 
 	salesRepresentative1: SalesRepresentative := new SalesRepresentative("Joana", 21, <Female>, "portuguese");
 	salesRepresentative2: SalesRepresentative := new SalesRepresentative("Manuel", 33, <Male>, "french");
+
+	gymClass1: GymClass := new GymClass("Aula de baixa intensidade", "Pilates", trainer1, <Tuesday>, 
+		Utils`CreateHour(09, 00), 
+		Utils`CreateHour(10, 00), 
+		Utils`CreateDate(2019, 01, 15));
+
+	lead1: Lead := new Lead("Maria", 23, <Female>, "portuguese");
+	lead2: Lead := new Lead("Jorge", 25, <Male>, "spanish");
+
+	crm: CRM := new CRM();
 	
 	
 operations
@@ -33,6 +43,7 @@ operations
 		club1.addGroup("PuxadoresDeFerro", {client1}, owner1);
 
 		club1.addPersonalTraining(trainer1, client1, 40, owner1);
+		club1.removeTraineeFromTrainer(trainer1, client1);
 
 		club1.addGymClass("Aula de alta intensidade", "Zumba", trainer1, <Monday>, 
 		Utils`CreateHour(16, 00), 
@@ -44,6 +55,9 @@ operations
 	  	Utils`CreateHour(10, 00), 
 	  	Utils`CreateDate(2019, 01, 15), owner1);
 		  IO`println("Finalizing GymClass2");
+
+		club1.addAttendeeToGymClass(gymClass1, client1, owner1);
+		club1.addAttendeeToGymClass(gymClass1, client2, owner1);
 		
 		club1.addTrainingSession("Aula iniciante", trainer1, client1, <Monday>, 
 		Utils`CreateHour(14, 00), 
@@ -87,9 +101,18 @@ operations
 		--club1.addPaymentToInvoice();
 		--club1.removePaymentFromInvoice();
 
-		
+		club1.addLeadToCRM(lead1, owner1);
+		club1.addLeadSRToCRM(lead2, salesRepresentative2, owner1);
+		club1.setCRMLeadSR(lead1, salesRepresentative1, owner1);
 
-		IO`println("Starting Asserts");
+		assertEqual({lead1 |-> salesRepresentative1}, crm.getLeads());
+		assertEqual(salesRepresentative1, crm.getLeadSR(lead1));
+
+		club1.removeLeadSR(lead1, salesRepresentative1, owner1);
+		assertEqual({lead1 |-> nil}, crm.getLeads());
+		club1.removeCRMLead(lead1);
+
+		club1.transformLeadIntoClient(lead2, owner1);
 
 		assertEqual({client1, client2}, club1.getClients());
 		assertEqual({trainer1, trainer2}, club1.getTrainers());
@@ -99,6 +122,10 @@ operations
 		assertEqual("Bombados", club1.getName());
 		
 		assertEqual(club1, owner1.getClub());
+
+		club1.getReportOnClubStatistics(owner1);
+
+		club1.getClientActivity(client1, owner1);
 
 		IO`println("Finalizing Club Tests");
 	);

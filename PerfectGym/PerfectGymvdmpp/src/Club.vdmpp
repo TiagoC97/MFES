@@ -181,7 +181,9 @@ operations
 			t1 <> t2 and (t1.getTrainer() = t2.getTrainer() or t1.getTrainee() = t2.getTrainee()) and
 			t1.getDate() = t2.getDate() and Utils`overlaps(t1.getStartHour(), t1.getEndHour(), t2.getStartHour(), t2.getEndHour());
 
-
+		/**
+		 * Set the access of a user
+		 */
 		public setUserAccess: User * Employee * Access ==> ()
 		setUserAccess(user, targetEmployee, access) == targetEmployee.setAccess(access)
 		pre
