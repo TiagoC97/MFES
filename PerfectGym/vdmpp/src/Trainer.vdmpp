@@ -77,6 +77,7 @@ operations
 		(
 			dcl numClasses: nat := card classes;
 			dcl numTrainingSessiosn: nat := card trainingSessions;
+			dcl numTrainees: nat := card trainees;
 			dcl tasks: map Date to seq of Task := calendar.getTasks();
 			dcl i: nat := 0;
 			dcl t: Task;
@@ -84,13 +85,14 @@ operations
 			IO`println("********* CLIENT STATISTICS *********");
 			IO`println("Number of gym classes: " ^ [numClasses]);
 			IO`println("Number of training sessions: " ^ [numTrainingSessiosn]);
+			IO`println("Number of trainees: " ^ [numTrainees]);
 			
 			if showAllTasks then
 				(
 					for all d in set dom tasks do
 					(
 						i := 0;
-						IO`println(d);	
+						IO`println("Date: " ^ [d]);	
 
 						while i < len tasks(d) do
 						( 

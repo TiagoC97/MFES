@@ -21,6 +21,7 @@ operations
 		quantity := prod_quantity;
 		return self;
  	)
+	pre prod_value >= 0 and prod_quantity >0
 	post name = prod_name and value = prod_value and quantity = prod_quantity;
 
 	/**

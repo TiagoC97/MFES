@@ -15,13 +15,14 @@ operations
 	public ProductPayment: Client * Product * nat * Date * Hour==> ProductPayment
  	ProductPayment(newClient, newProduct, qtt , newDate, newHour) == 
  	(   
+        dcl moneySpent: rat := newProduct.getValue() * qtt;
         products:= [newProduct];
         newProduct.removeQuantity(qtt);
 
         newClient.addProductPayment(self);
-        newClient.addProductBought(newProduct);
+        newClient.addProductBought(newProduct, qtt, moneySpent);
     
-        Payment(newClient, newDate, newHour, newProduct.getValue());
+        Payment(newClient, newDate, newHour, moneySpent);
 	)
 	pre len products >= 1
    post products = products ;
@@ -32,10 +33,11 @@ operations
     public addProduct: Product * nat==> ()
     addProduct(product, qtt) == 
     (
+        dcl moneySpent: rat := product.getValue() * qtt;
         products := products ^ [product];
-        amount:= amount + product.getValue();
+        amount:= amount + moneySpent;
         product.removeQuantity(qtt);
-        client.addProductBought(product);
+        client.addProductBought(product, qtt, moneySpent);
     );
 
     -- GETTERS

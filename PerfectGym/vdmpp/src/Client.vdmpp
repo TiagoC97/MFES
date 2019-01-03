@@ -7,7 +7,8 @@ instance variables
 	private classes: set of GymClass := {};
 	private trainingSessions: set of TrainingSession := {};
 	private gymAttendences: set of Date := {};
-	private productsBought: set of Product := {};
+	private productsBought: map String1 to nat := {|->};
+	private totalSpentOnProducts: rat;
 
 	private gymFeePayments: set of GymFeePayment := {};
 	private productPayments: set of ProductPayment := {};
@@ -24,9 +25,6 @@ instance variables
 	inv not exists t1, t2 in set trainingSessions &
 		t1 <> t2 and (t1.getTrainer() = t2.getTrainer() or t1.getTrainee() = t2.getTrainee()) and
 		t1.getDate() = t2.getDate() and Utils`overlaps(t1.getStartHour(), t1.getEndHour(), t2.getStartHour(), t2.getEndHour());
-
-	inv not exists p1, p2 in set productsBought &
-		p1 <> p2 and p1.getName() = p2.getName();
 	
 operations
 
@@ -38,9 +36,10 @@ operations
 	 (
 	 	trainer := nil;
 	 	personalTrainingFee := 0;
+		 totalSpentOnProducts := 0;
 	 	User(newName, <Client>, newAge, newGender, newNationality);
 	 )
-	 post trainer = nil and personalTrainingFee = 0 and classes = {} and trainingSessions = {} and gymAttendences = {} and productsBought = {} and
+	 post trainer = nil and personalTrainingFee = 0 and totalSpentOnProducts = 0 and classes = {} and trainingSessions = {} and gymAttendences = {} and productsBought = {|->} and
 	 	gymFeePayments = {} and productPayments = {} and personalTrainingPayments = {} and historyGymFeePayments = {} and
 		historyProductPayments = {} and historyPersonalTrainingPayments = {};
 	 
@@ -253,11 +252,17 @@ operations
 	/**
 	 * Add a product bought to this client
 	 */
-	public addProductBought: Product ==> ()
-	addProductBought(product) == 
-		productsBought:= productsBought union {product}
-	pre product not in set productsBought
-	post productsBought = productsBought~ union {product};
+	public addProductBought: Product * nat * rat ==> ()
+	addProductBought(product, qtt, spent) == 
+	(
+		totalSpentOnProducts:= totalSpentOnProducts + spent;
+		if product.getName() in set dom productsBought then
+			productsBought(product.getName()) := productsBought(product.getName()) + qtt
+		else
+			productsBought := productsBought munion {product.getName() |-> qtt};
+	)
+	pre spent > 0
+	post totalSpentOnProducts = totalSpentOnProducts~ + spent;
 	
 	/**
 	 * Add a product to a payment made by this client
@@ -278,6 +283,7 @@ operations
 			dcl numTrainingSessiosn: nat := card trainingSessions;
 			dcl numAttendences: nat := card gymAttendences;
 			dcl personalTrainer: String1 := "None";
+			dcl numProductsBought : nat := card dom productsBought;
 			
 			if trainer <> nil then
 				personalTrainer:= trainer.getName();
@@ -288,6 +294,7 @@ operations
 			IO`println("Number of gym classes: " ^ [numClasses]);
 			IO`println("Number of training sessions: " ^ [numTrainingSessiosn]);
 			IO`println("Number of gym attendences: " ^ [numAttendences]);
+			IO`println("Number of different products bought: " ^ [numProductsBought]);
 			IO`println("");
 			IO`println("************************************");
 		);
@@ -309,6 +316,15 @@ operations
 	public pure getPersonalTrainingFee: () ==> rat
 	getPersonalTrainingFee() == return personalTrainingFee
 	post RESULT = personalTrainingFee;
+
+	/**
+	 * Gets the client total spent on products
+	 * 
+	 * @return totalSpentOnProducts
+	 */
+	public pure getTotalSPentOnProducts: () ==> rat
+	getTotalSPentOnProducts() == return totalSpentOnProducts
+	post RESULT = totalSpentOnProducts;
 
 	/**
 	 * Gets the client classes
@@ -340,9 +356,9 @@ operations
 	/**
 	 * Gets the client products bought
 	 * 
-	 * @return set of Product
+	 * @return map String1 to nat
 	 */
-	public pure getProductsBought: () ==> set of Product
+	public pure getProductsBought: () ==> map String1 to nat
 	getProductsBought() == return productsBought
 	post RESULT = productsBought;
 

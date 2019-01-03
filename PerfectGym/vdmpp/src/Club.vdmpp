@@ -113,7 +113,8 @@ operations
 		addGroup(newName, newClients, user) ==
 				groups := groups munion {newName |-> new Group(newClients)}
 		pre newName not in set dom groups and user in set getUsers() and
-			forall c in set newClients & c in set clients and (isAtLeastEmployee(user))
+			forall c in set newClients & c in set clients and
+			(not exists c1, c2 in set newClients & c1<>c2 and c1.getID() = c2.getID()) and (isAtLeastEmployee(user))
 		post groups = groups~ munion {newName |-> groups(newName)};
 
 		/**

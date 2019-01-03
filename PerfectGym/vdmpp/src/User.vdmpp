@@ -7,7 +7,6 @@ types
 	public Hour = Utils`Hour;
 	public Gender = <Male> | <Female>;
 
--- TODO Define values here
 instance variables
 	protected name: String1;
 	public static curUserID : int := 0;
@@ -40,18 +39,29 @@ operations
 		 gender = newGender and
 		 nationality = newNationality and
  		 id = curUserID~ and
- 		 access = acc and
+		  access = acc and
+		  club = nil and
 		 curUserID = curUserID~ + 1;
 
+	/**
+	 * Sets this user club
+	 */
  	public setClub: Club ==> ()
  	setClub(newClub) == club:= newClub
- 	post club = newClub;
+	 post club = newClub;
+	 
+	 -- MESSAGES
 
+	/**
+	 * Sends a message from this user to the given user
+	 */
 	public sendMessage: User * String1 ==> ()
 	sendMessage(receiver, msg) == receiver.receiveMessage(msg, self)
 	pre receiver in set club.getUsers();
 
- 	-- puts the new message on the top of the inbox
+ 	/**
+	  *  Puts the new message on the top of the inbox
+	  */
  	public receiveMessage: String1 * User ==> ()
 	receiveMessage(msg, user) ==
 	(
@@ -63,31 +73,24 @@ operations
  	)
  	pre user in set club.getUsers();
 
-
-	
-	-- delete last message from a given user
+	/**
+	 * Delete last message from a given user
+	 */
 	public deleteLastMessageFromUser: User ==> ()
 	deleteLastMessageFromUser(user) == inbox(user.getName()):= tl inbox(user.getName())
-	pre user.getName() in set dom inbox and user in set club.getUsers()
-	post inbox(user.getName()) = tl inbox(user.getName());
+	pre user.getName() in set dom inbox and inbox(user.getName()) <> [] and user in set club.getUsers();
 
-	-- read an n message from a given user
-	public readMessageNFromUser: nat * User ==> String1
-	readMessageNFromUser(n, user) == return inbox(user.getName())(n)
-	pre inbox(user.getName()) <> [] and n in set inds inbox(user.getName()) and user in set club.getUsers()
-	post RESULT = inbox(user.getName())(n);
-
-	-- delete an n message from a given user
+	/**
+	 * Delete an n message from a given user
+	 */
 	public deleteMessageNFromUser: nat * User ==> ()
 	deleteMessageNFromUser(n, user) == inbox(user.getName()) := inbox(user.getName())(1,..., n - 1) ^ inbox(user.getName())((n + 1),..., (len inbox(user.getName())))
 	pre inbox(user.getName()) <> [] and n in set inds inbox(user.getName()) and user in set club.getUsers()
 	post inbox(user.getName()) = inbox(user.getName())(1,..., n - 1) ^ inbox(user.getName())((n + 1),..., (len inbox(user.getName())));  -- CHECK THIS POST
 
-
-
-
-
-
+	/**
+	 * Set this user access
+	 */
 	public setAccess: Access ==> ()
 	setAccess(newAccess) == access := newAccess;
 
@@ -123,6 +126,16 @@ operations
 	post RESULT = hd inbox(user.getName());
 
 	/**
+	 * Get an n message from a given user
+	 * 
+	 * @return Strign1
+	 */
+	public readMessageNFromUser: nat * User ==> String1
+	readMessageNFromUser(n, user) == return inbox(user.getName())(n)
+	pre inbox(user.getName()) <> [] and n in set inds inbox(user.getName()) and user in set club.getUsers()
+	post RESULT = inbox(user.getName())(n);
+
+	/**
 	 * Gets the user activity
 	 */
 	public getActivity: () ==> ()
@@ -142,8 +155,8 @@ operations
 	 *
 	 * @return int
 	 */
-	public pure getId : () ==> int
-	getId() == return id
+	public pure getID : () ==> int
+	getID() == return id
 	post RESULT = id;
 
  	/**
@@ -191,8 +204,4 @@ operations
  	getClub() == return club
  	post RESULT = club;
 
-functions
--- TODO Define functiones here
-traces
--- TODO Define Combinatorial Test Traces here
 end User

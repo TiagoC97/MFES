@@ -59,7 +59,7 @@ operations
         
  		return self;
     )
-	pre card payments >= 1
+	pre card newPayments >= 1
 	post payments = newPayments and date = newDate and hour = newHour and 
 		type = newType and client = newClient;
 
