@@ -70,9 +70,10 @@ public class Club {
     client.addTrainer(trainer, newFee);
   }
 
-  public void removeTraineeFromTrainer(final Trainer trainer, final Client client) {
+  public void removeTraineeFromTrainer(final Trainer trainer, final Client client, final User user) {
 
     trainer.removeTrainee(client);
+    client.removeTrainer();
   }
 
   public void addGymClass(

@@ -36,6 +36,8 @@ public class ClubMenu {
     private JSpinner feeSpinner;
     private JComboBox ptUserCombo;
     private JButton addPersonalTrainingButton;
+    private JTextArea personalTrainingTextArea;
+    private JButton removePersonalTrainingButton;
 
     private Main parent;
 
@@ -101,11 +103,11 @@ public class ClubMenu {
 
         usersAtLeastEmployeeAccess.forEach(u -> ptUserCombo.addItem(u.getName()));
 
-
         setClientsTextArea();
         setTrainerTextArea();
         setSalesRepresentativesTextArea();
         setGroupsTextArea();
+        setPersonalTrainingArea();
 
         addListeners();
 
@@ -117,8 +119,16 @@ public class ClubMenu {
             club.addPersonalTraining(trainers.get(trainersCombo2.getSelectedIndex()), clients.get(traineeCombo.getSelectedIndex()), (int) feeSpinner.getValue(), usersAtLeastEmployeeAccess.get(ptUserCombo.getSelectedIndex()));
 
             setClientsTextArea();
-            System.out.println("AAAAAAAAAAAAAAAAAAAAAAAA");
             setTrainerTextArea();
+            setPersonalTrainingArea();
+        });
+        removePersonalTrainingButton.addActionListener(e->{
+
+            club.removeTraineeFromTrainer(trainers.get(trainersCombo2.getSelectedIndex()), clients.get(traineeCombo.getSelectedIndex()), usersAtLeastEmployeeAccess.get(ptUserCombo.getSelectedIndex()));
+
+            setClientsTextArea();
+            setTrainerTextArea();
+            setPersonalTrainingArea();
         });
     }
 
@@ -176,6 +186,16 @@ public class ClubMenu {
         groupsTextArea.setText(sb.toString());
     }
 
+    private void setPersonalTrainingArea() {
+        StringBuilder sb = new StringBuilder();
+        for (Object c: club.getClients()) {
+            Client client = (Client) c;
+            if(client.getTrainer() != null)
+                sb.append("Trainee: " +  client.getName() + ", trainer: " + client.getTrainer().getName()).append("\n");
+        }
+        personalTrainingTextArea.setText(sb.toString());
+    }
+
     public void setVisible() {
         this.pane.setVisible(true);
     }
@@ -199,6 +219,7 @@ public class ClubMenu {
     public JButton getAddTrainerButton() {
         return addTrainerButton;
     }
+
 }
 
 

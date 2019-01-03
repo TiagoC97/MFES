@@ -49,12 +49,28 @@ operations
 	public addTrainer: Trainer * rat==> ()
 	addTrainer(newTrainer, fee) == 
 	(
+		if trainer <> nil then
+			trainer.removeTrainee(self);
+			
 		trainer := newTrainer;
 		personalTrainingFee := fee;			
 	)
 	pre newTrainer in set club.getTrainers() and fee > 0
 	post trainer = newTrainer;
 	
+	 /**
+	  * Remove a trainer from the client
+	  */
+	public removeTrainer: () ==> ()
+	removeTrainer() == 
+	(
+		trainer := nil;
+		personalTrainingFee := 0;			
+	)
+	pre trainer <> nil
+	post trainer = nil;
+	
+
 	-- MESSAGES TO/FROM GROUP
 	
 	/**

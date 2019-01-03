@@ -48,8 +48,16 @@ public class Client extends User {
 
   public void addTrainer(final Trainer newTrainer, final Number fee) {
 
+    if(trainer != null)
+      trainer.removeTrainee(this);
     trainer = newTrainer;
     personalTrainingFee = fee;
+  }
+
+  public void removeTrainer() {
+
+    trainer = null;
+    personalTrainingFee = 0;
   }
 
   public void sendMessageToGroup(final String msg, final String groupName) {

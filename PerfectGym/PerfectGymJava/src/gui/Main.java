@@ -39,7 +39,7 @@ public class Main extends JFrame {
         initialize();
         setVisible(true);
 
-        this.setSize(1300, 1200);
+//        this.setSize(1300, 1200);
     }
 
     /**
