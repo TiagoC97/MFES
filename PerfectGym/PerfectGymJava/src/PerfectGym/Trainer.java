@@ -114,6 +114,20 @@ public class Trainer extends Employee {
   public String toString() {
 
     return "Trainer{"
+            + "userID := "
+            + Utils.toString(id)
+            + ", name := "
+            + Utils.toString(name)
+            + ", age := "
+            + Utils.toString(age)
+            + ", gender := "
+            + Utils.toString(gender)
+            + ", nationality := "
+            + Utils.toString(nationality)
+            + ", inbox := "
+            + Utils.toString(inbox)
+            + ", access := "
+            + Utils.toString(access)
         + "trainees := "
         + Utils.toString(trainees)
         + ", classes := "

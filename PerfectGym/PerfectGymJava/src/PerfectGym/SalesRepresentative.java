@@ -87,6 +87,22 @@ public class SalesRepresentative extends Employee {
 
   public String toString() {
 
-    return "SalesRepresentative{" + "leads := " + Utils.toString(leads) + "}";
+    return "SalesRepresentative{"
+            + "userID := "
+            + Utils.toString(id)
+            + ", name := "
+            + Utils.toString(name)
+            + ", age := "
+            + Utils.toString(age)
+            + ", gender := "
+            + Utils.toString(gender)
+            + ", nationality := "
+            + Utils.toString(nationality)
+            + ", inbox := "
+            + Utils.toString(inbox)
+            + ", access := "
+            + Utils.toString(access)
+            + "leads := "
+            + Utils.toString(leads) + "}";
   }
 }

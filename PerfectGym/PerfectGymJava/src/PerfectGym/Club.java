@@ -328,7 +328,7 @@ public class Club {
     return newsletter;
   }
 
-  public User getOwner() {
+  public Owner getOwner() {
 
     return clubOwner;
   }

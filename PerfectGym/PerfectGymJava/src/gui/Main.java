@@ -7,7 +7,7 @@ public class Main extends JFrame {
 
     private MainMenu mainMenu;
     private PerfectGymMenu perfectGymMenu;
-    private CreateOwnerMenu createOwnerMenu;
+    private CreateUserMenu createUserMenu;
     private ClubMenu clubMenu;
 
     private JPanel contentPane;
@@ -39,7 +39,7 @@ public class Main extends JFrame {
         initialize();
         setVisible(true);
 
-        this.setSize(1200, 1200);
+        this.setSize(1300, 1200);
     }
 
     /**
@@ -52,15 +52,15 @@ public class Main extends JFrame {
         perfectGymMenu = new PerfectGymMenu(this);
         perfectGymMenu.setVisible();
 
-        createOwnerMenu = new CreateOwnerMenu(this);
-        createOwnerMenu.setVisible();
+        createUserMenu = new CreateUserMenu(this);
+        createUserMenu.setVisible();
 
         clubMenu = new ClubMenu(this);
         clubMenu.setVisible();
 
         contentPane.add(mainMenu.getPane(), "Main Menu");
         contentPane.add(perfectGymMenu.getPane(), "PerfectGYM Menu");
-        contentPane.add(createOwnerMenu.getPane(), "CreateOwnerMenu Menu");
+        contentPane.add(createUserMenu.getPane(), "CreateUserMenu Menu");
         contentPane.add(clubMenu.getPane(), "ClubMenu Menu");
 
         addListeners();
@@ -73,20 +73,54 @@ public class Main extends JFrame {
         mainMenu.getPerfectGymButton().addActionListener(e -> showLayout("PerfectGYM Menu"));
 
         perfectGymMenu.getBackButton().addActionListener(e -> showLayout("Main Menu"));
-        perfectGymMenu.getCreateOwnerButton().addActionListener(e -> showLayout("CreateOwnerMenu Menu"));
+        perfectGymMenu.getCreateOwnerButton().addActionListener(e -> {
+            createUserMenu.setUser("Owner");
+            showLayout("CreateUserMenu Menu");
+        });
         perfectGymMenu.getViewClubButton().addActionListener(e ->
         {
             clubMenu.setClub(perfectGymMenu.getSelectedClub());
             showLayout("ClubMenu Menu");
         });
 
-        createOwnerMenu.getCancelButton().addActionListener(e -> showLayout("PerfectGYM Menu"));
-        createOwnerMenu.getConfirmButton().addActionListener(e -> {
-            perfectGymMenu.addOwner(createOwnerMenu.getName(), createOwnerMenu.getAge(), createOwnerMenu.getGender(), createOwnerMenu.getNationality());
-            showLayout("PerfectGYM Menu");
+        createUserMenu.getCancelButton().addActionListener(e -> showLayout("PerfectGYM Menu"));
+        createUserMenu.getConfirmButton().addActionListener(e -> {
+            switch (createUserMenu.getUser()){
+                case "Owner":
+                    perfectGymMenu.addOwner(createUserMenu.getName(), createUserMenu.getAge(), createUserMenu.getGender(), createUserMenu.getNationality());
+                    showLayout("PerfectGYM Menu");
+                    break;
+                case "Client":
+                    clubMenu.addClient(createUserMenu.getName(), createUserMenu.getAge(), createUserMenu.getGender(), createUserMenu.getNationality());
+                    showLayout("ClubMenu Menu");
+                    break;
+                case "Trainer":
+                    clubMenu.addTrainer(createUserMenu.getName(), createUserMenu.getAge(), createUserMenu.getGender(), createUserMenu.getNationality());
+                    showLayout("ClubMenu Menu");
+                    break;
+                case "SalesRepresentative":
+                    clubMenu.addSalesRepresentative(createUserMenu.getName(), createUserMenu.getAge(), createUserMenu.getGender(), createUserMenu.getNationality());
+                    showLayout("ClubMenu Menu");
+                    break;
+
+            }
+
 
         });
 
+        clubMenu.getBackButton().addActionListener(e -> showLayout("PerfectGYM Menu"));
+        clubMenu.getAddClientButton().addActionListener(e -> {
+            createUserMenu.setUser("Client");
+            showLayout("CreateUserMenu Menu");
+        });
+        clubMenu.getAddSalesRepresentativeButton().addActionListener(e -> {
+            createUserMenu.setUser("SalesRepresentative");
+            showLayout("CreateUserMenu Menu");
+        });
+        clubMenu.getAddTrainerButton().addActionListener(e -> {
+            createUserMenu.setUser("Trainer");
+            showLayout("CreateUserMenu Menu");
+        });
         //clubMenu.getBackButton().addActionListener(e -> showLayout("Main Menu"));
 //        championshipManager.getBackButton().addActionListener(e -> showLayout("Main Options"));
 //        championshipViewer.getBackButton().addActionListener(e -> showLayout("Championship Manager"));

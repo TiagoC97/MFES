@@ -325,7 +325,21 @@ public class Client extends User {
   public String toString() {
 
     return "Client{"
-        + "trainer := "
+            + "userID := "
+            + Utils.toString(id)
+            + ", name := "
+            + Utils.toString(name)
+            + ", age := "
+            + Utils.toString(age)
+            + ", gender := "
+            + Utils.toString(gender)
+            + ", nationality := "
+            + Utils.toString(nationality)
+            + ", inbox := "
+            + Utils.toString(inbox)
+            + ", access := "
+            + Utils.toString(access)
+          + "trainer := "
         + Utils.toString(trainer)
         + ", personalTrainingFee := "
         + Utils.toString(personalTrainingFee)

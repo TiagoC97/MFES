@@ -5,7 +5,7 @@ import PerfectGym.quotes.MaleQuote;
 
 import javax.swing.*;
 
-public class CreateOwnerMenu {
+public class CreateUserMenu {
 
 
     private JTextField nameTextField;
@@ -17,10 +17,12 @@ public class CreateOwnerMenu {
     private JButton confirmButton;
     private JPanel pane;
 
+    private String user;
+
     private Main parent;
 
 
-    public CreateOwnerMenu(Main parent) {
+    public CreateUserMenu(Main parent) {
         this.parent = parent;
 
         genderCombo.addItem(MaleQuote.getInstance());
@@ -58,6 +60,15 @@ public class CreateOwnerMenu {
     public String getNationality() {
         return nationalityTextField.getText();
     }
+
+    public void setUser(String user){
+        this.user = user;
+    }
+
+    public String getUser(){
+        return user;
+    }
+
 
 
 }
