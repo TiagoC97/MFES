@@ -1,0 +1,65 @@
+package PerfectGym;
+
+import java.util.*;
+import org.overture.codegen.runtime.*;
+
+@SuppressWarnings("all")
+public class GymClass extends Session {
+  private String name;
+  private VDMSet attendees = SetUtil.set();
+
+  public void cg_init_GymClass_1(
+      final String newDescription,
+      final String className,
+      final Trainer newTrainer,
+      final Object newDayOfWeek,
+      final Number newStartHour,
+      final Number newEndHour,
+      final Number newDate) {
+
+    name = className;
+    cg_init_Session_1(
+        newDescription, newTrainer, ((Object) newDayOfWeek), newStartHour, newEndHour, newDate);
+  }
+
+  public GymClass(
+      final String newDescription,
+      final String className,
+      final Trainer newTrainer,
+      final Object newDayOfWeek,
+      final Number newStartHour,
+      final Number newEndHour,
+      final Number newDate) {
+
+    cg_init_GymClass_1(
+        newDescription, className, newTrainer, newDayOfWeek, newStartHour, newEndHour, newDate);
+  }
+
+  public void addAttendee(final Client client) {
+
+    attendees = SetUtil.union(Utils.copy(attendees), SetUtil.set(client));
+    client.addGymClass(this);
+  }
+
+  public String getName() {
+
+    return name;
+  }
+
+  public VDMSet getAttendees() {
+
+    return Utils.copy(attendees);
+  }
+
+  public GymClass() {}
+
+  public String toString() {
+
+    return "GymClass{"
+        + "name := "
+        + Utils.toString(name)
+        + ", attendees := "
+        + Utils.toString(attendees)
+        + "}";
+  }
+}

@@ -1,0 +1,71 @@
+class Product
+types
+	public String1= seq1 of char;
+values
+-- TODO Define values here
+instance variables
+	private name : String1;
+	private value : rat;
+	private quantity: nat;
+
+	inv quantity >= 0;
+operations
+	/**
+	 * Product constructor
+	 */
+	public Product: String1 * rat * nat ==> Product
+ 	Product(prod_name, prod_value, prod_quantity) ==
+ 	(
+ 		name := prod_name;
+		value := prod_value;
+		quantity := prod_quantity;
+		return self;
+ 	)
+	pre prod_value >= 0 and prod_quantity >0 and prod_name <> ""
+	post name = prod_name and value = prod_value and quantity = prod_quantity;
+
+	/**
+	 * Add quantiy of this product
+	 */
+	public addQuantity: nat ==> ()
+	addQuantity(qtt) == quantity:= quantity + qtt
+	pre qtt > 0;
+
+	/**
+	 * Remove quantity of this product
+	 */
+	public removeQuantity: nat ==> ()
+	removeQuantity(qtt) == quantity:= quantity - qtt
+	pre quantity > 0 and qtt <= quantity
+	post quantity > 0;
+
+	-- GETTERS
+
+	/**
+	 * Gets the product name
+	 *
+	 * @return name
+	 */
+	public pure getName: () ==> String1
+	getName() == return name
+	post RESULT = name;
+
+	/**
+	 * Gets the product value
+	 *
+	 * @return value
+	 */
+	public pure getValue: () ==> rat
+	getValue() == return value
+	post RESULT = value;
+
+	/**
+	 * Gets the product quantity
+	 *
+	 * @return quantity
+	 */
+	public pure getQuantity: () ==> rat
+	getQuantity() == return quantity
+	post RESULT = quantity;
+
+end Product

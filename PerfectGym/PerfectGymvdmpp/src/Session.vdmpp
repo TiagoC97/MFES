@@ -1,0 +1,46 @@
+class Session is subclass of Task
+types
+
+	public DayOfWeek = Utils`DayOfWeek;
+values
+	
+instance variables
+	
+	protected trainer: Trainer;
+	
+	protected dayOfWeek: DayOfWeek;
+
+operations
+	/**
+	 * Session constructor
+	 */
+	public Session: String1 * Trainer * DayOfWeek * Hour * Hour * Date ==> Session
+ 	Session(newDescription, newTrainer, newDayOfWeek, newStartHour, newEndHour, newDate) == 
+ 	(
+		trainer := newTrainer;
+		dayOfWeek := newDayOfWeek;
+		Task(newDescription, newStartHour, newEndHour, newDate);
+ 	)
+	post trainer = newTrainer and dayOfWeek = newDayOfWeek and 
+	 	startHour = newStartHour and endHour = newEndHour and date = newDate;
+	
+ 	-- GETTERS
+ 	 	
+	/**
+	 * Gets the session trainer
+	 * 
+	 * @return trainer
+	 */
+ 	public pure getTrainer: () ==> Trainer
+ 	getTrainer() == return trainer
+	post RESULT = trainer;
+
+	/**
+	 * Gets the session dayOfWeek
+	 * 
+	 * @return dayOfWeek
+	 */ 	
+ 	public pure getDayOfWeek: () ==> DayOfWeek
+ 	getDayOfWeek() == return dayOfWeek
+ 	post RESULT = dayOfWeek;
+end Session

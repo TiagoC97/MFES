@@ -1,0 +1,19 @@
+class MyTestRunner
+
+operations
+	public static main: () ==> ()
+		main() == (
+			IO`println("Initializing Test Runner");
+			
+	    new PerfectGymTest().Run();
+		new ClubTest().Run();
+		new ProductTest().Run();
+		new TaskTest().Run();
+		new GroupTest().Run();
+		new LeadTest().Run();
+	    -- new UseCasesTest().Run();
+	    
+	    IO`println("\nFinalizing Test Runner");
+		);
+	
+end MyTestRunner
