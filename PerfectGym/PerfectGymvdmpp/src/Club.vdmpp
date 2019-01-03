@@ -465,7 +465,7 @@ operations
 		 *
 		 * @return clubOwner
 		 */
-		public pure getOwner : () ==> User
+		public pure getOwner : () ==> Owner
 		getOwner() == return clubOwner
 		post RESULT = clubOwner;
 

@@ -24,7 +24,7 @@ operations
     
         Payment(newClient, newDate, newHour, moneySpent);
 	)
-	pre len products >= 1
+	pre qtt >= 1
    post products = products ;
 
     /**

@@ -43,7 +43,7 @@ operations
 			dcl i: nat := 0;
 			dcl t: Task;
 
-			IO`println("********* CLIENT STATISTICS *********");
+			IO`println("********* SALES REPRESENTATIVE STATISTICS *********");
 			IO`println("Number of leads: " ^ [numLeads]);
 			
 			if showAllTasks then
@@ -64,7 +64,7 @@ operations
 				);
 			
 			IO`println("");
-			IO`println("************************************");
+			IO`println("***************************************************");
 		);
 		
     /**
