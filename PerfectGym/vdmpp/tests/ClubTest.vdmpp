@@ -56,7 +56,7 @@ operations
 	  	Utils`CreateDate(2019, 01, 15), owner1);
 		  IO`println("Finalizing TrainingSession2");
 
-		--club1.setUserAccess(owner1, );
+		club1.setUserAccess(owner1, trainer1, <Owner>);
 
 		IO`println("Initiate addNewsletter");
 		club1.addNewsletter("Sales", owner1);
