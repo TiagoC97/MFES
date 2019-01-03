@@ -43,7 +43,7 @@ operations
 		club1.addGroup("PuxadoresDeFerro", {client1}, owner1);
 
 		club1.addPersonalTraining(trainer1, client1, 40, owner1);
-		club1.removeTraineeFromTrainer(trainer1, client1);
+		club1.removeTraineeFromTrainer(trainer1, client1, owner1);
 
 		club1.addGymClass("Aula de alta intensidade", "Zumba", trainer1, <Monday>, 
 		Utils`CreateHour(16, 00), 

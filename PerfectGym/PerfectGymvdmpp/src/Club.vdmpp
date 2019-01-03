@@ -136,9 +136,10 @@ operations
 		/**
 		 * Remove trainee from trainer
 		 */
-		public removeTraineeFromTrainer: Trainer * Client ==> ()
-		removeTraineeFromTrainer(trainer, client) == trainer.removeTrainee(client)
-		pre trainer in set trainers and client in set clients;
+		public removeTraineeFromTrainer: Trainer * Client * User==> ()
+		removeTraineeFromTrainer(trainer, client, user) == trainer.removeTrainee(client)
+		pre trainer in set trainers and client in set clients and
+			(isAtLeastEmployee(user));
 
 		/**
 		 * Add a new gym class to the club
