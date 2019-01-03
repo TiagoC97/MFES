@@ -15,6 +15,12 @@ instance variables
 	salesRepresentative1: SalesRepresentative := new SalesRepresentative("Joana", 21, <Female>, "portuguese");
 	salesRepresentative2: SalesRepresentative := new SalesRepresentative("Manuel", 33, <Male>, "french");
 
+	--gymClass1: GymClass := new GymClass("Aula de alta intensidade", "Zumba", trainer1, );
+	--gymClass2: GymClass := new GymClass("Aula de baixa intensidade", "Pilates", trainer2, );
+
+	--trainingSession1: TrainingSession := new TrainingSession("Aula iniciante", client1, );
+	--trainingSession2: TrainingSession := new TrainingSession("Aula de treino instenso de abdominais", client2, );	
+
 	
 	
 operations

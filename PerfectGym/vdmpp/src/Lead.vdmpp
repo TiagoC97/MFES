@@ -57,7 +57,7 @@ operations
 	post RESULT = age;
 
 	/**
-	 * Gets the lead nationality
+	 * Gets the lead gender
 	 * 
 	 * @return gender
 	 */
