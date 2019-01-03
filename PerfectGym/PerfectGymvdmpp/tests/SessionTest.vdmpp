@@ -15,7 +15,7 @@ operations
 	Run() == (
 		IO`println("\nSession Tests");
 
-		assertEqual(trainer1, session1.getTrainer());
+		assertEqual(trainer1.getID(), session1.getTrainer());
 		assertEqual(<Monday>, session1.getDayOfWeek());
 
 		IO`println("Finalizing Session Tests");

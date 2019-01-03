@@ -339,7 +339,7 @@ public class Client extends User {
             + Utils.toString(inbox)
             + ", access := "
             + Utils.toString(access)
-          + "trainer := "
+          + ", trainer := "
         + Utils.toString(trainer)
         + ", personalTrainingFee := "
         + Utils.toString(personalTrainingFee)

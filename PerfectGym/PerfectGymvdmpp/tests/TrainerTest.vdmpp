@@ -25,9 +25,9 @@ operations
 
 		trainer1.addTrainee(client1);
 		trainer1.addTrainee(client2);
-		assertEqual({client1, client2}, trainer1.getTrainees());
+		assertEqual({client1.getID(), client2.getID()}, trainer1.getTrainees());
 		trainer1.removeTrainee(client2);
-		assertEqual({client1}, trainer1.getTrainees());
+		assertEqual({client1.getID()}, trainer1.getTrainees());
 
 		trainer1.addGymClass(gymClass1);
 		assertEqual({gymClass1}, trainer1.getClasses());

@@ -5,7 +5,7 @@ values
 
 instance variables
 
-    private trainee: Client;
+    private trainee: int;
 	
 operations
 	/**
@@ -14,10 +14,13 @@ operations
    public TrainingSession: String1 * Trainer * Client * DayOfWeek * Hour * Hour * Date ==> TrainingSession
  	TrainingSession(newDescription, newTrainer, client, newDayOfWeek, newStartHour, newEndHour, newDate) == 
  	(
-		trainee := client;
+		trainee := client.getID();
+		newTrainer.addTask(self);
+		newTrainer.addTrainingSession(self);
+		client.addTrainingSession(self);
  		Session(newDescription, newTrainer, newDayOfWeek, newStartHour, newEndHour, newDate);
  	)
-	post trainee = client;
+	post trainee = client.getID();
 
 	-- GETTERS
  	/**
@@ -25,7 +28,7 @@ operations
 	  * 
 	  * @return trainee
 	  */
- 	public pure getTrainee: () ==> Client
+ 	public pure getTrainee: () ==> int
  	getTrainee() == return trainee
  	post RESULT = trainee;
  		

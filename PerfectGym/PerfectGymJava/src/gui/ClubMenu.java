@@ -3,6 +3,9 @@ package gui;
 import PerfectGym.*;
 import PerfectGym.quotes.FemaleQuote;
 import PerfectGym.quotes.MaleQuote;
+import PerfectGym.quotes.OwnerQuote;
+import org.overture.codegen.runtime.SetUtil;
+import org.overture.codegen.runtime.VDMSet;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -26,14 +29,26 @@ public class ClubMenu {
     private JTextArea ownerTextArea;
     private JButton addGroupButton;
     private JComboBox groupsCombo;
-    private JButton addGroupButton1;
+    private JButton viewGroupButton;
     private JTextArea groupsTextArea;
+    private JComboBox trainersCombo2;
+    private JComboBox traineeCombo;
+    private JSpinner feeSpinner;
+    private JComboBox ptUserCombo;
+    private JButton addPersonalTrainingButton;
 
     private Main parent;
 
     private Club club;
 
     private Owner owner;
+
+    private ArrayList<User> usersAtLeastEmployeeAccess = new ArrayList<>();
+    private ArrayList<User> usersOwnerAccess = new ArrayList<>();
+    private ArrayList<Client> clients= new ArrayList<>();
+    private ArrayList<Trainer> trainers= new ArrayList<>();
+    private ArrayList<SalesRepresentative> salesRepresentatives= new ArrayList<>();
+    private ArrayList<Group> groups = new ArrayList<>();
 
     public ClubMenu(Main parent) {
         this.parent = parent;
@@ -44,28 +59,67 @@ public class ClubMenu {
         owner = club.getOwner();
         ownerTextArea.setText(owner.toString());
 
+        usersOwnerAccess.add(owner);
+        usersAtLeastEmployeeAccess.add(owner);
+
 
         club.getClients().forEach(c -> {
             clientsCombo.addItem(((Client) c).getName());
+            traineeCombo.addItem(((Client) c).getName());
+            clients.add((Client)c);
         });
 
         club.getTrainers().forEach(t -> {
             trainersCombo.addItem(((Trainer) t).getName());
+            trainersCombo2.addItem(((Trainer) t).getName());
+            if(((User) t).getAccess().equals(OwnerQuote.getInstance()))
+                usersOwnerAccess.add((User) t);
+            else {
+                usersOwnerAccess.add((User) t);
+                usersAtLeastEmployeeAccess.add((User) t);
+            }
+            trainers.add((Trainer) t);
         });
 
         club.getSalesRepresentatives().forEach(s -> {
             salesRepresentativesCombo.addItem(((SalesRepresentative) s).getName());
+            if(((User) s).getAccess().equals(OwnerQuote.getInstance()))
+                usersOwnerAccess.add((User) s);
+            else
+            {
+                usersOwnerAccess.add((User) s);
+                usersAtLeastEmployeeAccess.add((User) s);
+            }
+            salesRepresentatives.add((SalesRepresentative) s);
         });
 
         club.getGroups().keySet().forEach(g -> {
             groupsCombo.addItem(g);
+            groups.add((Group) club.getGroups().get(g));
         });
+
+
+        usersAtLeastEmployeeAccess.forEach(u -> ptUserCombo.addItem(u.getName()));
+
 
         setClientsTextArea();
         setTrainerTextArea();
         setSalesRepresentativesTextArea();
         setGroupsTextArea();
 
+        addListeners();
+
+    }
+
+    private void addListeners() {
+        addPersonalTrainingButton.addActionListener(e->{
+
+            club.addPersonalTraining(trainers.get(trainersCombo2.getSelectedIndex()), clients.get(traineeCombo.getSelectedIndex()), (int) feeSpinner.getValue(), usersAtLeastEmployeeAccess.get(ptUserCombo.getSelectedIndex()));
+
+            setClientsTextArea();
+            System.out.println("AAAAAAAAAAAAAAAAAAAAAAAA");
+            setTrainerTextArea();
+        });
     }
 
     public void addClient(String n, int a, Object g, String nat){

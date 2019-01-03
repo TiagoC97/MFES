@@ -29,12 +29,12 @@ public class Trainer extends Employee {
 
   public void addTrainee(final Client client) {
 
-    trainees = SetUtil.union(Utils.copy(trainees), SetUtil.set(client));
+    trainees = SetUtil.union(Utils.copy(trainees), SetUtil.set(client.getID()));
   }
 
   public void removeTrainee(final Client client) {
 
-    trainees = SetUtil.diff(Utils.copy(trainees), SetUtil.set(client));
+    trainees = SetUtil.diff(Utils.copy(trainees), SetUtil.set(client.getID()));
   }
 
   public void addGymClass(final GymClass gymClass) {
@@ -128,7 +128,7 @@ public class Trainer extends Employee {
             + Utils.toString(inbox)
             + ", access := "
             + Utils.toString(access)
-        + "trainees := "
+        + ", trainees := "
         + Utils.toString(trainees)
         + ", classes := "
         + Utils.toString(classes)

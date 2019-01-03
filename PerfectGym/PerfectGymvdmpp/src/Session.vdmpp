@@ -6,7 +6,7 @@ values
 	
 instance variables
 	
-	protected trainer: Trainer;
+	protected trainer: int;
 	
 	protected dayOfWeek: DayOfWeek;
 
@@ -17,11 +17,11 @@ operations
 	public Session: String1 * Trainer * DayOfWeek * Hour * Hour * Date ==> Session
  	Session(newDescription, newTrainer, newDayOfWeek, newStartHour, newEndHour, newDate) == 
  	(
-		trainer := newTrainer;
+		trainer := newTrainer.getID();
 		dayOfWeek := newDayOfWeek;
 		Task(newDescription, newStartHour, newEndHour, newDate);
  	)
-	post trainer = newTrainer and dayOfWeek = newDayOfWeek and 
+	post trainer = newTrainer.getID() and dayOfWeek = newDayOfWeek and 
 	 	startHour = newStartHour and endHour = newEndHour and date = newDate;
 	
  	-- GETTERS
@@ -31,7 +31,7 @@ operations
 	 * 
 	 * @return trainer
 	 */
- 	public pure getTrainer: () ==> Trainer
+ 	public pure getTrainer: () ==> int
  	getTrainer() == return trainer
 	post RESULT = trainer;
 

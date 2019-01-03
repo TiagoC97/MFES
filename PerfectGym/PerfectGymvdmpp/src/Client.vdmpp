@@ -27,7 +27,7 @@ instance variables
 		t1.getDate() = t2.getDate() and Utils`overlaps(t1.getStartHour(), t1.getEndHour(), t2.getStartHour(), t2.getEndHour());
 	
 operations
-
+ 
 	/**
 	 * Client constructor
 	 */

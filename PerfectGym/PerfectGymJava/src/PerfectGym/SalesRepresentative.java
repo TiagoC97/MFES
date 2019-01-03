@@ -102,7 +102,7 @@ public class SalesRepresentative extends Employee {
             + Utils.toString(inbox)
             + ", access := "
             + Utils.toString(access)
-            + "leads := "
+            + ", leads := "
             + Utils.toString(leads) + "}";
   }
 }

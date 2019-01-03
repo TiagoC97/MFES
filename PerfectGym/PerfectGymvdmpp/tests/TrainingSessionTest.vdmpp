@@ -17,7 +17,7 @@ operations
 	Run() == (
 		IO`println("\nTrainingSession Tests");
 
-		assertEqual(client1, trainingSession1.getTrainee());
+		assertEqual(client1.getID(), trainingSession1.getTrainee());
 
 		IO`println("Finalizing TrainingSession Tests");
 

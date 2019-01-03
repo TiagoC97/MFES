@@ -117,7 +117,7 @@ operations
 
 		IO`println("Initiate Getters");
 		assertEqual({client1, client2}, club1.getClients());
-		assertEqual({trainer1, trainer2}, club1.getTrainers());
+		assertEqual({trainer1.getID(), trainer2.getID()}, club1.getTrainers());
 		assertEqual({salesRepresentative1, salesRepresentative2}, club1.getSalesRepresentatives());
 			
 		assertEqual(owner1, club1.getOwner());

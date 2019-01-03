@@ -5,7 +5,7 @@ values
 	
 instance variables
 	private name: String1;
-	private attendees: set of Client := {};
+	private attendees: set of int := {};
 	
 operations
 	/**
@@ -15,6 +15,8 @@ operations
  	GymClass(newDescription, className, newTrainer, newDayOfWeek, newStartHour, newEndHour, newDate) == 
  	(
 		name := className;
+		newTrainer.addTask(self);
+		newTrainer.addGymClass(self);
 		Session(newDescription, newTrainer, newDayOfWeek, newStartHour, newEndHour, newDate);
  	)
 	pre className <> ""
@@ -26,10 +28,10 @@ operations
 	public addAttendee: Client ==> ()
 	addAttendee(client) == 
 	(
-		attendees:= attendees union {client};
+		attendees:= attendees union {client.getID()};
 		client.addGymClass(self);
 	)
-	post attendees = attendees~ union {client};
+	post attendees = attendees~ union {client.getID()};
 
  	
  	-- GETTERS
@@ -46,9 +48,9 @@ operations
 	/**
 	 * Gets the gym class attendees
 	 * 
-	 * @return set of Client
+	 * @return set of int
 	 */
-	public pure getAttendees: () ==> set of Client
+	public pure getAttendees: () ==> set of int
  	getAttendees() == return attendees
  	post RESULT = attendees;
 

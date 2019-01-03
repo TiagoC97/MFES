@@ -129,7 +129,7 @@ operations
 		pre
 			trainer in set trainers and
 			client in set clients and
-			client not in set trainer.getTrainees() and
+			client.getID() not in set trainer.getTrainees() and
 			user in set getUsers() and
 			(isAtLeastEmployee(user));
 
@@ -148,10 +148,8 @@ operations
 		(
 			dcl gymClass: GymClass := new GymClass(description, className, trainer, dayOfWeek, startHour, endHour, date);
 			classes := classes union {gymClass};
-			gymClass.getTrainer().addTask(gymClass);
-			gymClass.getTrainer().addGymClass(gymClass);
-			for all attendee in set gymClass.getAttendees() do
-				attendee.addGymClass(gymClass);
+			
+			
 		)
 		pre (isAtLeastEmployee(user)) and user in set getUsers() and description <> "" and className <> ""
 		post not exists c1, c2 in set classes & c1 <> c2 and c1.getTrainer() = c2.getTrainer() and c1.getDate() = c2.getDate() and
@@ -172,9 +170,6 @@ operations
 		(
 			dcl trainingSession: TrainingSession := new TrainingSession(newDescription, newTrainer, client, newDayOfWeek, newStartHour, newEndHour, newDate);
 			trainingSessions := trainingSessions union {trainingSession};
-			trainingSession.getTrainer().addTask(trainingSession);
-			trainingSession.getTrainer().addTrainingSession(trainingSession);
-			trainingSession.getTrainee().addTrainingSession(trainingSession);
 		)
 		pre (isAtLeastEmployee(user)) and user in set getUsers() and newDescription <> ""
 		post not exists t1, t2 in set trainingSessions &

@@ -4,7 +4,7 @@ types
 values
 -- TODO Define values here
 instance variables	
-	private trainees: set of Client := {};
+	private trainees: set of int := {};
 	private classes: set of GymClass := {};
 	private trainingSessions: set of TrainingSession := {};
 
@@ -28,17 +28,17 @@ operations
 	 * Add trainee to this trainer
 	 */
 	public addTrainee: Client ==> ()
-	addTrainee(client) == trainees := trainees union {client}
-	pre client not in set trainees
-	post trainees = trainees~ union {client};
+	addTrainee(client) == trainees := trainees union {client.getID()}
+	pre client.getID() not in set trainees
+	post trainees = trainees~ union {client.getID()};
 
 	/**
 	 * Remove trainee from this trainer
 	 */
 	public removeTrainee: Client ==> ()
-	removeTrainee(client) == trainees := trainees \ {client}
-	pre trainees <> {} and client in set trainees
-	post trainees = trainees~ \ {client};
+	removeTrainee(client) == trainees := trainees \ {client.getID()}
+	pre trainees <> {} and client.getID() in set trainees
+	post trainees = trainees~ \ {client.getID()};
 
 	 -- GYM CLASSES
 	
@@ -111,9 +111,9 @@ operations
 	/**
 	 * Gets the trainer trainees
 	 * 
-	 * @return set of Client
+	 * @return set of int
 	 */
-	public pure getTrainees : () ==> set of Client
+	public pure getTrainees : () ==> set of int
 	getTrainees() == return trainees
 	post RESULT = trainees;
 
