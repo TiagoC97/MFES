@@ -1,0 +1,28 @@
+class LeadTest is subclass of MyTestCase
+
+instance variables
+
+	lead1: Lead := new Lead("Maria", 23, <Female>, "portuguese");
+	lead2: Lead := new Lead("Jorge", 25, <Male>, "spanish");
+	
+operations
+	public Run: () ==> ()
+	Run() == (
+		IO`println("\nLead Tests");
+
+		assertEqual("Maria", lead1.getName());
+
+		assertEqual(23, lead1.getAge());
+
+		assertEqual(<Female>, lead1.getGender());
+
+		assertEqual("portuguese", lead1.getNationality());
+
+		assertEqual(0, lead1.getID());
+		assertEqual(1, lead2.getID());
+
+		IO`println("Finalizing Lead Tests");
+
+	);
+	
+end LeadTest
