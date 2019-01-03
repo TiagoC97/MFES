@@ -16,7 +16,7 @@ operations
 		new LeadTest().Run();
 		new SalesRepresentativeTest().Run();
 		new PaymentTest().Run();
-		-- new ClubTest().Run();
+		new ClubTest().Run();
 	    -- new UseCasesTest().Run();
 	    
 	    IO`println("\nFinalizing Test Runner");

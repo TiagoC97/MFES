@@ -19,8 +19,7 @@ operations
 	(
 		leads := leads munion {lead |-> nil}
 	)
- 	pre lead not in set dom leads
- 	post leads = leads~ munion {lead |-> false};
+ 	pre lead not in set dom leads;
 	 
 	/**
 	 * Add lead with sales representative
@@ -30,9 +29,8 @@ operations
 	 (
 		leads := leads munion {lead |-> sr}
 	 ) 
- 	pre lead not in set dom leads
- 	post leads = leads~ munion {lead |-> false};
-	 
+ 	pre lead not in set dom leads;
+ 		 
 	/**
 	 * Set lead with sales representative
 	 */

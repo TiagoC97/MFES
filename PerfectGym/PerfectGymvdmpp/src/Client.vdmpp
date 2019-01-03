@@ -97,7 +97,7 @@ operations
 	-- GYM ATTENDENCES
 
 	/**
-	 * Adds a gym attendaence (date) to this client
+	 * Adds a gym attendence (date) to this client
 	 */
 	public addGymAttendence: Date ==> ()
 	addGymAttendence(date) == gymAttendences := gymAttendences union {date}
@@ -296,7 +296,7 @@ operations
 			IO`println("Number of gym attendences: " ^ [numAttendences]);
 			IO`println("Number of different products bought: " ^ [numProductsBought]);
 			IO`println("");
-			IO`println("************************************");
+			IO`println("*************************************");
 		);
 	
 	/**
