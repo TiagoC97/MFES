@@ -19,8 +19,7 @@ operations
 	(
 		leads := leads munion {lead.getName() |-> nil}
 	)
- 	pre lead.getName() not in set dom leads
- 	post leads = leads~ munion {lead.getName() |-> false};
+ 	pre lead.getName() not in set dom leads;
 	 
 	/**
 	 * Add lead with sales representative
@@ -30,8 +29,7 @@ operations
 	 (
 		leads := leads munion {lead.getName() |-> sr}
 	 ) 
- 	pre lead.getName() not in set dom leads
- 	post leads = leads~ munion {lead.getName() |-> false};
+ 	pre lead.getName() not in set dom leads;
 	 
 	/**
 	 * Set lead with sales representative
@@ -83,7 +81,8 @@ operations
 	 */
 	public pure getLeadSR: Lead ==> SalesRepresentative
 	getLeadSR(lead) == return leads(lead.getName())
-	pre lead.getName() in set dom leads and leads(lead.getName()) <> nil
+	pre lead.getName() in set dom leads
+	and leads(lead.getName()) <> nil
 	post RESULT = leads(lead.getName());
  	
  	

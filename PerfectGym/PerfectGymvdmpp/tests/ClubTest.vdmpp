@@ -20,6 +20,27 @@ instance variables
 		Utils`CreateHour(10, 00), 
 		Utils`CreateDate(2019, 01, 11));
 
+	gymFeePayment1: GymFeePayment := new GymFeePayment(client1, 80,
+		Utils`CreateDate(2019, 01, 22), 
+	  	Utils`CreateHour(08, 00));
+
+	gymFeePayment2: GymFeePayment := new GymFeePayment(client1, 80,
+		Utils`CreateDate(2019, 02, 22), 
+	  	Utils`CreateHour(18, 00));
+
+	gymFeePayment3: GymFeePayment := new GymFeePayment(client1, 80,
+		Utils`CreateDate(2019, 03, 22), 
+	  	Utils`CreateHour(18, 00));
+
+	invoice1: Invoice := new Invoice({gymFeePayment3},
+		Utils`CreateDate(2019, 04, 23), 
+	  	Utils`CreateHour(08, 00),
+		"gymFee", true, client1);
+
+	personalTrainingPayment1: PersonalTrainingPayment := new PersonalTrainingPayment(client1, 50,
+		Utils`CreateDate(2019, 03, 13), 
+	  	Utils`CreateHour(08, 00));
+
 	lead1: Lead := new Lead("Maria", 23, <Female>, "portuguese");
 	lead2: Lead := new Lead("Jorge", 25, <Male>, "spanish");
 
@@ -105,23 +126,39 @@ operations
 		club1.removeGroupClient("PuxadoresDeFerro", client2, owner1);
 
 		IO`println("Initiate Invoice");
-		--club1.addInvoice(client1, {} );
-		--club1.addInvoiceWithAllActivePayments();
-		--club1.addPaymentToInvoice();
-		--club1.removePaymentFromInvoice();
+		client1.addGymFeePayment(gymFeePayment1);
+		client1.addGymFeePayment(gymFeePayment2);
+
+		club1.addInvoice(client1, {gymFeePayment1},
+		Utils`CreateDate(2019, 04, 23), 
+	  	Utils`CreateHour(08, 00),
+		"gymFee", owner1);
+
+		club1.addInvoiceWithAllActivePayments(client1,
+		Utils`CreateDate(2019, 04, 23), 
+	  	Utils`CreateHour(08, 00),
+		"gymFee", owner1);
+
+		club1.addPaymentToInvoice(invoice1, {personalTrainingPayment1}, owner1);
+
+		club1.removePaymentFromInvoice(invoice1, {personalTrainingPayment1}, owner1);
 
 		IO`println("Initiate CRM");
-		-- club1.addLeadToCRM(lead1, owner1);
-		-- club1.addLeadSRToCRM(lead2, salesRepresentative2, owner1);
-		-- club1.setCRMLeadSR(lead1, salesRepresentative1, owner1);
+		
 
-		-- assertEqual({lead1 |-> salesRepresentative1}, crm.getLeads());
-		-- assertEqual(salesRepresentative1, crm.getLeadSR(lead1));
+		assertEqual({|->}, crm.getLeads());
 
-		-- club1.removeLeadSR(lead1, salesRepresentative1, owner1);
-		-- club1.removeCRMLead(lead1, owner1);
+		club1.addLeadToCRM(lead1, owner1);
+		club1.setCRMLeadSR(lead1, salesRepresentative1, owner1);
 
-		-- club1.transformLeadIntoClient(lead2, owner1);
+		club1.addLeadSRToCRM(lead2, salesRepresentative2, owner1);
+
+		--assertEqual(salesRepresentative1, crm.getLeadSR(lead1));
+
+		--club1.removeLeadSR(lead1, salesRepresentative1, owner1);
+		--club1.removeCRMLead(lead1, owner1);
+
+		--club1.transformLeadIntoClient(lead2, owner1);
 
 		IO`println("Initiate Getters");
 		assertEqual({client1, client2}, club1.getClients());
