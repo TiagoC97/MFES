@@ -10,6 +10,11 @@ public class Main extends JFrame {
     private CreateUserMenu createUserMenu;
     private ClubMenu clubMenu;
     private CreateGroupMenu createGroupMenu;
+    private CreateGymClassMenu createGymClassMenu;
+    private CreateTrainingSessionMenu createTrainingSessionMenu;
+    private SendMessageDestMarkedMenu sendMessageDestMarkedMenu;
+    private SendMessageToUserMenu sendMessageToUserMenu;
+    private SendMessageOfferGroupMenu sendMessageOfferGroupMenu;
 
     private JPanel contentPane;
 
@@ -62,10 +67,30 @@ public class Main extends JFrame {
         createGroupMenu = new CreateGroupMenu(this);
         createGroupMenu.setVisible();
 
+        createGymClassMenu = new CreateGymClassMenu(this);
+        createGymClassMenu.setVisible();
+
+        createTrainingSessionMenu = new CreateTrainingSessionMenu(this);
+        createTrainingSessionMenu.setVisible();
+
+        sendMessageDestMarkedMenu = new SendMessageDestMarkedMenu(this);
+        sendMessageDestMarkedMenu.setVisible();
+
+        sendMessageToUserMenu = new SendMessageToUserMenu(this);
+        sendMessageToUserMenu.setVisible();
+
+        sendMessageOfferGroupMenu = new SendMessageOfferGroupMenu(this);
+        sendMessageOfferGroupMenu.setVisible();
+
         contentPane.add(mainMenu.getPane(), "Main Menu");
         contentPane.add(perfectGymMenu.getPane(), "PerfectGYM Menu");
         contentPane.add(createUserMenu.getPane(), "CreateUserMenu Menu");
         contentPane.add(createGroupMenu.getPane(), "CreateGroupMenu Menu");
+        contentPane.add(createGymClassMenu.getPane(), "CreateGymClassMenu Menu");
+        contentPane.add(createTrainingSessionMenu.getPane(), "CreateTrainingSessionMenu Menu");
+        contentPane.add(sendMessageDestMarkedMenu.getPane(), "SendMessageDestMarkedMenu Menu");
+        contentPane.add(sendMessageToUserMenu.getPane(), "SendMessageToUserMenu Menu");
+        contentPane.add(sendMessageOfferGroupMenu.getPane(), "SendMessageOfferGroupMenu Menu");
         contentPane.add(clubMenu.getPane(), "ClubMenu Menu");
 
         addListeners();
@@ -131,9 +156,147 @@ public class Main extends JFrame {
             showLayout("CreateUserMenu Menu");
         });
         clubMenu.getAddGroupButton().addActionListener(e -> {
+            createGroupMenu.start();
             createGroupMenu.setClients(clubMenu.getClients());
             createGroupMenu.setUsersAtLeastEmployees(clubMenu.getUsersAtLeastEmployeeAccess());
             showLayout("CreateGroupMenu Menu");
+        });
+        clubMenu.getAddGymClassButton().addActionListener(e -> {
+            createGymClassMenu.setTrainers(clubMenu.getTrainers());
+            createGymClassMenu.setUsersAtLeastEmployees(clubMenu.getUsersAtLeastEmployeeAccess());
+            showLayout("CreateGymClassMenu Menu");
+        });
+
+        clubMenu.getAddTrainingSessionButton().addActionListener(e -> {
+            createTrainingSessionMenu.setClients(clubMenu.getClients());
+            createTrainingSessionMenu.setUsersAtLeastEmployees(clubMenu.getUsersAtLeastEmployeeAccess());
+            showLayout("CreateTrainingSessionMenu Menu");
+        });
+
+        clubMenu.getSendMsgToClientButton().addActionListener(e -> {
+            sendMessageToUserMenu.setDestinatary("Client");
+            sendMessageToUserMenu.setClients(clubMenu.getClients());
+            sendMessageToUserMenu.setUsersOwnerAccess(clubMenu.getUsersOwnerAccess());
+            showLayout("SendMessageToUserMenu Menu");
+        });
+
+        clubMenu.getSendMsgToEmployeeButton().addActionListener(e -> {
+            sendMessageToUserMenu.setDestinatary("Employee");
+            sendMessageToUserMenu.setEmployees(clubMenu.getEmployees());
+            sendMessageToUserMenu.setUsersOwnerAccess(clubMenu.getUsersOwnerAccess());
+            showLayout("SendMessageToUserMenu Menu");
+        });
+
+        clubMenu.getSendMsgAllClientsButton().addActionListener(e -> {
+            sendMessageDestMarkedMenu.setDestinatary("AllClients");
+            sendMessageToUserMenu.setUsersOwnerAccess(clubMenu.getUsersOwnerAccess());
+            showLayout("SendMessageDestMarkedMenu Menu");
+        });
+
+        clubMenu.getSendMsgAllTrainersButton().addActionListener(e -> {
+            sendMessageDestMarkedMenu.setDestinatary("AllTrainers");
+            sendMessageToUserMenu.setUsersOwnerAccess(clubMenu.getUsersOwnerAccess());
+            showLayout("SendMessageDestMarkedMenu Menu");
+        });
+
+        clubMenu.getSendMsgAllSRsButton().addActionListener(e -> {
+            sendMessageDestMarkedMenu.setDestinatary("AllSRs");
+            sendMessageToUserMenu.setUsersOwnerAccess(clubMenu.getUsersOwnerAccess());
+            showLayout("SendMessageDestMarkedMenu Menu");
+        });
+
+        clubMenu.getSendMsgGroupButton().addActionListener(e -> {
+            sendMessageOfferGroupMenu.setType("Group");
+            sendMessageOfferGroupMenu.setUsersOwnerAccess(clubMenu.getUsersOwnerAccess());
+            showLayout("SendMessageDestMarkedMenu Menu");
+        });
+
+        clubMenu.getSendOfferToGroupButton().addActionListener(e -> {
+            sendMessageOfferGroupMenu.setType("OfferGroup");
+            sendMessageOfferGroupMenu.setUsersOwnerAccess(clubMenu.getUsersAtLeastEmployeeAccess());
+            showLayout("SendMessageDestMarkedMenu Menu");
+        });
+
+        sendMessageToUserMenu.getCancelButton().addActionListener(e -> showLayout("ClubMenu Menu"));
+        sendMessageToUserMenu.getConfirmButton().addActionListener(e -> {
+            switch (sendMessageToUserMenu.getDestinatary()){
+                case "Client":
+                    clubMenu.sendMsgToClient(sendMessageToUserMenu.getMessage(), sendMessageToUserMenu.getClient(),
+                            sendMessageToUserMenu.getUser());
+                    showLayout("ClubMenu Menu");
+                    break;
+                case "Employee":
+                    clubMenu.sendMsgToEmployee(sendMessageToUserMenu.getMessage(), sendMessageToUserMenu.getEmployee(),
+                            sendMessageToUserMenu.getUser());
+                    showLayout("ClubMenu Menu");
+                    break;
+            }
+
+        });
+
+        sendMessageDestMarkedMenu.getCancelButton().addActionListener(e -> showLayout("ClubMenu Menu"));
+        sendMessageDestMarkedMenu.getConfirmButton().addActionListener(e -> {
+            switch (sendMessageDestMarkedMenu.getDestinatary()){
+                case "AllClients":
+                    clubMenu.sendMsgAllClients(sendMessageDestMarkedMenu.getMessage(),
+                            sendMessageToUserMenu.getUser());
+                    showLayout("ClubMenu Menu");
+                    break;
+                case "AllTrainers":
+                    clubMenu.sendMsgAllTrainers(sendMessageToUserMenu.getMessage(),
+                            sendMessageToUserMenu.getUser());
+                    showLayout("ClubMenu Menu");
+                    break;
+                case "AllSRs":
+                    clubMenu.sendMessageAllSalesRepresentatives(sendMessageToUserMenu.getMessage(),
+                            sendMessageToUserMenu.getUser());
+                    showLayout("ClubMenu Menu");
+                    break;
+            }
+
+        });
+
+        sendMessageOfferGroupMenu.getCancelButton().addActionListener(e -> showLayout("ClubMenu Menu"));
+        sendMessageOfferGroupMenu.getConfirmButton().addActionListener(e -> {
+            switch (sendMessageOfferGroupMenu.getType()){
+                case "Group":
+                    clubMenu.sendMsgGroup(sendMessageOfferGroupMenu.getMessage(), sendMessageOfferGroupMenu.getGroupName(),
+                            sendMessageOfferGroupMenu.getUser());
+                    showLayout("ClubMenu Menu");
+                    break;
+                case "OfferGroup":
+                    clubMenu.sendSendOfferToGroup(sendMessageOfferGroupMenu.getMessage(), sendMessageOfferGroupMenu.getGroupName(),
+                            sendMessageOfferGroupMenu.getUser());
+                    showLayout("ClubMenu Menu");
+                    break;
+
+            }
+
+        });
+
+        createGymClassMenu.getCancelButton().addActionListener(e -> showLayout("ClubMenu Menu"));
+        createGymClassMenu.getConfirmButton().addActionListener(e -> {
+            clubMenu.addGymClass(createGymClassMenu.getDescription(),
+                    createGymClassMenu.getName(),
+                    createGymClassMenu.getTrainer(),
+                    createGymClassMenu.getDayOfWeek(),
+                    createGymClassMenu.getStartHour(),
+                    createGymClassMenu.getEndHour(),
+                    createGymClassMenu.getDate(),
+                    createGymClassMenu.getUserResponsible());
+            showLayout("ClubMenu Menu");
+        });
+
+        createTrainingSessionMenu.getCancelButton().addActionListener(e -> showLayout("ClubMenu Menu"));
+        createTrainingSessionMenu.getConfirmButton().addActionListener(e -> {
+            clubMenu.addTrainingSession(createTrainingSessionMenu.getDescription(),
+                    createTrainingSessionMenu.getClient(),
+                    createTrainingSessionMenu.getDayOfWeek(),
+                    createTrainingSessionMenu.getStartHour(),
+                    createTrainingSessionMenu.getEndHour(),
+                    createTrainingSessionMenu.getDate(),
+                    createTrainingSessionMenu.getUserResponsible());
+            showLayout("ClubMenu Menu");
         });
 
     }

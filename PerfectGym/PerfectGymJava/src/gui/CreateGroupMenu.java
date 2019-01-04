@@ -32,10 +32,6 @@ public class CreateGroupMenu {
     public CreateGroupMenu(Main parent) {
         this.parent = parent;
 
-        membersVector = new Vector<>();
-        members = new VDMSet();
-
-
         addListeners();
 
     }
@@ -79,6 +75,7 @@ public class CreateGroupMenu {
 
     public void setClients(ArrayList<Client> clients) {
         this.clients = clients;
+        clientsCombo.removeAllItems();
         clients.forEach(c -> clientsCombo.addItem(c.getName()));
     }
 
@@ -117,7 +114,14 @@ public class CreateGroupMenu {
 
     public void setUsersAtLeastEmployees(ArrayList<User> usersAtLEastEmployees) {
         this.usersAtLeastEmployees = usersAtLEastEmployees;
+        usersCombo.removeAllItems();
         usersAtLeastEmployees.forEach(u -> usersCombo.addItem(u.getName()));
+    }
+
+    public void start(){
+        membersVector = new Vector<>();
+        members = new VDMSet();
+        groupMembersList.setListData(membersVector);
     }
 }
 
