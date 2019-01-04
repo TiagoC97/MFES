@@ -28,16 +28,27 @@ public class ClubMenu {
     private JTextArea salesRepresentativesTextArea;
     private JTextArea ownerTextArea;
     private JButton addGroupButton;
-    private JComboBox groupsCombo;
+    private JComboBox<String> groupsCombo;
     private JButton viewGroupButton;
     private JTextArea groupsTextArea;
-    private JComboBox trainersCombo2;
-    private JComboBox traineeCombo;
+    private JComboBox<String> trainersCombo2;
+    private JComboBox<String> traineeCombo;
     private JSpinner feeSpinner;
-    private JComboBox ptUserCombo;
+    private JComboBox<String> ptUserCombo;
     private JButton addPersonalTrainingButton;
     private JTextArea personalTrainingTextArea;
     private JButton removePersonalTrainingButton;
+    private JButton addGymClassButton;
+    private JComboBox<String> gymClassesCombo;
+    private JButton viewGymClassButton;
+    private JTextArea gymClassesTextArea;
+    private JButton addTrainingSessionButton;
+    private JComboBox<String> trainingSessionsCombo;
+    private JButton viewTrainingSessionButton;
+    private JTextArea trainingSessionTextArea;
+    private JComboBox<String> attendeesCombo;
+    private JComboBox<String> attendeesUserCombo;
+    private JButton addAttendeeButton;
 
     private Main parent;
 
@@ -45,12 +56,16 @@ public class ClubMenu {
 
     private Owner owner;
 
+
     private ArrayList<User> usersAtLeastEmployeeAccess = new ArrayList<>();
     private ArrayList<User> usersOwnerAccess = new ArrayList<>();
     private ArrayList<Client> clients= new ArrayList<>();
     private ArrayList<Trainer> trainers= new ArrayList<>();
     private ArrayList<SalesRepresentative> salesRepresentatives= new ArrayList<>();
     private ArrayList<Group> groups = new ArrayList<>();
+    private ArrayList<GymClass> gymClasses = new ArrayList<>();
+    private ArrayList<TrainingSession> trainingSessios = new ArrayList<>();
+
 
     public ClubMenu(Main parent) {
         this.parent = parent;
@@ -68,6 +83,7 @@ public class ClubMenu {
         club.getClients().forEach(c -> {
             clientsCombo.addItem(((Client) c).getName());
             traineeCombo.addItem(((Client) c).getName());
+            attendeesCombo.addItem(((Client) c).getName());
             clients.add((Client)c);
         });
 
@@ -96,18 +112,33 @@ public class ClubMenu {
         });
 
         club.getGroups().keySet().forEach(g -> {
-            groupsCombo.addItem(g);
+            groupsCombo.addItem((String) g);
             groups.add((Group) club.getGroups().get(g));
         });
 
+        club.getGymClasses().forEach(g -> {
+            gymClassesCombo.addItem(((GymClass) g).getName() + " -> " + ((GymClass) g).getDescription());
+            gymClasses.add((GymClass) g);
+        });
 
-        usersAtLeastEmployeeAccess.forEach(u -> ptUserCombo.addItem(u.getName()));
+        club.getTrainingSessions().forEach(t -> {
+            trainingSessionsCombo.addItem(((TrainingSession) t).getDescription());
+            trainingSessios.add((TrainingSession) t);
+        });
+
+        usersAtLeastEmployeeAccess.forEach(u -> {
+            ptUserCombo.addItem(u.getName());
+            attendeesUserCombo.addItem(u.getName());
+        });
 
         setClientsTextArea();
         setTrainerTextArea();
         setSalesRepresentativesTextArea();
         setGroupsTextArea();
         setPersonalTrainingArea();
+
+        setGymClassesTextArea();
+        setTrainingSessionTextArea();
 
         addListeners();
 
@@ -130,6 +161,18 @@ public class ClubMenu {
             setTrainerTextArea();
             setPersonalTrainingArea();
         });
+
+        addAttendeeButton.addActionListener(e->{
+
+            club.addAttendeeToGymClass(gymClasses.get(gymClassesCombo.getSelectedIndex()),
+                    clients.get(attendeesCombo.getSelectedIndex()),
+                    usersAtLeastEmployeeAccess.get(attendeesUserCombo.getSelectedIndex()));
+
+
+            setClientsTextArea();
+            setTrainerTextArea();
+            setGymClassesTextArea();
+        });
     }
 
     public void addClient(String n, int a, Object g, String nat){
@@ -151,7 +194,12 @@ public class ClubMenu {
         setSalesRepresentativesTextArea();
     }
 
-
+    public void addGroup(String n, VDMSet clients, User u){
+        System.out.println(n+ " " + clients + " " + u);
+        club.addGroup(n, clients, u);
+        groupsCombo.addItem(n);
+        setGroupsTextArea();
+    }
 
 
     private void setClientsTextArea() {
@@ -181,7 +229,7 @@ public class ClubMenu {
     private void setGroupsTextArea() {
         StringBuilder sb = new StringBuilder();
         for (Object g: club.getGroups().keySet()) {
-            sb.append(club.getGroups().get(g).toString()).append("\n");
+            sb.append("Group " + g.toString() + ": " + club.getGroups().get(g).toString()).append("\n");
         }
         groupsTextArea.setText(sb.toString());
     }
@@ -195,6 +243,24 @@ public class ClubMenu {
         }
         personalTrainingTextArea.setText(sb.toString());
     }
+
+    private void setGymClassesTextArea() {
+        StringBuilder sb = new StringBuilder();
+        for (Object g: club.getGymClasses()) {
+            sb.append(g.toString()).append("\n");
+        }
+        gymClassesTextArea.setText(sb.toString());
+    }
+
+    private void setTrainingSessionTextArea() {
+        StringBuilder sb = new StringBuilder();
+        for (Object t: club.getTrainingSessions()) {
+            sb.append(t.toString()).append("\n");
+        }
+        trainingSessionTextArea.setText(sb.toString());
+    }
+
+
 
     public void setVisible() {
         this.pane.setVisible(true);
@@ -219,6 +285,23 @@ public class ClubMenu {
     public JButton getAddTrainerButton() {
         return addTrainerButton;
     }
+
+    public JButton getAddGroupButton() {
+        return addGroupButton;
+    }
+
+    public ArrayList<Client> getClients(){
+        return clients;
+    }
+
+    public ArrayList<User> getUsersAtLeastEmployeeAccess() {
+        return usersAtLeastEmployeeAccess;
+    }
+
+    public ArrayList<User> getUsersOwnerAccess() {
+        return usersOwnerAccess;
+    }
+
 
 }
 

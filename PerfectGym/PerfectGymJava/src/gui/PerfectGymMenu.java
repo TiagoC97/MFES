@@ -1,8 +1,7 @@
 package gui;
 
 import PerfectGym.*;
-import PerfectGym.quotes.FemaleQuote;
-import PerfectGym.quotes.MaleQuote;
+import PerfectGym.quotes.*;
 import org.overture.codegen.runtime.SetUtil;
 import org.overture.codegen.runtime.VDMSet;
 
@@ -29,7 +28,8 @@ public class PerfectGymMenu extends JFrame{
     private ArrayList<Client> clients= new ArrayList<>();
     private ArrayList<Trainer> trainers= new ArrayList<>();
     private ArrayList<SalesRepresentative> salesRepresentatives= new ArrayList<>();
-    private ArrayList<Group> groups = new ArrayList<>();
+    private ArrayList<GymClass> gymClasses = new ArrayList<>();
+    private ArrayList<TrainingSession> trainingSessions = new ArrayList<>();
 
     public PerfectGymMenu(Main parent) {
         this.parent = parent;
@@ -39,6 +39,9 @@ public class PerfectGymMenu extends JFrame{
         initTrainers();
         initSalesRepresentatives();
         initGroups();
+        initPersonalTrainings();
+        initGymClasses();
+        initTrainingSessions();
 
         addListeners();
 
@@ -129,6 +132,47 @@ public class PerfectGymMenu extends JFrame{
         clubs.get(0).addGroup("LALALA", SetUtil.set(clients.get(3), clients.get(4), clients.get(5)), clubs.get(0).getOwner());
     }
 
+    private void initPersonalTrainings(){
+        clubs.get(0).addPersonalTraining(trainers.get(0), clients.get(0), 20, clubs.get(0).getOwner());
+        clubs.get(0).addPersonalTraining(trainers.get(1), clients.get(1), 20, clubs.get(0).getOwner());
+        clubs.get(0).addPersonalTraining(trainers.get(1), clients.get(2), 20, clubs.get(0).getOwner());
+    }
+
+    private void initGymClasses(){
+        gymClasses.add(new GymClass("Aula de baixa intensidade", "Pilates", trainers.get(0), TuesdayQuote.getInstance(),
+                cg_Utils.CreateHour(9, 0), cg_Utils.CreateHour(10, 0), cg_Utils.CreateDate(2019, 1, 11)));
+        gymClasses.add(new GymClass("Aula de alta intensidade", "Zumba", trainers.get(0), MondayQuote.getInstance(),
+                cg_Utils.CreateHour(16, 0), cg_Utils.CreateHour(17, 0), cg_Utils.CreateDate(2019, 1, 14)));
+        gymClasses.add(new GymClass("Aula de baixa intensidade", "Pilates", trainers.get(1), TuesdayQuote.getInstance(),
+                cg_Utils.CreateHour(9, 0), cg_Utils.CreateHour(10, 0), cg_Utils.CreateDate(2019, 1, 15)));
+
+        initAttendesGymClass();
+
+        gymClasses.forEach(g -> clubs.get(0).addGymClass(g, clubs.get(0).getOwner()));
+    }
+
+    private void initAttendesGymClass(){
+        gymClasses.get(0).addAttendee(clients.get(0));
+        gymClasses.get(0).addAttendee(clients.get(1));
+        gymClasses.get(0).addAttendee(clients.get(2));
+
+        gymClasses.get(1).addAttendee(clients.get(2));
+        gymClasses.get(1).addAttendee(clients.get(3));
+        gymClasses.get(1).addAttendee(clients.get(4));
+        gymClasses.get(1).addAttendee(clients.get(5));
+        gymClasses.get(1).addAttendee(clients.get(6));
+    }
+
+    private void initTrainingSessions(){
+        trainingSessions.add(new TrainingSession("Aula iniciante", clients.get(0), MondayQuote.getInstance(),
+                cg_Utils.CreateHour(14, 0), cg_Utils.CreateHour(15, 0), cg_Utils.CreateDate(2019, 2, 4)));
+        trainingSessions.add(new TrainingSession("Aula de treino instenso de abdominais", clients.get(1), TuesdayQuote.getInstance(),
+                cg_Utils.CreateHour(17, 0), cg_Utils.CreateHour(18, 0), cg_Utils.CreateDate(2019, 2, 11)));
+        trainingSessions.add(new TrainingSession("Aula de PUMP", clients.get(2), WednesdayQuote.getInstance(),
+                cg_Utils.CreateHour(9, 0), cg_Utils.CreateHour(10, 0), cg_Utils.CreateDate(2019, 2, 23)));
+
+        trainingSessions.forEach(t -> clubs.get(0).addTrainingSession(t, clubs.get(0).getOwner()));
+    }
 
     private void setOwnersShowArea() {
         StringBuilder sb = new StringBuilder();

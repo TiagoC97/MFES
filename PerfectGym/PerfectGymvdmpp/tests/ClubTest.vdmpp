@@ -44,6 +44,8 @@ operations
 
 		club1.addPersonalTraining(trainer1, client1, 40, owner1);
 		club1.removeTraineeFromTrainer(trainer1, client1, owner1);
+		
+		club1.addGymClass(gymClass1, owner1);
 
 		club1.addGymClass("Aula de alta intensidade", "Zumba", trainer1, <Monday>, 
 		Utils`CreateHour(16, 00), 
@@ -59,12 +61,12 @@ operations
 		club1.addAttendeeToGymClass(gymClass1, client1, owner1);
 		club1.addAttendeeToGymClass(gymClass1, client2, owner1);
 		
-		club1.addTrainingSession("Aula iniciante", trainer1, client1, <Monday>, 
+		club1.addTrainingSession("Aula iniciante", client1, <Monday>, 
 		Utils`CreateHour(14, 00), 
 	  	Utils`CreateHour(15, 00), 
 	  	Utils`CreateDate(2019, 01, 14), owner1);
 		  IO`println("Finalizing TrainingSession1");
-		club1.addTrainingSession("Aula de treino instenso de abdominais", trainer2, client2, <Tuesday>, 
+		club1.addTrainingSession("Aula de treino instenso de abdominais", client2, <Tuesday>, 
 		Utils`CreateHour(17, 00), 
 	  	Utils`CreateHour(18, 00), 
 	  	Utils`CreateDate(2019, 01, 15), owner1);

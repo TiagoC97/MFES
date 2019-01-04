@@ -6,7 +6,7 @@ instance variables
 
 	client1: Client := new Client("Maria", 23, <Female>, "portuguese");
 
-  	trainingSession1: TrainingSession := new TrainingSession("Aula iniciante", trainer1, client1, <Monday>, 
+  	trainingSession1: TrainingSession := new TrainingSession("Aula iniciante", client1, <Monday>, 
 		Utils`CreateHour(14, 00), 
 	  	Utils`CreateHour(15, 00), 
 	  	Utils`CreateDate(2019, 01, 14));

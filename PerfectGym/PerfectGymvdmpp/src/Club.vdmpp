@@ -161,6 +161,15 @@ operations
 			Utils`overlaps(c1.getStartHour(), c1.getEndHour(), c2.getStartHour(), c2.getEndHour());
 
 		/**
+		 * Add an existing gym class to the club
+		 */
+		public addGymClass: GymClass * User ==> ()
+		addGymClass(gymClass, user) == 	classes := classes union {gymClass}
+		pre (isAtLeastEmployee(user)) and user in set getUsers() and gymClass not in set classes
+		post not exists c1, c2 in set classes & c1 <> c2 and c1.getTrainer() = c2.getTrainer() and c1.getDate() = c2.getDate() and
+			Utils`overlaps(c1.getStartHour(), c1.getEndHour(), c2.getStartHour(), c2.getEndHour());
+
+		/**
 		 * Add a trainee to a class
 		 */
 		public addAttendeeToGymClass: GymClass * Client * User ==> ()
@@ -170,16 +179,27 @@ operations
 		/**
 		 * Add a new training session to the club
 		 */
-		public addTrainingSession: String1 * Trainer * Client * DayOfWeek * Hour * Hour * Date * User ==> ()
-		addTrainingSession(newDescription, newTrainer, client, newDayOfWeek, newStartHour, newEndHour, newDate, user) ==
+		public addTrainingSession: String1 * Client * DayOfWeek * Hour * Hour * Date * User ==> ()
+		addTrainingSession(newDescription, client, newDayOfWeek, newStartHour, newEndHour, newDate, user) ==
 		(
-			dcl trainingSession: TrainingSession := new TrainingSession(newDescription, newTrainer, client, newDayOfWeek, newStartHour, newEndHour, newDate);
+			dcl trainingSession: TrainingSession := new TrainingSession(newDescription, client, newDayOfWeek, newStartHour, newEndHour, newDate);
 			trainingSessions := trainingSessions union {trainingSession};
 		)
 		pre (isAtLeastEmployee(user)) and user in set getUsers() and newDescription <> ""
 		post not exists t1, t2 in set trainingSessions &
 			t1 <> t2 and (t1.getTrainer() = t2.getTrainer() or t1.getTrainee() = t2.getTrainee()) and
 			t1.getDate() = t2.getDate() and Utils`overlaps(t1.getStartHour(), t1.getEndHour(), t2.getStartHour(), t2.getEndHour());
+
+		/**
+		 * Add an existing training session to the club
+		 */
+		public addTrainingSession: TrainingSession * User ==> ()
+		addTrainingSession(trainingSession, user) == trainingSessions := trainingSessions union {trainingSession}
+		pre (isAtLeastEmployee(user)) and user in set getUsers() and trainingSession not in set trainingSessions
+		post not exists t1, t2 in set trainingSessions &
+			t1 <> t2 and (t1.getTrainer() = t2.getTrainer() or t1.getTrainee() = t2.getTrainee()) and
+			t1.getDate() = t2.getDate() and Utils`overlaps(t1.getStartHour(), t1.getEndHour(), t2.getStartHour(), t2.getEndHour());
+
 
 		/**
 		 * Set the access of a user

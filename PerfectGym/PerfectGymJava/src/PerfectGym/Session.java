@@ -1,56 +1,66 @@
 package PerfectGym;
 
 import java.util.*;
+
 import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
 public class Session extends Task {
-  protected Trainer trainer;
-  protected Object dayOfWeek;
+    protected Number trainer;
+    protected Object dayOfWeek;
 
-  public void cg_init_Session_1(
-      final String newDescription,
-      final Trainer newTrainer,
-      final Object newDayOfWeek,
-      final Number newStartHour,
-      final Number newEndHour,
-      final Number newDate) {
+    public void cg_init_Session_1(
+            final String newDescription,
+            final Trainer newTrainer,
+            final Object newDayOfWeek,
+            final Number newStartHour,
+            final Number newEndHour,
+            final Number newDate) {
 
-    trainer = newTrainer;
-    dayOfWeek = newDayOfWeek;
-    cg_init_Task_1(newDescription, newStartHour, newEndHour, newDate);
-  }
+        trainer = newTrainer.getID();
+        dayOfWeek = newDayOfWeek;
+        cg_init_Task_1(newDescription, newStartHour, newEndHour, newDate);
+    }
 
-  public Session(
-      final String newDescription,
-      final Trainer newTrainer,
-      final Object newDayOfWeek,
-      final Number newStartHour,
-      final Number newEndHour,
-      final Number newDate) {
+    public Session(
+            final String newDescription,
+            final Trainer newTrainer,
+            final Object newDayOfWeek,
+            final Number newStartHour,
+            final Number newEndHour,
+            final Number newDate) {
 
-    cg_init_Session_1(newDescription, newTrainer, newDayOfWeek, newStartHour, newEndHour, newDate);
-  }
+        cg_init_Session_1(newDescription, newTrainer, newDayOfWeek, newStartHour, newEndHour, newDate);
+    }
 
-  public Trainer getTrainer() {
+    public Number getTrainer() {
 
-    return trainer;
-  }
+        return trainer;
+    }
 
-  public Object getDayOfWeek() {
+    public Object getDayOfWeek() {
 
-    return dayOfWeek;
-  }
+        return dayOfWeek;
+    }
 
-  public Session() {}
+    public Session() {
+    }
 
-  public String toString() {
+    public String toString() {
 
-    return "Session{"
-        + "trainer := "
-        + Utils.toString(trainer)
-        + ", dayOfWeek := "
-        + Utils.toString(dayOfWeek)
-        + "}";
-  }
+        return "Session{"
+                + "description := "
+                + Utils.toString(description)
+                + ", startHour := "
+                + Utils.toString(startHour)
+                + ", endHour := "
+                + Utils.toString(endHour)
+                + ", date := "
+                + Utils.toString(date)
+                + ", dayOfWeek := "
+                + Utils.toString(dayOfWeek)
+                + ", trainer := "
+                + Utils.toString(trainer)
+                + "}";
+    }
 }

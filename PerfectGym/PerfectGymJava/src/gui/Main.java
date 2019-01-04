@@ -9,6 +9,7 @@ public class Main extends JFrame {
     private PerfectGymMenu perfectGymMenu;
     private CreateUserMenu createUserMenu;
     private ClubMenu clubMenu;
+    private CreateGroupMenu createGroupMenu;
 
     private JPanel contentPane;
 
@@ -58,9 +59,13 @@ public class Main extends JFrame {
         clubMenu = new ClubMenu(this);
         clubMenu.setVisible();
 
+        createGroupMenu = new CreateGroupMenu(this);
+        createGroupMenu.setVisible();
+
         contentPane.add(mainMenu.getPane(), "Main Menu");
         contentPane.add(perfectGymMenu.getPane(), "PerfectGYM Menu");
         contentPane.add(createUserMenu.getPane(), "CreateUserMenu Menu");
+        contentPane.add(createGroupMenu.getPane(), "CreateGroupMenu Menu");
         contentPane.add(clubMenu.getPane(), "ClubMenu Menu");
 
         addListeners();
@@ -102,10 +107,14 @@ public class Main extends JFrame {
                     clubMenu.addSalesRepresentative(createUserMenu.getName(), createUserMenu.getAge(), createUserMenu.getGender(), createUserMenu.getNationality());
                     showLayout("ClubMenu Menu");
                     break;
-
             }
 
+        });
 
+        createGroupMenu.getCancelButton().addActionListener(e -> showLayout("ClubMenu Menu"));
+        createGroupMenu.getConfirmButton().addActionListener(e -> {
+            clubMenu.addGroup(createGroupMenu.getGroupName(), createGroupMenu.getGroupMembers(), createGroupMenu.getUserResponsible());
+            showLayout("ClubMenu Menu");
         });
 
         clubMenu.getBackButton().addActionListener(e -> showLayout("PerfectGYM Menu"));
@@ -121,9 +130,12 @@ public class Main extends JFrame {
             createUserMenu.setUser("Trainer");
             showLayout("CreateUserMenu Menu");
         });
-        //clubMenu.getBackButton().addActionListener(e -> showLayout("Main Menu"));
-//        championshipManager.getBackButton().addActionListener(e -> showLayout("Main Options"));
-//        championshipViewer.getBackButton().addActionListener(e -> showLayout("Championship Manager"));
+        clubMenu.getAddGroupButton().addActionListener(e -> {
+            createGroupMenu.setClients(clubMenu.getClients());
+            createGroupMenu.setUsersAtLeastEmployees(clubMenu.getUsersAtLeastEmployeeAccess());
+            showLayout("CreateGroupMenu Menu");
+        });
+
     }
 
     public void showLayout(String layout){

@@ -320,7 +320,7 @@ operations
 	 * 
 	 * @return trainer
 	 */
-	public pure getTrainer: () ==> Trainer
+	public pure getTrainer: () ==> [Trainer]
 	getTrainer() == return trainer
 	post RESULT = trainer;
 

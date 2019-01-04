@@ -11,15 +11,17 @@ operations
 	/**
 	 * TrainingSession constructor
 	 */
-   public TrainingSession: String1 * Trainer * Client * DayOfWeek * Hour * Hour * Date ==> TrainingSession
- 	TrainingSession(newDescription, newTrainer, client, newDayOfWeek, newStartHour, newEndHour, newDate) == 
+   public TrainingSession: String1 * Client * DayOfWeek * Hour * Hour * Date ==> TrainingSession
+ 	TrainingSession(newDescription, client, newDayOfWeek, newStartHour, newEndHour, newDate) == 
  	(
+		dcl newTrainer: Trainer := client.getTrainer();
 		trainee := client.getID();
 		newTrainer.addTask(self);
 		newTrainer.addTrainingSession(self);
 		client.addTrainingSession(self);
  		Session(newDescription, newTrainer, newDayOfWeek, newStartHour, newEndHour, newDate);
  	)
+	 pre client.getTrainer() <> nil
 	post trainee = client.getID();
 
 	-- GETTERS

@@ -31,13 +31,16 @@ public class GymClass extends Session {
       final Number newEndHour,
       final Number newDate) {
 
+    newTrainer.addTask(this);
+    newTrainer.addGymClass(this);
+
     cg_init_GymClass_1(
         newDescription, className, newTrainer, newDayOfWeek, newStartHour, newEndHour, newDate);
   }
 
   public void addAttendee(final Client client) {
 
-    attendees = SetUtil.union(Utils.copy(attendees), SetUtil.set(client));
+    attendees = SetUtil.union(Utils.copy(attendees), SetUtil.set(client.getID()));
     client.addGymClass(this);
   }
 
@@ -56,10 +59,22 @@ public class GymClass extends Session {
   public String toString() {
 
     return "GymClass{"
-        + "name := "
-        + Utils.toString(name)
-        + ", attendees := "
-        + Utils.toString(attendees)
+          + "name := "
+          + Utils.toString(name)
+              + ", description := "
+              + Utils.toString(description)
+              + ", startHour := "
+              + Utils.toString(startHour)
+              + ", endHour := "
+              + Utils.toString(endHour)
+              + ", date := "
+              + Utils.toString(date)
+              + ", dayOfWeek := "
+              + Utils.toString(dayOfWeek)
+              + ", trainer := "
+              + Utils.toString(trainer)
+          + ", attendees := "
+          + Utils.toString(attendees)
         + "}";
   }
 }
