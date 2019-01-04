@@ -16,9 +16,6 @@ operations
  	(
 		dcl newTrainer: Trainer := client.getTrainer();
 		trainee := client.getID();
-		newTrainer.addTask(self);
-		newTrainer.addTrainingSession(self);
-		client.addTrainingSession(self);
  		Session(newDescription, newTrainer, newDayOfWeek, newStartHour, newEndHour, newDate);
  	)
 	 pre client.getTrainer() <> nil

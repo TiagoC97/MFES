@@ -153,8 +153,8 @@ operations
 		(
 			dcl gymClass: GymClass := new GymClass(description, className, trainer, dayOfWeek, startHour, endHour, date);
 			classes := classes union {gymClass};
-			
-			
+			trainer.addGymClass(gymClass);
+			trainer.addTask(gymClass);			
 		)
 		pre (isAtLeastEmployee(user)) and user in set getUsers() and description <> "" and className <> ""
 		post not exists c1, c2 in set classes & c1 <> c2 and c1.getTrainer() = c2.getTrainer() and c1.getDate() = c2.getDate() and
@@ -184,6 +184,9 @@ operations
 		(
 			dcl trainingSession: TrainingSession := new TrainingSession(newDescription, client, newDayOfWeek, newStartHour, newEndHour, newDate);
 			trainingSessions := trainingSessions union {trainingSession};
+			client.addTrainingSession(trainingSession);
+			client.getTrainer().addTask(trainingSession);
+			client.getTrainer().addTrainingSession(trainingSession);
 		)
 		pre (isAtLeastEmployee(user)) and user in set getUsers() and newDescription <> ""
 		post not exists t1, t2 in set trainingSessions &

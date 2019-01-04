@@ -9,7 +9,9 @@ instance variables
 	private trainingSessions: set of TrainingSession := {};
 
 	inv not exists c1, c2 in set classes &
-		c1 <> c2 and c1.getTrainer() = c2.getTrainer() and c1.getDate() = c2.getDate() and
+		c1 <> c2 and 
+		c1.getTrainer() = c2.getTrainer() and 
+		c1.getDate() = c2.getDate() and
 		Utils`overlaps(c1.getStartHour(), c1.getEndHour(), c2.getStartHour(), c2.getEndHour());
 
 	inv not exists t1, t2 in set trainingSessions &

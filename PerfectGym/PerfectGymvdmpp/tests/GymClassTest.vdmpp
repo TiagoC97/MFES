@@ -20,7 +20,7 @@ operations
 		gymClass1.addAttendee(client1);
 
 		assertEqual("Pilates", gymClass1.getName());
-		assertEqual({client1}, gymClass1.getAttendees());
+		assertEqual({client1.getID()}, gymClass1.getAttendees());
 
 		IO`println("Finalizing GymClass Tests");
 

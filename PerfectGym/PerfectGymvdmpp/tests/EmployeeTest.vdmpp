@@ -1,0 +1,30 @@
+class EmployeeTest is subclass of MyTestCase
+
+instance variables
+
+	employee1: Employee := new Employee("Vasco", 25, <Male>, "brazilian");
+
+	task1: Task := new Task("Reunião com o patrão", 
+	  Utils`CreateHour(09, 00), 
+	  Utils`CreateHour(10, 00), 
+	  Utils`CreateDate(2019, 01, 12));
+	
+	
+operations
+	public Run: () ==> ()
+	Run() == (
+		IO`println("\nEmployee Tests");
+
+		employee1.addTask(task1);
+		
+		assertEqual({20190112 |-> [task1]}, employee1.getCalendar().getTasks());
+
+		assertEqual([task1], employee1.getCalendar().getTasksForGivenDate(20190112));
+
+		employee1.getActivity(true);
+
+		IO`println("Finalizing Employee Tests");
+
+	);
+	
+end EmployeeTest

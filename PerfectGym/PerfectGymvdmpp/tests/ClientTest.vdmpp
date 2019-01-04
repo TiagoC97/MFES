@@ -1,0 +1,16 @@
+class ClientTest is subclass of MyTestCase
+
+instance variables
+
+	client1: Client := new Client("Vasco", 25, <Male>, "brazilian");
+	
+operations
+	public Run: () ==> ()
+	Run() == (
+		IO`println("\nClient Tests");
+
+		IO`println("Finalizing Client Tests");
+
+	);
+	
+end ClientTest

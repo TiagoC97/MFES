@@ -26,13 +26,13 @@ operations
 	-- GETTERS
 
 	/**
-	 * Get trainer activity
+	 * Get employee activity
 	 */
 		public getActivity: bool ==> ()
 		getActivity(showAllTasks) == skip;
  	
  	/**
-	 * Get client calendar
+	 * Get employee calendar
 	 * 
 	 * @return calendar
 	 */

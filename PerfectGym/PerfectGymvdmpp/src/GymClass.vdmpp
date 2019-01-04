@@ -15,8 +15,6 @@ operations
  	GymClass(newDescription, className, newTrainer, newDayOfWeek, newStartHour, newEndHour, newDate) == 
  	(
 		name := className;
-		newTrainer.addTask(self);
-		newTrainer.addGymClass(self);
 		Session(newDescription, newTrainer, newDayOfWeek, newStartHour, newEndHour, newDate);
  	)
 	pre className <> ""
