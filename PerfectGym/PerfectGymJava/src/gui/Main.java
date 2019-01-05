@@ -17,6 +17,9 @@ public class Main extends JFrame {
     private SendMessageOfferGroupMenu sendMessageOfferGroupMenu;
     private CreateProductMenu createProductMenu;
     private CreateLeadWithSRMenu createLeadWithSRMenu;
+    private CreateInvoiceMenu createInvoiceMenu;
+
+    private ViewClientMenu viewClientMenu;
 
 
     private JPanel contentPane;
@@ -91,6 +94,12 @@ public class Main extends JFrame {
         createLeadWithSRMenu = new CreateLeadWithSRMenu(this);
         createLeadWithSRMenu.setVisible();
 
+        createInvoiceMenu = new CreateInvoiceMenu(this);
+        createInvoiceMenu.setVisible();
+
+        viewClientMenu = new ViewClientMenu(this);
+        viewClientMenu.setVisible();
+
         contentPane.add(mainMenu.getPane(), "Main Menu");
         contentPane.add(perfectGymMenu.getPane(), "PerfectGYM Menu");
         contentPane.add(createUserMenu.getPane(), "CreateUserMenu Menu");
@@ -103,6 +112,9 @@ public class Main extends JFrame {
         contentPane.add(createProductMenu.getPane(), "CreateProductMenu Menu");
         contentPane.add(clubMenu.getPane(), "ClubMenu Menu");
         contentPane.add(createLeadWithSRMenu.getPane(), "CreateLeadWithSRMenu Menu");
+        contentPane.add(createInvoiceMenu.getPane(), "CreateInvoiceMenu Menu");
+
+        contentPane.add(viewClientMenu.getPane(), "ViewClientMenu Menu");
 
         addListeners();
 
@@ -120,7 +132,6 @@ public class Main extends JFrame {
         });
         perfectGymMenu.getViewClubButton().addActionListener(e ->
         {
-
             clubMenu.setClub(perfectGymMenu.getSelectedClub());
             showLayout("ClubMenu Menu");
         });
@@ -350,6 +361,31 @@ public class Main extends JFrame {
             showLayout("ClubMenu Menu");
         });
 
+        clubMenu.getAddInvoiceButton().addActionListener(e -> {
+            createInvoiceMenu.start();
+            createInvoiceMenu.setClients(clubMenu.getClients());
+            createInvoiceMenu.setUsersAtLeastEmployees(clubMenu.getUsersAtLeastEmployeeAccess());
+            showLayout("CreateInvoiceMenu Menu");
+        });
+
+        createInvoiceMenu.getCancelButton().addActionListener(e -> showLayout("ClubMenu Menu"));
+        createInvoiceMenu.getConfirmButton().addActionListener(e -> {
+            clubMenu.addInvoice(createInvoiceMenu.getPayments(),
+                    createInvoiceMenu.getDate(),
+                    createInvoiceMenu.getHour(),
+                    createInvoiceMenu.getType(),
+                    createInvoiceMenu.getAllActivePayments(),
+                    createInvoiceMenu.getClientNow(),
+                    createInvoiceMenu.getUser());
+            showLayout("ClubMenu Menu");
+        });
+
+        clubMenu.getViewClientButton().addActionListener(e -> {
+            viewClientMenu.setClient(clubMenu.getClient());
+            showLayout("ViewClientMenu Menu");
+        });
+
+        viewClientMenu.getBackButton().addActionListener(e -> showLayout("ClubMenu Menu"));
     }
 
     public void showLayout(String layout) {

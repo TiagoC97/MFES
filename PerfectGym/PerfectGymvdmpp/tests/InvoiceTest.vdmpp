@@ -10,15 +10,28 @@ instance variables
 	gymFeePayment1: GymFeePayment := new GymFeePayment(client1, 80,
 		Utils`CreateDate(2019, 01, 22), 
 	  	Utils`CreateHour(08, 00));
+	  	
+	  		gymFeePayment2: GymFeePayment := new GymFeePayment(client1, 80,
+		Utils`CreateDate(2019, 02, 22), 
+	  	Utils`CreateHour(08, 00));
 
 	invoice1: Invoice := new Invoice({gymFeePayment1},
 		Utils`CreateDate(2019, 04, 23), 
 	  	Utils`CreateHour(08, 00),
-		"gymFee", true, client1);
+		"gymFee", false, client1);
 
 	personalTrainingPayment1: PersonalTrainingPayment := new PersonalTrainingPayment(client1, 50,
 		Utils`CreateDate(2019, 03, 13), 
 	  	Utils`CreateHour(08, 00));
+	  	
+	  		personalTrainingPayment2: PersonalTrainingPayment := new PersonalTrainingPayment(client1, 50,
+		Utils`CreateDate(2019, 04, 13), 
+	  	Utils`CreateHour(08, 00));
+
+	invoice2: Invoice := new Invoice({personalTrainingPayment1},
+		Utils`CreateDate(2019, 04, 23), 
+	  	Utils`CreateHour(08, 00),
+		"personalTraining", false, client1);
 
 	
 operations
@@ -26,17 +39,30 @@ operations
 	Run() == (
 		IO`println("\nInvoice Tests");
 
-		invoice1.addPayment({personalTrainingPayment1});
-		assertEqual({gymFeePayment1, personalTrainingPayment1}, invoice1.getPayments());
-		assertEqual(130, invoice1.getTotalAmount());
-		invoice1.removePayment({personalTrainingPayment1});
-		assertEqual({gymFeePayment1}, invoice1.getPayments());
+		invoice2.addPayment({personalTrainingPayment2});
+				
+		assertEqual({personalTrainingPayment1, personalTrainingPayment2}, invoice2.getPayments());
+		assertEqual(100, invoice2.getTotalAmount());
+		invoice2.removePayment({personalTrainingPayment1});
+		assertEqual({personalTrainingPayment2}, invoice2.getPayments());
+		assertEqual(50, invoice2.getTotalAmount());
+		
+			invoice1.addPayment({gymFeePayment2});
+		assertEqual({gymFeePayment1, gymFeePayment2}, invoice1.getPayments());
+		assertEqual(160, invoice1.getTotalAmount());
+		invoice1.removePayment({gymFeePayment1});
+		assertEqual({gymFeePayment2}, invoice1.getPayments());
 		assertEqual(80, invoice1.getTotalAmount());
 
 		assertEqual(20190423, invoice1.getDate());
 		assertEqual(0800, invoice1.getHour());
 		assertEqual("gymFee", invoice1.getType());
 		assertEqual(client1, invoice1.getClient());
+		
+				assertEqual(20190423, invoice2.getDate());
+		assertEqual(0800, invoice2.getHour());
+		assertEqual("personalTraining", invoice2.getType());
+		assertEqual(client1, invoice2.getClient());
 		
 
 		IO`println("Finalizing Invoice Tests");

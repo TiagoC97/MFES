@@ -25,8 +25,9 @@ instance variables
 	  	Utils`CreateHour(08, 00));
 
 	gymFeePayment2: GymFeePayment := new GymFeePayment(client1, 80,
-		Utils`CreateDate(2019, 02, 22), 
-	  	Utils`CreateHour(18, 00));
+		Utils`CreateDate(2019, 04, 22), 
+	  	Utils`CreateHour(08, 00));
+
 
 	gymFeePayment3: GymFeePayment := new GymFeePayment(client1, 80,
 		Utils`CreateDate(2019, 03, 22), 
@@ -35,7 +36,7 @@ instance variables
 	invoice1: Invoice := new Invoice({gymFeePayment3},
 		Utils`CreateDate(2019, 04, 23), 
 	  	Utils`CreateHour(08, 00),
-		"gymFee", true, client1);
+		"gymFee", false, client1);
 
 	personalTrainingPayment1: PersonalTrainingPayment := new PersonalTrainingPayment(client1, 50,
 		Utils`CreateDate(2019, 03, 13), 
@@ -143,16 +144,18 @@ operations
 		Utils`CreateDate(2019, 04, 23), 
 	  	Utils`CreateHour(08, 00),
 		"gymFee", owner1);
-
+		
 		assertEqual(1, card club1.getInvoices());
-
+		IO`println(client1.getGymFeePayments());		
 		club1.addInvoiceWithAllActivePayments(client1,
 		Utils`CreateDate(2019, 04, 23), 
 	  	Utils`CreateHour(08, 00),
 		"gymFee", owner1);
 
-		club1.addPaymentToInvoice(invoice1, {personalTrainingPayment1}, owner1);
-
+		club1.addPaymentToInvoice(invoice1, {new GymFeePayment(client1, 80,
+		Utils`CreateDate(2019, 02, 22), 
+	  	Utils`CreateHour(18, 00))}, owner1);
+IO`println("Initiate Invoice");		
 		club1.removePaymentFromInvoice(invoice1, {personalTrainingPayment1}, owner1);
 
 		IO`println("Initiate Clients");

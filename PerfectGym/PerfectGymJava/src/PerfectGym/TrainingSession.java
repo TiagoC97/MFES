@@ -31,7 +31,7 @@ public class TrainingSession extends Session {
             final Number newDate) {
 
         Trainer newTrainer = client.getTrainer();
-
+        date = newDate;
         newTrainer.addTask(this);
         newTrainer.addTrainingSession(this);
         client.addTrainingSession(this);

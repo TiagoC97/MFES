@@ -50,6 +50,17 @@ public class ProductPayment extends Payment {
 
   public String toString() {
 
-    return "ProductPayment{" + "products := " + Utils.toString(products) + "}";
+    return "ProductPayment{"
+            + "date := "
+            + Utils.toString(date)
+            + ", hour := "
+            + Utils.toString(hour)
+            + ", amount := "
+            + Utils.toString(amount)
+            + ", curPaymentID := "
+            + Utils.toString(curPaymentID)
+            + ", id := "
+            + Utils.toString(id)
+            + ", products := " + Utils.toString(products) + "}";
   }
 }

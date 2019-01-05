@@ -104,6 +104,29 @@ public class Invoice {
     for (Iterator iterator_29 = newPayments.iterator(); iterator_29.hasNext(); ) {
       Payment p = (Payment) iterator_29.next();
       totalAmount = totalAmount.doubleValue() + p.getAmount().doubleValue();
+      String stringPattern_7 = type;
+      Boolean success_3 = Utils.equals(stringPattern_7, "product");
+
+      if (!(success_3)) {
+        String stringPattern_8 = type;
+        success_3 = Utils.equals(stringPattern_8, "gymFee");
+
+        if (!(success_3)) {
+          String stringPattern_9 = type;
+          success_3 = Utils.equals(stringPattern_9, "personalTraining");
+
+          if (success_3) {
+            client.removePersonalTrainingPayment(p);
+          }
+
+        } else {
+          client.removeGymFeePayment(p);
+        }
+
+      } else {
+        client.removeProductPayment(p);
+      }
+
     }
   }
 

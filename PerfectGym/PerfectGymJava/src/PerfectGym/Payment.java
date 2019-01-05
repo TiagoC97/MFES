@@ -69,8 +69,6 @@ public class Payment {
         + Utils.toString(curPaymentID)
         + ", id := "
         + Utils.toString(id)
-        + ", client := "
-        + Utils.toString(client)
         + "}";
   }
 }

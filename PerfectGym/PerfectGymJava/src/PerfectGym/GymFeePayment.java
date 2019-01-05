@@ -30,6 +30,17 @@ public class GymFeePayment extends Payment {
 
   public String toString() {
 
-    return "GymFeePayment{" + "fee := " + Utils.toString(fee) + "}";
+    return "GymFeePayment{"
+            + "date := "
+            + Utils.toString(date)
+            + ", hour := "
+            + Utils.toString(hour)
+            + ", amount := "
+            + Utils.toString(amount)
+            + ", curPaymentID := "
+            + Utils.toString(curPaymentID)
+            + ", id := "
+            + Utils.toString(id)
+            + ", fee := " + Utils.toString(fee) + "}";
   }
 }

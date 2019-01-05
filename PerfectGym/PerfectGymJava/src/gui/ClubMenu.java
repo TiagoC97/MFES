@@ -12,6 +12,9 @@ public class ClubMenu {
     private JPanel pane;
     private JButton backButton;
     private JComboBox<String> clientsCombo;
+
+
+
     private JButton viewClientButton;
     private JButton viewOwnerButton;
     private JButton addClientButton;
@@ -71,10 +74,11 @@ public class ClubMenu {
     private JSpinner qttSpinner;
     private JButton addQuantityButton;
     private JTextArea productsTextArea;
+
+
     private JButton addInvoiceButton;
     private JComboBox invoicesCombo;
     private JComboBox<String> productsUserCombo;
-    private JButton viewInvoiceButton;
     private JTextArea invoicesTextArea;
     private JButton addLeadButton;
     private JTextArea crmTextArea;
@@ -89,6 +93,8 @@ public class ClubMenu {
     private JButton removeSRButton;
     private JButton assignSRButton;
     private JButton transformLeadButton;
+    private JComboBox invoicePaymentsCombo;
+    private JButton addPaymentToInvoiceButton;
 
     private Main parent;
 
@@ -190,7 +196,7 @@ public class ClubMenu {
         });
 
         club.getInvoices().forEach(i -> {
-            invoicesCombo.addItem("Client: " + ((Invoice) i).getClient() + " Type: " + ((Invoice) i).getType() +
+            invoicesCombo.addItem("Client: " + ((Invoice) i).getClient().getName() + " Type: " + ((Invoice) i).getType() +
                     " Date: " + ((Invoice) i).getDate());
             invoices.add((Invoice) i);
         });
@@ -448,6 +454,39 @@ public class ClubMenu {
             setCRMTextArea();
 
         });
+
+        invoicesCombo.addActionListener(e -> {
+            invoicePaymentsCombo.removeAllItems();
+            Invoice i = invoices.get(invoicesCombo.getSelectedIndex());
+            switch (i.getType()) {
+                case "product":
+                    if(i.getClient().getProductPayments().size() > 0)
+                        i.getClient().getProductPayments().forEach(p -> {
+                            invoicePaymentsCombo.addItem(p);
+                        });
+                    break;
+                case "gymFee":
+                    if(i.getClient().getGymFeePayments().size() > 0)
+                        i.getClient().getGymFeePayments().forEach(p -> {
+                            invoicePaymentsCombo.addItem(p);
+                        });
+                    break;
+                case "personalTraining":
+                    if(i.getClient().getPersonalTrainingPayments().size() > 0)
+                        i.getClient().getPersonalTrainingPayments().forEach(p -> {
+                            invoicePaymentsCombo.addItem(p);
+                        });
+                    break;
+
+            }
+        });
+
+        addPaymentToInvoiceButton.addActionListener(e -> {
+            System.out.println(SetUtil.set(invoicePaymentsCombo.getSelectedItem()));
+            club.addPaymentToInvoice(invoices.get(invoicesCombo.getSelectedIndex()), SetUtil.set(invoicePaymentsCombo.getSelectedItem()) ,owner);
+            invoicePaymentsCombo.removeItemAt(invoicePaymentsCombo.getSelectedIndex());
+            setInvoicesTextArea();
+        });
     }
 
     private void setSRFromLead() {
@@ -590,6 +629,21 @@ public class ClubMenu {
         setProductsTextArea();
     }
 
+    public void addInvoice(VDMSet payments, Number date, Number hour, String type, boolean allActivePayments, Client c, User u) {
+        System.out.println(payments);
+        Invoice i = new Invoice(payments, date, hour, type, allActivePayments, c);
+        if(!allActivePayments)
+            club.addInvoice(c, payments, date, hour, type, u);
+        else
+            club.addInvoiceWithAllActivePayments(c, date, hour, type, u);
+
+        invoices.add(i);
+        invoicesCombo.addItem("Client: " + c.getName() + " Type: " + type +
+                " Date: " + date);
+
+        setInvoicesTextArea();
+    }
+
     private void setClientsTextArea() {
         StringBuilder sb = new StringBuilder();
         for (Object c : club.getClients()) {
@@ -660,7 +714,14 @@ public class ClubMenu {
 
     private void setCRMTextArea() {
         StringBuilder sb = new StringBuilder();
-        sb.append(club.getCRM().toString()).append("\n");
+        sb.append("CRM{").append("\n");
+        club.getCRM().getLeads().forEach((l, sr) -> {
+            String srString = " nil";
+            if (sr != null)
+                    srString = sr.toString();
+            sb.append(l.toString() + "|->" + srString).append("\n");
+        });
+        sb.append("}").append("\n");
         crmTextArea.setText(sb.toString());
     }
 
@@ -774,6 +835,42 @@ public class ClubMenu {
 
     public JButton getAddLeadWithSalesButton() {
         return addLeadWithSalesButton;
+    }
+
+    public JButton getAddInvoiceButton() {
+        return addInvoiceButton;
+    }
+
+    public JButton getViewClientButton() {
+        return viewClientButton;
+    }
+
+    public JButton getViewOwnerButton() {
+        return viewOwnerButton;
+    }
+
+    public JButton getViewSalesRepresentativeButton() {
+        return viewSalesRepresentativeButton;
+    }
+
+    public JButton getViewTrainerButton() {
+        return viewTrainerButton;
+    }
+
+    public JButton getViewGroupButton() {
+        return viewGroupButton;
+    }
+
+    public JButton getViewGymClassButton() {
+        return viewGymClassButton;
+    }
+
+    public JButton getViewTrainingSessionButton() {
+        return viewTrainingSessionButton;
+    }
+
+    public Client getClient() {
+        return clients.get(clientsCombo.getSelectedIndex());
     }
 }
 

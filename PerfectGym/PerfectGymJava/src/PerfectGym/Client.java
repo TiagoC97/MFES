@@ -76,6 +76,7 @@ public class Client extends User {
 
     Number trainingSessionDate = trainingSession.getDate();
     trainingSessions = SetUtil.union(Utils.copy(trainingSessions), SetUtil.set(trainingSession));
+
     addGymAttendence(trainingSessionDate);
   }
 

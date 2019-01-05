@@ -76,17 +76,17 @@ operations
 	/**
 	 * Delete last message from a given user
 	 */
-	public deleteLastMessageFromUser: User ==> ()
-	deleteLastMessageFromUser(user) == inbox(user.getName()):= tl inbox(user.getName())
-	pre user.getName() in set dom inbox and inbox(user.getName()) <> [] and user in set club.getUsers();
+	public deleteLastMessageFromUser: String1 ==> ()
+	deleteLastMessageFromUser(user) == inbox(user):= tl inbox(user)
+	pre user in set dom inbox and inbox(user) <> [] ;
 
 	/**
 	 * Delete an n message from a given user
 	 */
-	public deleteMessageNFromUser: nat * User ==> ()
-	deleteMessageNFromUser(n, user) == inbox(user.getName()) := inbox(user.getName())(1,..., n - 1) ^ inbox(user.getName())((n + 1),..., (len inbox(user.getName())))
-	pre inbox(user.getName()) <> [] and n in set inds inbox(user.getName()) and user in set club.getUsers()
-	post inbox(user.getName()) = inbox(user.getName())(1,..., n - 1) ^ inbox(user.getName())((n + 1),..., (len inbox(user.getName())));  -- CHECK THIS POST
+	public deleteMessageNFromUser: nat * String1 ==> ()
+	deleteMessageNFromUser(n, user) == inbox(user) := inbox(user)(1,..., n - 1) ^ inbox(user)((n + 1),..., (len inbox(user)))
+	pre inbox(user) <> [] and n in set inds inbox(user)
+	post inbox(user) = inbox(user)(1,..., n - 1) ^ inbox(user)((n + 1),..., (len inbox(user)));  -- CHECK THIS POST
 
 	/**
 	 * Set this user access

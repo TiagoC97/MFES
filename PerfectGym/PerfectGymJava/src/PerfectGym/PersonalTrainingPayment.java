@@ -30,6 +30,17 @@ public class PersonalTrainingPayment extends Payment {
 
   public String toString() {
 
-    return "PersonalTrainingPayment{" + "fee := " + Utils.toString(fee) + "}";
+    return "PersonalTrainingPayment{"
+            + "date := "
+            + Utils.toString(date)
+            + ", hour := "
+            + Utils.toString(hour)
+            + ", amount := "
+            + Utils.toString(amount)
+            + ", curPaymentID := "
+            + Utils.toString(curPaymentID)
+            + ", id := "
+            + Utils.toString(id)
+            + ", fee := " + Utils.toString(fee) + "}";
   }
 }

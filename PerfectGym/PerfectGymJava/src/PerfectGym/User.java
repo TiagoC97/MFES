@@ -66,26 +66,26 @@ public class User {
     }
   }
 
-  public void deleteLastMessageFromUser(final User user) {
+  public void deleteLastMessageFromUser(final String user) {
 
     Utils.mapSeqUpdate(
         inbox,
-        user.getName(),
-        SeqUtil.tail(Utils.copy(((VDMSeq) Utils.get(inbox, user.getName())))));
+        getName(),
+        SeqUtil.tail(Utils.copy(((VDMSeq) Utils.get(inbox, getName())))));
   }
 
-  public void deleteMessageNFromUser(final Number n, final User user) {
+  public void deleteMessageNFromUser(final Number n, final String user) {
 
     Utils.mapSeqUpdate(
         inbox,
-        user.getName(),
+        getName(),
         SeqUtil.conc(
             SeqUtil.subSeq(
-                Utils.copy(((VDMSeq) Utils.get(inbox, user.getName()))), 1L, n.longValue() - 1L),
+                Utils.copy(((VDMSeq) Utils.get(inbox, getName()))), 1L, n.longValue() - 1L),
             SeqUtil.subSeq(
-                Utils.copy(((VDMSeq) Utils.get(inbox, user.getName()))),
+                Utils.copy(((VDMSeq) Utils.get(inbox, getName()))),
                 n.longValue() + 1L,
-                ((VDMSeq) Utils.get(inbox, user.getName())).size())));
+                ((VDMSeq) Utils.get(inbox, getName())).size())));
   }
 
   public void setAccess(final Object newAccess) {

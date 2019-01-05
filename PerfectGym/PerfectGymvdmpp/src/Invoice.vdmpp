@@ -72,7 +72,14 @@ operations
 	(
 		payments:= payments union newPayments;
 		for all p in set newPayments do
-           totalAmount:= totalAmount + p.getAmount();
+		(
+		   totalAmount:= totalAmount + p.getAmount();
+		   cases type:
+					"product" -> client.removeProductPayment(p),
+					"gymFee" -> client.removeGymFeePayment(p),
+					"personalTraining" -> client.removePersonalTrainingPayment(p)
+				end;
+		)
 
 	)
 	pre card newPayments >= 1 and newPayments inter payments = {};
