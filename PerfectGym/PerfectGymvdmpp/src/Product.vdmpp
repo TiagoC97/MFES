@@ -36,8 +36,7 @@ operations
 	 */
 	public removeQuantity: nat ==> ()
 	removeQuantity(qtt) == quantity:= quantity - qtt
-	pre quantity > 0 and qtt <= quantity
-	post quantity > 0;
+	pre quantity > 0 and qtt <= quantity;
 
 	-- GETTERS
 

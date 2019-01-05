@@ -96,12 +96,12 @@ operations
 				(
 					for all d in set dom tasks do
 					(
-						i := 0;
+						i := 1;
 						IO`print("Date: " );	
 						IO`println(d);
 
 
-						while i < len tasks(d) do
+						while i <= len tasks(d) do
 						( 
 							t := tasks(d)(i); 
 							IO`print("	Task: ");

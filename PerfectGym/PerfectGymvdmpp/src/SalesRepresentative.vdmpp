@@ -27,7 +27,7 @@ operations
  	public removeLead: Lead ==> ()
  	removeLead(lead) == leads := leads \ {lead.getName()}
  	pre lead.getName() in set leads
- 	post leads <> {} and leads= leads~ \ {lead.getName()};
+ 	post leads= leads~ \ {lead.getName()};
 
 	-- GETTERS
 
