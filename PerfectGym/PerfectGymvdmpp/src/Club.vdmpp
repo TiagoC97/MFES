@@ -548,7 +548,7 @@ operations
 		post RESULT = trainers union salesRepresentatives;
 
 		/**
-		 * Gets the club users (clients + trainers + salesRepresentatives)
+		 * Gets the club users (owner + clients + trainers + salesRepresentatives)
 		 *
 		 * @return set of User
 		 */

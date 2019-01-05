@@ -69,6 +69,12 @@ operations
 		club1.addSalesRepresentative(salesRepresentative1, owner1);
 		club1.addSalesRepresentative(salesRepresentative2, owner1);
 
+
+		trainer1.addGymClass(gymClass1);
+		trainer1.addTask(gymClass1);
+		assertEqual({20190111 |-> [gymClass1]}, club1.getEmployeeCalendar(trainer1));
+		assertEqual([gymClass1], club1.getEmployeeTasksForGivenDate(trainer1, 20190111));
+
 		IO`println("Initiate addGroup");
 		club1.addGroup("PuxadoresDeFerro", {client1}, owner1);
 
@@ -77,6 +83,7 @@ operations
 		
 		IO`println("Initiate addGymClass");
 		club1.addGymClass(gymClass1, owner1);
+		assertEqual({gymClass1}, club1.getGymClasses());
 		
 		IO`println("Initiate GymClass");
 		club1.addGymClass("Aula de alta intensidade", "Zumba", trainer1, <Monday>, 
@@ -130,12 +137,14 @@ operations
 		club1.addGroupClient("PuxadoresDeFerro", client2, owner1);
 		club1.removeGroupClient("PuxadoresDeFerro", client2, owner1);
 
-		IO`println("Initiate Invoice");
+		IO`println("Initiate Invoice");		
 
 		club1.addInvoice(client1, {gymFeePayment1},
 		Utils`CreateDate(2019, 04, 23), 
 	  	Utils`CreateHour(08, 00),
 		"gymFee", owner1);
+
+		assertEqual(1, card club1.getInvoices());
 
 		club1.addInvoiceWithAllActivePayments(client1,
 		Utils`CreateDate(2019, 04, 23), 
@@ -146,7 +155,10 @@ operations
 
 		club1.removePaymentFromInvoice(invoice1, {personalTrainingPayment1}, owner1);
 
+		IO`println("Initiate Clients");
 		assertEqual({client1, client2}, club1.getClients());
+		assertEqual({owner1, client1, client2, trainer1, trainer2, salesRepresentative1, salesRepresentative2}, club1.getUsers());
+		assertEqual({client1}, club1.getClientByName("Maria"));
 
 		IO`println("Initiate CRM");
 		
@@ -182,10 +194,19 @@ operations
 		IO`println("Initiate Getters");
 		assertEqual({trainer1, trainer2}, club1.getTrainers());
 		assertEqual({salesRepresentative1, salesRepresentative2}, club1.getSalesRepresentatives());
-			
+		assertEqual({trainer1, trainer2, salesRepresentative1, salesRepresentative2}, club1.getEmployees());
+
+		assertEqual({trainer1}, club1.getEmployeeByName("Vasco"));
+		assertEqual({trainer1}, club1.getUserByName("Vasco"));
+
 		assertEqual(owner1, club1.getOwner());
 		assertEqual("Bombados", club1.getName());
-		
+		assertEqual("Sales", club1.getNewsletter());
+
+		assertEqual(1, card dom club1.getGroups());
+
+		assertEqual(17, club1.getFee());
+
 		assertEqual(club1, owner1.getClub());
 
 		IO`println("Initiate Stats");
