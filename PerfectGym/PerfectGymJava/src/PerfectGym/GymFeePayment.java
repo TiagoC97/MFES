@@ -11,6 +11,7 @@ public class GymFeePayment extends Payment {
       final Client newClient, final Number newFee, final Number newDate, final Number newHour) {
 
     fee = newFee;
+    newClient.addGymFeePayment(this);
     cg_init_Payment_1(newClient, newDate, newHour, newFee);
   }
 

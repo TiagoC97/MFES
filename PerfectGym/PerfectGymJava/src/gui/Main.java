@@ -15,6 +15,9 @@ public class Main extends JFrame {
     private SendMessageDestMarkedMenu sendMessageDestMarkedMenu;
     private SendMessageToUserMenu sendMessageToUserMenu;
     private SendMessageOfferGroupMenu sendMessageOfferGroupMenu;
+    private CreateProductMenu createProductMenu;
+    private CreateLeadWithSRMenu createLeadWithSRMenu;
+
 
     private JPanel contentPane;
 
@@ -82,6 +85,12 @@ public class Main extends JFrame {
         sendMessageOfferGroupMenu = new SendMessageOfferGroupMenu(this);
         sendMessageOfferGroupMenu.setVisible();
 
+        createProductMenu = new CreateProductMenu(this);
+        createProductMenu.setVisible();
+
+        createLeadWithSRMenu = new CreateLeadWithSRMenu(this);
+        createLeadWithSRMenu.setVisible();
+
         contentPane.add(mainMenu.getPane(), "Main Menu");
         contentPane.add(perfectGymMenu.getPane(), "PerfectGYM Menu");
         contentPane.add(createUserMenu.getPane(), "CreateUserMenu Menu");
@@ -91,7 +100,9 @@ public class Main extends JFrame {
         contentPane.add(sendMessageDestMarkedMenu.getPane(), "SendMessageDestMarkedMenu Menu");
         contentPane.add(sendMessageToUserMenu.getPane(), "SendMessageToUserMenu Menu");
         contentPane.add(sendMessageOfferGroupMenu.getPane(), "SendMessageOfferGroupMenu Menu");
+        contentPane.add(createProductMenu.getPane(), "CreateProductMenu Menu");
         contentPane.add(clubMenu.getPane(), "ClubMenu Menu");
+        contentPane.add(createLeadWithSRMenu.getPane(), "CreateLeadWithSRMenu Menu");
 
         addListeners();
 
@@ -99,7 +110,7 @@ public class Main extends JFrame {
         cardLayout.show(contentPane, "Main Menu");
     }
 
-    private void addListeners(){
+    private void addListeners() {
         mainMenu.getPerfectGymButton().addActionListener(e -> showLayout("PerfectGYM Menu"));
 
         perfectGymMenu.getBackButton().addActionListener(e -> showLayout("Main Menu"));
@@ -109,13 +120,20 @@ public class Main extends JFrame {
         });
         perfectGymMenu.getViewClubButton().addActionListener(e ->
         {
+
             clubMenu.setClub(perfectGymMenu.getSelectedClub());
             showLayout("ClubMenu Menu");
         });
 
-        createUserMenu.getCancelButton().addActionListener(e -> showLayout("PerfectGYM Menu"));
+        createUserMenu.getCancelButton().addActionListener(e -> {
+            if (createUserMenu.getUser().equals("Owner"))
+                showLayout("PerfectGYM Menu");
+            else
+                showLayout("ClubMenu Menu");
+
+        });
         createUserMenu.getConfirmButton().addActionListener(e -> {
-            switch (createUserMenu.getUser()){
+            switch (createUserMenu.getUser()) {
                 case "Owner":
                     perfectGymMenu.addOwner(createUserMenu.getName(), createUserMenu.getAge(), createUserMenu.getGender(), createUserMenu.getNationality());
                     showLayout("PerfectGYM Menu");
@@ -130,6 +148,10 @@ public class Main extends JFrame {
                     break;
                 case "SalesRepresentative":
                     clubMenu.addSalesRepresentative(createUserMenu.getName(), createUserMenu.getAge(), createUserMenu.getGender(), createUserMenu.getNationality());
+                    showLayout("ClubMenu Menu");
+                    break;
+                case "Lead":
+                    clubMenu.addLead(createUserMenu.getName(), createUserMenu.getAge(), createUserMenu.getGender(), createUserMenu.getNationality());
                     showLayout("ClubMenu Menu");
                     break;
             }
@@ -153,6 +175,11 @@ public class Main extends JFrame {
         });
         clubMenu.getAddTrainerButton().addActionListener(e -> {
             createUserMenu.setUser("Trainer");
+            showLayout("CreateUserMenu Menu");
+        });
+        clubMenu.getBackButton().addActionListener(e -> showLayout("PerfectGYM Menu"));
+        clubMenu.getAddLeadButton().addActionListener(e -> {
+            createUserMenu.setUser("Lead");
             showLayout("CreateUserMenu Menu");
         });
         clubMenu.getAddGroupButton().addActionListener(e -> {
@@ -219,7 +246,7 @@ public class Main extends JFrame {
 
         sendMessageToUserMenu.getCancelButton().addActionListener(e -> showLayout("ClubMenu Menu"));
         sendMessageToUserMenu.getConfirmButton().addActionListener(e -> {
-            switch (sendMessageToUserMenu.getDestinatary()){
+            switch (sendMessageToUserMenu.getDestinatary()) {
                 case "Client":
                     clubMenu.sendMsgToClient(sendMessageToUserMenu.getMessage(), sendMessageToUserMenu.getClient(),
                             sendMessageToUserMenu.getUser());
@@ -236,7 +263,7 @@ public class Main extends JFrame {
 
         sendMessageDestMarkedMenu.getCancelButton().addActionListener(e -> showLayout("ClubMenu Menu"));
         sendMessageDestMarkedMenu.getConfirmButton().addActionListener(e -> {
-            switch (sendMessageDestMarkedMenu.getDestinatary()){
+            switch (sendMessageDestMarkedMenu.getDestinatary()) {
                 case "AllClients":
                     clubMenu.sendMsgAllClients(sendMessageDestMarkedMenu.getMessage(),
                             sendMessageToUserMenu.getUser());
@@ -258,7 +285,7 @@ public class Main extends JFrame {
 
         sendMessageOfferGroupMenu.getCancelButton().addActionListener(e -> showLayout("ClubMenu Menu"));
         sendMessageOfferGroupMenu.getConfirmButton().addActionListener(e -> {
-            switch (sendMessageOfferGroupMenu.getType()){
+            switch (sendMessageOfferGroupMenu.getType()) {
                 case "Group":
                     clubMenu.sendMsgGroup(sendMessageOfferGroupMenu.getMessage(), sendMessageOfferGroupMenu.getGroupName(),
                             sendMessageOfferGroupMenu.getUser());
@@ -299,9 +326,33 @@ public class Main extends JFrame {
             showLayout("ClubMenu Menu");
         });
 
+
+        clubMenu.getAddProductButton().addActionListener(e -> {
+            showLayout("CreateProductMenu Menu");
+        });
+
+        clubMenu.getAddLeadWithSalesButton().addActionListener(e -> {
+            createLeadWithSRMenu.setSalesRepresentatives(clubMenu.getSalesRepresentatives());
+            showLayout("CreateLeadWithSRMenu Menu");
+        });
+
+        createProductMenu.getCancelButton().addActionListener(e -> showLayout("ClubMenu Menu"));
+        createProductMenu.getConfirmButton().addActionListener(e -> {
+            clubMenu.addProduct(createProductMenu.getName(), createProductMenu.getValue(), createProductMenu.getQuantity());
+            showLayout("ClubMenu Menu");
+        });
+
+        createLeadWithSRMenu.getCancelButton().addActionListener(e -> showLayout("ClubMenu Menu"));
+        createLeadWithSRMenu.getConfirmButton().addActionListener(e -> {
+            clubMenu.addleadSR(createLeadWithSRMenu.getName(), createLeadWithSRMenu.getAge(),
+                    createLeadWithSRMenu.getAge(), createLeadWithSRMenu.getNationality(),
+                    createLeadWithSRMenu.getSR());
+            showLayout("ClubMenu Menu");
+        });
+
     }
 
-    public void showLayout(String layout){
+    public void showLayout(String layout) {
         CardLayout cardLayout = (CardLayout) contentPane.getLayout();
         cardLayout.show(contentPane, layout);
     }

@@ -25,16 +25,21 @@ public class CRM {
   public void addLeadWithSR(final Lead lead, final SalesRepresentative sr) {
 
     leads = MapUtil.munion(Utils.copy(leads), MapUtil.map(new Maplet(lead, sr)));
+    sr.addLead(lead);
   }
 
   public void setLeadSR(final Lead lead, final SalesRepresentative sr) {
 
     if (!(Utils.equals(((SalesRepresentative) Utils.get(leads, lead)), null))) {
       ((SalesRepresentative) Utils.get(leads, lead)).removeLead(lead);
+
     }
 
+    if(sr != null)
+      sr.addLead(lead);
+
     Utils.mapSeqUpdate(leads, lead, sr);
-    sr.addLead(lead);
+
   }
 
   public void removeLead(final Lead lead) {

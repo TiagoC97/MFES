@@ -258,9 +258,9 @@ public class Club {
         crm.setLeadSR(lead, sr);
     }
 
-    public void removeLeadSR(final Lead lead, final SalesRepresentative sr, final User user) {
+    public void removeLeadSR(final Lead lead, final User user) {
 
-        sr.removeLead(lead);
+        crm.setLeadSR(lead, null);
     }
 
     public void removeCRMLead(final Lead lead, final User user) {
@@ -311,18 +311,22 @@ public class Club {
         employee.addTask(task);
     }
 
-    public void addProduct(final String prod_name, final Number prod_value, final Number qtt) {
+    public void addProduct(final String prod_name, final Number prod_value, final Number qtt, final User user) {
 
         Product prod = new Product(prod_name, prod_value, qtt);
         products = SetUtil.union(Utils.copy(products), SetUtil.set(prod));
     }
 
-    public void addStockOfProduct(final Product prod, final Number qtt) {
+    public void addProduct(final Product product, final User user) {
+        products = SetUtil.union(Utils.copy(products), SetUtil.set(product));
+    }
+
+    public void addStockOfProduct(final Product prod, final Number qtt, final User user) {
 
         prod.addQuantity(qtt);
     }
 
-    public void removeProduct(final Product prod) {
+    public void removeProduct(final Product prod, final User user) {
 
         prod.removeQuantity(prod.getQuantity());
         products = SetUtil.diff(Utils.copy(products), SetUtil.set(prod));
@@ -441,6 +445,12 @@ public class Club {
 
         return crm;
     }
+
+    public VDMSet getProducts() {
+
+        return products;
+    }
+
 
     public VDMMap getEmployeeCalendar(final Employee employee) {
 

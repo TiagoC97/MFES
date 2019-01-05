@@ -9,6 +9,7 @@ operations
  	GymFeePayment(newClient, newFee, newDate, newHour) == 
  	(
 		fee:= newFee;
+		newClient.addGymFeePayment(self);
         Payment(newClient, newDate, newHour, newFee);
     )
     pre newFee >= 0

@@ -11,6 +11,7 @@ public class PersonalTrainingPayment extends Payment {
       final Client newClient, final Number newFee, final Number newDate, final Number newHour) {
 
     fee = newFee;
+    newClient.addPersonalTrainingPayment(this);
     cg_init_Payment_1(newClient, newDate, newHour, newFee);
   }
 

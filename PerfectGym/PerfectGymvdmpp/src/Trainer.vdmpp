@@ -85,21 +85,31 @@ operations
 			dcl t: Task;
 
 			IO`println("********* TRAINER STATISTICS *********");
-			IO`println("Number of gym classes: " ^ [numClasses]);
-			IO`println("Number of training sessions: " ^ [numTrainingSessiosn]);
-			IO`println("Number of trainees: " ^ [numTrainees]);
-			
+			IO`print("Number of gym classes: ");
+			IO`println(numClasses);
+			IO`print("Number of training sessions: ");
+			IO`println(numTrainingSessiosn);
+			IO`print("Number of trainees: " );
+			IO`println(numTrainees);
+
 			if showAllTasks then
 				(
 					for all d in set dom tasks do
 					(
 						i := 0;
-						IO`println("Date: " ^ [d]);	
+						IO`print("Date: " );	
+						IO`println(d);
+
 
 						while i < len tasks(d) do
 						( 
 							t := tasks(d)(i); 
-							IO`println("	Task: " ^ [t.getDescription()] ^ [" started at "] ^ [t.getStartHour()] ^ [" and ended at "] ^ [t.getEndHour()]);
+							IO`print("	Task: ");
+							IO`print(t.getDescription());
+							IO`print(" started at ");
+							IO`print(t.getStartHour());
+							IO`print(" and ended at ");
+							IO`println(t.getEndHour());							
 							i:= i + 1;
 						);
 						IO`println("");

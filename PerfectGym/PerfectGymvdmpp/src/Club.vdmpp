@@ -372,9 +372,12 @@ operations
 		/**
 		 * Remove a lead from  a sales representative
 		 */
-		public removeLeadSR: Lead * SalesRepresentative * User ==> ()
-		removeLeadSR(lead, sr, user) == sr.removeLead(lead)
-		pre sr in set salesRepresentatives and isAtLeastEmployee(user) and user in set getUsers();
+		public removeLeadSR: Lead * User ==> ()
+		removeLeadSR(lead, user) == 
+		(
+			crm.setLeadSR(lead, nil);
+		)
+		pre isAtLeastEmployee(user) and user in set getUsers();
 
 		/**
 		 * Remove a lead from crm
@@ -407,11 +410,16 @@ operations
 			dcl numClasses: nat := card classes;
 			dcl numTrainingSessiosn: nat := card trainingSessions;
 			IO`println("********* CLUB STATISTICS *********");
-			IO`println("Number of clients: " ^ [numClients]);
-			IO`println("Number of trainers: " ^ [numTrainers]);
-			IO`println("Number of sales representatives: " ^ [numSalesRepresentatives]);
-			IO`println("Number of gym classes: " ^ [numClasses]);
-			IO`println("Number of training sessions: " ^ [numTrainingSessiosn]);
+			IO`print("Number of clients: ");
+			IO`println(numClients);
+			IO`print("Number of trainers: ");
+			IO`println(numTrainers);
+			IO`print("Number of sales representatives: ");
+			IO`println(numSalesRepresentatives);
+			IO`print("Number of gym classes: " );
+			IO`println(numClasses);
+			IO`print("Number of training sessions: " );
+			IO`println(numTrainingSessiosn);
 			IO`println("");
 			IO`println("************************************");
 		)
@@ -443,27 +451,36 @@ operations
 
 		-- PRODUCTS
 
-		public addProduct: String1 * rat * nat ==> ()
-		addProduct(prod_name, prod_value, qtt) ==
+		public addProduct: String1 * rat * nat * User ==> ()
+		addProduct(prod_name, prod_value, qtt, user) ==
 		(
 			dcl prod : Product := new Product(prod_name, prod_value, qtt);
 			products := products union {prod};
 		)
-		pre prod_name <> "" and prod_value > 0 and qtt > 0
+		pre prod_name <> "" and prod_value > 0 and qtt > 0 and isAtLeastEmployee(user) and user in set getUsers()
 		post not exists p1, p2 in set products &
 			p1 <> p2 and p1.getName() = p2.getName();
 
-		public addStockOfProduct: Product * nat ==> ()
-		addStockOfProduct(prod, qtt)== prod.addQuantity(qtt)
-		pre qtt > 0;
+		public addProduct: Product * User ==> ()
+		addProduct(prod, user) ==
+		(
+			products := products union {prod};
+		)
+		pre isAtLeastEmployee(user) and user in set getUsers()
+		post not exists p1, p2 in set products &
+			p1 <> p2 and p1.getName() = p2.getName();
 
-		public removeProduct: Product ==> ()
-		removeProduct(prod) ==
+		public addStockOfProduct: Product * nat * User ==> ()
+		addStockOfProduct(prod, qtt, user)== prod.addQuantity(qtt)
+		pre qtt > 0 and isAtLeastEmployee(user) and user in set getUsers();
+
+		public removeProduct: Product * User==> ()
+		removeProduct(prod, user) ==
 		(
 			prod.removeQuantity(prod.getQuantity());
 			products := products \ {prod};
 		)
-		pre products <> {} and prod in set products;
+		pre products <> {} and prod in set products and isAtLeastEmployee(user) and user in set getUsers();
 
 		-- GETTERS
 
@@ -672,6 +689,15 @@ operations
 			return employee.getCalendar().getTasksForGivenDate(date)
 			pre employee in set getEmployees()
 		post RESULT = employee.getCalendar().getTasksForGivenDate(date);
+		
+		/**
+		 * Gets the products
+		 * 
+		 * @return products
+		 */
+		public getProducts: () ==> set of Product
+		getProducts() == return products
+		post RESULT = products;
 
  functions
 

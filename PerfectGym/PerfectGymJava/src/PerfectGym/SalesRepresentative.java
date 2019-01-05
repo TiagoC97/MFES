@@ -27,12 +27,12 @@ public class SalesRepresentative extends Employee {
 
   public void addLead(final Lead lead) {
 
-    leads = SetUtil.union(Utils.copy(leads), SetUtil.set(lead));
+    leads = SetUtil.union(Utils.copy(leads), SetUtil.set(lead.getName()));
   }
 
   public void removeLead(final Lead lead) {
 
-    leads = SetUtil.diff(Utils.copy(leads), SetUtil.set(lead));
+    leads = SetUtil.diff(Utils.copy(leads), SetUtil.set(lead.getName()));
   }
 
   public void getActivity(final Boolean showAllTasks) {

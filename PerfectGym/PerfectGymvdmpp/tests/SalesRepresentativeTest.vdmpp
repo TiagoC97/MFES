@@ -15,9 +15,9 @@ operations
 
 		salesRepresentative1.addLead(lead1);
 		salesRepresentative1.addLead(lead2);
-		assertEqual({lead1, lead2}, salesRepresentative1.getLeads());
+		assertEqual({lead1.getName(), lead2.getName()}, salesRepresentative1.getLeads());
 		salesRepresentative1.removeLead(lead2);
-		assertEqual({lead1}, salesRepresentative1.getLeads());
+		assertEqual({lead1.getName()}, salesRepresentative1.getLeads());
 
 		salesRepresentative1.getActivity(true);
 

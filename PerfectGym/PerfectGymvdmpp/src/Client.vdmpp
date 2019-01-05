@@ -259,7 +259,7 @@ operations
 	public payPersonalTrainingFee: Date * Hour ==> ()
 	payPersonalTrainingFee(date, hour) == 
 	(
-		dcl payment: PersonalTrainingPayment := new PersonalTrainingPayment(self, club.getFee(), date, hour);
+		dcl payment: PersonalTrainingPayment := new PersonalTrainingPayment(self, personalTrainingFee, date, hour);
 		addPersonalTrainingPayment(payment);
 	);
 
@@ -306,11 +306,16 @@ operations
 			
 
 			IO`println("********* CLIENT STATISTICS *********");
-			IO`println("Personal trainer: " ^ [personalTrainer]);
-			IO`println("Number of gym classes: " ^ [numClasses]);
-			IO`println("Number of training sessions: " ^ [numTrainingSessiosn]);
-			IO`println("Number of gym attendences: " ^ [numAttendences]);
-			IO`println("Number of different products bought: " ^ [numProductsBought]);
+			IO`print("Personal trainer: ");
+			IO`println(personalTrainer);
+			IO`print("Number of gym classes: " );
+			IO`println(numClasses);
+			IO`print("Number of training sessions: " );
+			IO`println(numTrainingSessiosn);
+			IO`print("Number of gym attendences: " );
+			IO`println(numAttendences);
+			IO`print("Number of different products bought: ");
+			IO`println(numProductsBought);
 			IO`println("");
 			IO`println("*************************************");
 		);

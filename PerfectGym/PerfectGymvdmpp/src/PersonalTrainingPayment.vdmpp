@@ -10,6 +10,7 @@ operations
  	PersonalTrainingPayment(newClient, newFee, newDate, newHour) == 
  	(
 		fee:= newFee;
+		newClient.addPersonalTrainingPayment(self);
         Payment(newClient, newDate, newHour, newFee);
     )
     pre newFee >= 0
