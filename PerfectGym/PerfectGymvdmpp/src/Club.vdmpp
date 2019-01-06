@@ -451,6 +451,9 @@ operations
 
 		-- PRODUCTS
 
+		/**
+		 * Create product for the club
+		 */
 		public addProduct: String1 * rat * nat * User ==> ()
 		addProduct(prod_name, prod_value, qtt, user) ==
 		(
@@ -461,6 +464,9 @@ operations
 		post not exists p1, p2 in set products &
 			p1 <> p2 and p1.getName() = p2.getName();
 
+		/**
+		 * Add an existing product to the club
+		 */
 		public addProduct: Product * User ==> ()
 		addProduct(prod, user) ==
 		(
@@ -470,10 +476,16 @@ operations
 		post not exists p1, p2 in set products &
 			p1 <> p2 and p1.getName() = p2.getName();
 
+		/**
+		 * Add stock of a product for the club
+		 */
 		public addStockOfProduct: Product * nat * User ==> ()
 		addStockOfProduct(prod, qtt, user)== prod.addQuantity(qtt)
 		pre qtt > 0 and isAtLeastEmployee(user) and user in set getUsers();
 
+		/**
+		 * Remove a product
+		 */
 		public removeProduct: Product * User==> ()
 		removeProduct(prod, user) ==
 		(

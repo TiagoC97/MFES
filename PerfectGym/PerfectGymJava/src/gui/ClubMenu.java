@@ -413,6 +413,7 @@ public class ClubMenu {
                         (Number) qttSpinner.getValue(),
                         usersAtLeastEmployeeAccess.get(productsUserCombo.getSelectedIndex()));
             }
+            setProductsTextArea();
         });
 
         removeProductButton.addActionListener(e -> {
@@ -420,7 +421,7 @@ public class ClubMenu {
                 int index = productsCombo.getSelectedIndex();
                 productsCombo.removeItemAt(index);
                 products.remove(index);
-
+                setProductsTextArea();
             }
         });
 
