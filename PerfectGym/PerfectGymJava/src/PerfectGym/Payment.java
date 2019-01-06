@@ -13,7 +13,7 @@ public class Payment {
   protected Client client;
 
   public void cg_init_Payment_1(
-      final Client newClient, final Number newDate, final Number newHour, final Number newAmount) {
+          final Client newClient, final Number newDate, final Number newHour, final Number newAmount) {
 
     client = newClient;
     date = newDate;
@@ -24,7 +24,7 @@ public class Payment {
   }
 
   public Payment(
-      final Client newClient, final Number newDate, final Number newHour, final Number newAmount) {
+          final Client newClient, final Number newDate, final Number newHour, final Number newAmount) {
 
     cg_init_Payment_1(newClient, newDate, newHour, newAmount);
   }
@@ -59,16 +59,18 @@ public class Payment {
   public String toString() {
 
     return "Payment{"
-        + "date := "
-        + Utils.toString(date)
-        + ", hour := "
-        + Utils.toString(hour)
-        + ", amount := "
-        + Utils.toString(amount)
-        + ", curPaymentID := "
-        + Utils.toString(curPaymentID)
-        + ", id := "
-        + Utils.toString(id)
-        + "}";
+            + "date := "
+            + Utils.toString(date)
+            + ", hour := "
+            + Utils.toString(hour)
+            + ", amount := "
+            + Utils.toString(amount)
+            + ", curPaymentID := "
+            + Utils.toString(curPaymentID)
+            + ", id := "
+            + Utils.toString(id)
+            + ", client := "
+            + Utils.toString(client)
+            + "}";
   }
 }

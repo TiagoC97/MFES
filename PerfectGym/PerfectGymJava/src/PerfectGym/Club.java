@@ -48,24 +48,19 @@ public class Club {
         trainer.setClub(this);
     }
 
-    public void addSalesRepresentative(
-            final SalesRepresentative salesRepresentative, final User user) {
+    public void addSalesRepresentative(final SalesRepresentative salesRepresentative, final User user) {
 
-        salesRepresentatives =
-                SetUtil.union(Utils.copy(salesRepresentatives), SetUtil.set(salesRepresentative));
+        salesRepresentatives = SetUtil.union(Utils.copy(salesRepresentatives), SetUtil.set(salesRepresentative));
         salesRepresentative.setClub(this);
     }
 
     public void addGroup(final String newName, final VDMSet newClients, final User user) {
 
-        groups =
-                MapUtil.munion(
-                        Utils.copy(groups),
-                        MapUtil.map(new Maplet(newName, new Group(Utils.copy(newClients)))));
+        groups = MapUtil.munion(Utils.copy(groups),
+                MapUtil.map(new Maplet(newName, new Group(Utils.copy(newClients)))));
     }
 
-    public void addPersonalTraining(
-            final Trainer trainer, final Client client, final Number newFee, final User user) {
+    public void addPersonalTraining(final Trainer trainer, final Client client, final Number newFee, final User user) {
 
         trainer.addTrainee(client);
         client.addTrainer(trainer, newFee);
@@ -77,61 +72,36 @@ public class Club {
         client.removeTrainer();
     }
 
-    public void addGymClass(
-            final String description,
-            final String className,
-            final Trainer trainer,
-            final Object dayOfWeek,
-            final Number startHour,
-            final Number endHour,
-            final Number date,
-            final User user) {
+    public void addGymClass(final String description, final String className, final Trainer trainer,
+            final Object dayOfWeek, final Number startHour, final Number endHour, final Number date, final User user) {
 
-        GymClass gymClass =
-                new GymClass(
-                        description, className, trainer, ((Object) dayOfWeek), startHour, endHour, date);
+        GymClass gymClass = new GymClass(description, className, trainer, ((Object) dayOfWeek), startHour, endHour,
+                date);
         classes = SetUtil.union(Utils.copy(classes), SetUtil.set(gymClass));
 
     }
 
-    public void addGymClass(
-            final GymClass gymClass,
-            final User user) {
+    public void addGymClass(final GymClass gymClass, final User user) {
 
         classes = SetUtil.union(Utils.copy(classes), SetUtil.set(gymClass));
 
     }
-
 
     public void addAttendeeToGymClass(final GymClass gymClass, final Client client, final User user) {
 
         gymClass.addAttendee(client);
     }
 
-    public void addTrainingSession(
-            final String newDescription,
-            final Client client,
-            final Object newDayOfWeek,
-            final Number newStartHour,
-            final Number newEndHour,
-            final Number newDate,
-            final User user) {
+    public void addTrainingSession(final String newDescription, final Client client, final Object newDayOfWeek,
+            final Number newStartHour, final Number newEndHour, final Number newDate, final User user) {
 
-        TrainingSession trainingSession =
-                new TrainingSession(
-                        newDescription,
-                        client,
-                        ((Object) newDayOfWeek),
-                        newStartHour,
-                        newEndHour,
-                        newDate);
+        TrainingSession trainingSession = new TrainingSession(newDescription, client, ((Object) newDayOfWeek),
+                newStartHour, newEndHour, newDate);
         trainingSessions = SetUtil.union(Utils.copy(trainingSessions), SetUtil.set(trainingSession));
 
     }
 
-    public void addTrainingSession(
-           final TrainingSession trainingSession,
-            final User user) {
+    public void addTrainingSession(final TrainingSession trainingSession, final User user) {
 
         trainingSessions = SetUtil.union(Utils.copy(trainingSessions), SetUtil.set(trainingSession));
 
@@ -162,7 +132,7 @@ public class Club {
 
     public void sendMessageAllClients(final String msg, final User user) {
 
-        for (Iterator iterator_21 = clients.iterator(); iterator_21.hasNext(); ) {
+        for (Iterator iterator_21 = clients.iterator(); iterator_21.hasNext();) {
             Client client = (Client) iterator_21.next();
             sendMessageClient(msg, client, user);
         }
@@ -170,7 +140,7 @@ public class Club {
 
     public void sendMessageAllTrainers(final String msg, final User user) {
 
-        for (Iterator iterator_22 = trainers.iterator(); iterator_22.hasNext(); ) {
+        for (Iterator iterator_22 = trainers.iterator(); iterator_22.hasNext();) {
             Trainer trainer = (Trainer) iterator_22.next();
             trainer.receiveMessage(msg, user);
         }
@@ -178,7 +148,7 @@ public class Club {
 
     public void sendMessageAllSalesRepresentatives(final String msg, final User user) {
 
-        for (Iterator iterator_23 = salesRepresentatives.iterator(); iterator_23.hasNext(); ) {
+        for (Iterator iterator_23 = salesRepresentatives.iterator(); iterator_23.hasNext();) {
             SalesRepresentative salesRepresentative = (SalesRepresentative) iterator_23.next();
             salesRepresentative.receiveMessage(msg, user);
         }
@@ -204,32 +174,18 @@ public class Club {
         ((Group) Utils.get(groups, groupName)).removeClient(client);
     }
 
-    public void addInvoice(
-            final Client client,
-            final VDMSet payments,
-            final Number date,
-            final Number hour,
-            final String type,
-            final User user) {
+    public void addInvoice(final Client client, final VDMSet payments, final Number date, final Number hour,
+            final String type, final User user) {
 
-        invoices =
-                SetUtil.union(
-                        Utils.copy(invoices),
-                        SetUtil.set(new Invoice(Utils.copy(payments), date, hour, type, false, client)));
+        invoices = SetUtil.union(Utils.copy(invoices),
+                SetUtil.set(new Invoice(Utils.copy(payments), date, hour, type, false, client)));
     }
 
-    public void addInvoiceWithAllActivePayments(
-            final Client client,
-            final Number date,
-            final Number hour,
-            final String type,
-            final User user) {
+    public void addInvoiceWithAllActivePayments(final Client client, final Number date, final Number hour,
+            final String type, final User user) {
 
-        invoices =
-                SetUtil.union(
-                        Utils.copy(invoices),
-                        SetUtil.set(
-                                new Invoice(client.getPaymentsOfGivenType(type), date, hour, type, true, client)));
+        invoices = SetUtil.union(Utils.copy(invoices),
+                SetUtil.set(new Invoice(client.getPaymentsOfGivenType(type), date, hour, type, true, client)));
     }
 
     public void addPaymentToInvoice(final Invoice invoice, final VDMSet payments, final User user) {
@@ -237,8 +193,7 @@ public class Club {
         invoice.addPayment(Utils.copy(payments));
     }
 
-    public void removePaymentFromInvoice(
-            final Invoice invoice, final VDMSet payments, final User user) {
+    public void removePaymentFromInvoice(final Invoice invoice, final VDMSet payments, final User user) {
 
         invoice.removePayment(Utils.copy(payments));
     }
@@ -270,9 +225,7 @@ public class Club {
 
     public void transformLeadIntoClient(final Lead lead, final User user) {
 
-        Client client =
-                new Client(
-                        lead.getName(), lead.getAge(), ((Object) lead.getGender()), lead.getNationality());
+        Client client = new Client(lead.getName(), lead.getAge(), ((Object) lead.getGender()), lead.getNationality());
         crm.removeLead(lead);
         addClient(client, user);
     }
@@ -287,8 +240,7 @@ public class Club {
         IO.println("********* CLUB STATISTICS *********");
         IO.println("Number of clients: " + SeqUtil.toStr(SeqUtil.seq(numClients)));
         IO.println("Number of trainers: " + SeqUtil.toStr(SeqUtil.seq(numTrainers)));
-        IO.println(
-                "Number of sales representatives: " + SeqUtil.toStr(SeqUtil.seq(numSalesRepresentatives)));
+        IO.println("Number of sales representatives: " + SeqUtil.toStr(SeqUtil.seq(numSalesRepresentatives)));
         IO.println("Number of gym classes: " + SeqUtil.toStr(SeqUtil.seq(numClasses)));
         IO.println("Number of training sessions: " + SeqUtil.toStr(SeqUtil.seq(numTrainingSessiosn)));
         IO.println("");
@@ -300,8 +252,7 @@ public class Club {
         client.getActivity();
     }
 
-    public void getEmployeeActivity(
-            final Employee employee, final Boolean showAllTasks, final User user) {
+    public void getEmployeeActivity(final Employee employee, final Boolean showAllTasks, final User user) {
 
         employee.getActivity(showAllTasks);
     }
@@ -370,15 +321,14 @@ public class Club {
     public VDMSet getUsers() {
 
         return SetUtil.union(
-                SetUtil.union(
-                        SetUtil.union(SetUtil.set(clubOwner), Utils.copy(clients)), Utils.copy(trainers)),
+                SetUtil.union(SetUtil.union(SetUtil.set(clubOwner), Utils.copy(clients)), Utils.copy(trainers)),
                 Utils.copy(salesRepresentatives));
     }
 
     public VDMSet getClientByName(final String clientName) {
 
         VDMSet retClients = SetUtil.set();
-        for (Iterator iterator_24 = clients.iterator(); iterator_24.hasNext(); ) {
+        for (Iterator iterator_24 = clients.iterator(); iterator_24.hasNext();) {
             Client c = (Client) iterator_24.next();
             if (Utils.equals(c.getName(), clientName)) {
                 retClients = SetUtil.union(Utils.copy(retClients), SetUtil.set(c));
@@ -390,7 +340,7 @@ public class Club {
     public VDMSet getEmployeeByName(final String employeeName) {
 
         VDMSet retEmployees = SetUtil.set();
-        for (Iterator iterator_25 = getEmployees().iterator(); iterator_25.hasNext(); ) {
+        for (Iterator iterator_25 = getEmployees().iterator(); iterator_25.hasNext();) {
             Employee e = (Employee) iterator_25.next();
             if (Utils.equals(e.getName(), employeeName)) {
                 retEmployees = SetUtil.union(Utils.copy(retEmployees), SetUtil.set(e));
@@ -402,7 +352,7 @@ public class Club {
     public VDMSet getUserByName(final String userName) {
 
         VDMSet retUsers = SetUtil.set();
-        for (Iterator iterator_26 = getUsers().iterator(); iterator_26.hasNext(); ) {
+        for (Iterator iterator_26 = getUsers().iterator(); iterator_26.hasNext();) {
             User u = (User) iterator_26.next();
             if (Utils.equals(u.getName(), userName)) {
                 retUsers = SetUtil.union(Utils.copy(retUsers), SetUtil.set(u));
@@ -451,7 +401,6 @@ public class Club {
         return products;
     }
 
-
     public VDMMap getEmployeeCalendar(final Employee employee) {
 
         return employee.getCalendar().getTasks();
@@ -477,33 +426,12 @@ public class Club {
 
     public String toString() {
 
-        return "Club{"
-                + "name := "
-                + Utils.toString(name)
-                + ", newsletter := "
-                + Utils.toString(newsletter)
-                + ", clients := "
-                + Utils.toString(clients)
-                + ", salesRepresentatives := "
-                + Utils.toString(salesRepresentatives)
-                + ", trainers := "
-                + Utils.toString(trainers)
-                + ", groups := "
-                + Utils.toString(groups)
-                + ", classes := "
-                + Utils.toString(classes)
-                + ", trainingSessions := "
-                + Utils.toString(trainingSessions)
-                + ", invoices := "
-                + Utils.toString(invoices)
-                + ", products := "
-                + Utils.toString(products)
-                + ", fee := "
-                + Utils.toString(fee)
-                + ", crm := "
-                + Utils.toString(crm)
-                + ", clubOwner := "
-                + Utils.toString(clubOwner)
-                + "}";
+        return "Club{" + "name := " + Utils.toString(name) + ", newsletter := " + Utils.toString(newsletter)
+                + ", clients := " + Utils.toString(clients) + ", salesRepresentatives := "
+                + Utils.toString(salesRepresentatives) + ", trainers := " + Utils.toString(trainers) + ", groups := "
+                + Utils.toString(groups) + ", classes := " + Utils.toString(classes) + ", trainingSessions := "
+                + Utils.toString(trainingSessions) + ", invoices := " + Utils.toString(invoices) + ", products := "
+                + Utils.toString(products) + ", fee := " + Utils.toString(fee) + ", crm := " + Utils.toString(crm)
+                + ", clubOwner := " + Utils.toString(clubOwner) + "}";
     }
 }

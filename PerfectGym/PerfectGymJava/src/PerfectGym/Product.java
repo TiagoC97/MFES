@@ -10,7 +10,7 @@ public class Product {
   private Number quantity;
 
   public void cg_init_Product_1(
-      final String prod_name, final Number prod_value, final Number prod_quantity) {
+          final String prod_name, final Number prod_value, final Number prod_quantity) {
 
     name = prod_name;
     value = prod_value;
@@ -53,12 +53,12 @@ public class Product {
   public String toString() {
 
     return "Product{"
-        + "name := "
-        + Utils.toString(name)
-        + ", value := "
-        + Utils.toString(value)
-        + ", quantity := "
-        + Utils.toString(quantity)
-        + "}";
+            + "name := "
+            + Utils.toString(name)
+            + ", value := "
+            + Utils.toString(value)
+            + ", quantity := "
+            + Utils.toString(quantity)
+            + "}";
   }
 }

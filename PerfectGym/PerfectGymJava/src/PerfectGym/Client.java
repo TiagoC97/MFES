@@ -1,8 +1,9 @@
 package PerfectGym;
 
 import java.util.*;
+
+import PerfectGym.quotes.ClientQuote;
 import org.overture.codegen.runtime.*;
-import PerfectGym.quotes.*;
 
 @SuppressWarnings("all")
 public class Client extends User {
@@ -21,35 +22,37 @@ public class Client extends User {
   private VDMSet historyPersonalTrainingPayments = SetUtil.set();
 
   public void cg_init_Client_1(
-      final String newName,
-      final Number newAge,
-      final Object newGender,
-      final String newNationality) {
+          final String newName,
+          final Number newAge,
+          final Object newGender,
+          final String newNationality) {
 
     trainer = null;
     personalTrainingFee = 0L;
     totalSpentOnProducts = 0L;
     cg_init_User_1(
-        newName,
-        ClientQuote.getInstance(),
-        newAge,
-        ((Object) newGender),
-        newNationality);
+            newName,
+            ClientQuote.getInstance(),
+            newAge,
+            ((Object) newGender),
+            newNationality);
   }
 
   public Client(
-      final String newName,
-      final Number newAge,
-      final Object newGender,
-      final String newNationality) {
+          final String newName,
+          final Number newAge,
+          final Object newGender,
+          final String newNationality) {
 
     cg_init_Client_1(newName, newAge, newGender, newNationality);
   }
 
   public void addTrainer(final Trainer newTrainer, final Number fee) {
 
-    if(trainer != null)
+    if (!(Utils.equals(trainer, null))) {
       trainer.removeTrainee(this);
+    }
+
     trainer = newTrainer;
     personalTrainingFee = fee;
   }
@@ -57,7 +60,7 @@ public class Client extends User {
   public void removeTrainer() {
 
     trainer = null;
-    personalTrainingFee = 0;
+    personalTrainingFee = 0L;
   }
 
   public void sendMessageToGroup(final String msg, final String groupName) {
@@ -76,7 +79,6 @@ public class Client extends User {
 
     Number trainingSessionDate = trainingSession.getDate();
     trainingSessions = SetUtil.union(Utils.copy(trainingSessions), SetUtil.set(trainingSession));
-
     addGymAttendence(trainingSessionDate);
   }
 
@@ -98,7 +100,7 @@ public class Client extends User {
   public void addPersonalTrainingPayment(final PersonalTrainingPayment payment) {
 
     personalTrainingPayments =
-        SetUtil.union(Utils.copy(personalTrainingPayments), SetUtil.set(payment));
+            SetUtil.union(Utils.copy(personalTrainingPayments), SetUtil.set(payment));
   }
 
   public void addHistoryGymFeePayment(final Payment payment) {
@@ -109,13 +111,13 @@ public class Client extends User {
   public void addHistoryProductPayment(final Payment payment) {
 
     historyProductPayments =
-        SetUtil.union(Utils.copy(historyProductPayments), SetUtil.set(payment));
+            SetUtil.union(Utils.copy(historyProductPayments), SetUtil.set(payment));
   }
 
   public void addHistoryPersonalTrainingPayment(final Payment payment) {
 
     historyPersonalTrainingPayments =
-        SetUtil.union(Utils.copy(historyPersonalTrainingPayments), SetUtil.set(payment));
+            SetUtil.union(Utils.copy(historyPersonalTrainingPayments), SetUtil.set(payment));
   }
 
   public void removeGymFeePayment(final Payment payment) {
@@ -134,29 +136,29 @@ public class Client extends User {
 
     addHistoryPersonalTrainingPayment(payment);
     personalTrainingPayments =
-        SetUtil.diff(Utils.copy(personalTrainingPayments), SetUtil.set(payment));
+            SetUtil.diff(Utils.copy(personalTrainingPayments), SetUtil.set(payment));
   }
 
   public void moveAllGymFeePaymentsToHistory() {
 
-    for (Iterator iterator_17 = gymFeePayments.iterator(); iterator_17.hasNext(); ) {
-      GymFeePayment payment = (GymFeePayment) iterator_17.next();
+    for (Iterator iterator_23 = gymFeePayments.iterator(); iterator_23.hasNext(); ) {
+      GymFeePayment payment = (GymFeePayment) iterator_23.next();
       removeGymFeePayment(payment);
     }
   }
 
   public void moveAllProductPaymentsToHistory() {
 
-    for (Iterator iterator_18 = productPayments.iterator(); iterator_18.hasNext(); ) {
-      ProductPayment payment = (ProductPayment) iterator_18.next();
+    for (Iterator iterator_24 = productPayments.iterator(); iterator_24.hasNext(); ) {
+      ProductPayment payment = (ProductPayment) iterator_24.next();
       removeProductPayment(payment);
     }
   }
 
   public void moveAllPersonalTrainingPaymentsToHistory() {
 
-    for (Iterator iterator_19 = personalTrainingPayments.iterator(); iterator_19.hasNext(); ) {
-      PersonalTrainingPayment payment = (PersonalTrainingPayment) iterator_19.next();
+    for (Iterator iterator_25 = personalTrainingPayments.iterator(); iterator_25.hasNext(); ) {
+      PersonalTrainingPayment payment = (PersonalTrainingPayment) iterator_25.next();
       removePersonalTrainingPayment(payment);
     }
   }
@@ -169,11 +171,13 @@ public class Client extends User {
 
   public void payPersonalTrainingFee(final Number date, final Number hour) {
 
-    PersonalTrainingPayment payment = new PersonalTrainingPayment(this, club.getFee(), date, hour);
+    PersonalTrainingPayment payment =
+            new PersonalTrainingPayment(this, personalTrainingFee, date, hour);
     addPersonalTrainingPayment(payment);
   }
 
-  public void createProductPayment(final Product product, final Number qtt, final Number date, final Number hour) {
+  public void createProductPayment(
+          final Product product, final Number qtt, final Number date, final Number hour) {
 
     ProductPayment payment = new ProductPayment(this, product, qtt, date, hour);
     addProductPayment(payment);
@@ -184,18 +188,18 @@ public class Client extends User {
     totalSpentOnProducts = totalSpentOnProducts.doubleValue() + spent.doubleValue();
     if (SetUtil.inSet(product.getName(), MapUtil.dom(Utils.copy(productsBought)))) {
       Utils.mapSeqUpdate(
-          productsBought,
-          product.getName(),
-          ((Number) Utils.get(productsBought, product.getName())).longValue() + qtt.longValue());
+              productsBought,
+              product.getName(),
+              ((Number) Utils.get(productsBought, product.getName())).longValue() + qtt.longValue());
     } else {
       productsBought =
-          MapUtil.munion(
-              Utils.copy(productsBought), MapUtil.map(new Maplet(product.getName(), qtt)));
+              MapUtil.munion(
+                      Utils.copy(productsBought), MapUtil.map(new Maplet(product.getName(), qtt)));
     }
   }
 
   public void addProductToPayment(
-      final ProductPayment payment, final Product product, final Number qtt) {
+          final ProductPayment payment, final Product product, final Number qtt) {
 
     payment.addProduct(product, qtt);
   }
@@ -212,14 +216,18 @@ public class Client extends User {
     }
 
     IO.println("********* CLIENT STATISTICS *********");
-    IO.println("Personal trainer: " + SeqUtil.toStr(SeqUtil.seq(personalTrainer)));
-    IO.println("Number of gym classes: " + SeqUtil.toStr(SeqUtil.seq(numClasses)));
-    IO.println("Number of training sessions: " + SeqUtil.toStr(SeqUtil.seq(numTrainingSessiosn)));
-    IO.println("Number of gym attendences: " + SeqUtil.toStr(SeqUtil.seq(numAttendences)));
-    IO.println(
-        "Number of different products bought: " + SeqUtil.toStr(SeqUtil.seq(numProductsBought)));
+    IO.print("Personal trainer: ");
+    IO.println(personalTrainer);
+    IO.print("Number of gym classes: ");
+    IO.println(numClasses);
+    IO.print("Number of training sessions: ");
+    IO.println(numTrainingSessiosn);
+    IO.print("Number of gym attendences: ");
+    IO.println(numAttendences);
+    IO.print("Number of different products bought: ");
+    IO.println(numProductsBought);
     IO.println("");
-    IO.println("************************************");
+    IO.println("*************************************");
   }
 
   public Trainer getTrainer() {
@@ -337,49 +345,51 @@ public class Client extends User {
 
   public Client() {}
 
-  public String toString() {
 
-    return "Client{"
-            + "userID := "
-            + Utils.toString(id)
-            + ", name := "
-            + Utils.toString(name)
-            + ", age := "
-            + Utils.toString(age)
-            + ", gender := "
-            + Utils.toString(gender)
-            + ", nationality := "
-            + Utils.toString(nationality)
-            + ", inbox := "
-            + Utils.toString(inbox)
-            + ", access := "
-            + Utils.toString(access)
-          + ", trainer := "
-        + Utils.toString(trainer)
-        + ", personalTrainingFee := "
-        + Utils.toString(personalTrainingFee)
-        + ", classes := "
-        + Utils.toString(classes)
-        + ", trainingSessions := "
-        + Utils.toString(trainingSessions)
-        + ", gymAttendences := "
-        + Utils.toString(gymAttendences)
-        + ", productsBought := "
-        + Utils.toString(productsBought)
-        + ", totalSpentOnProducts := "
-        + Utils.toString(totalSpentOnProducts)
-        + ", gymFeePayments := "
-        + Utils.toString(gymFeePayments)
-        + ", productPayments := "
-        + Utils.toString(productPayments)
-        + ", personalTrainingPayments := "
-        + Utils.toString(personalTrainingPayments)
-        + ", historyGymFeePayments := "
-        + Utils.toString(historyGymFeePayments)
-        + ", historyProductPayments := "
-        + Utils.toString(historyProductPayments)
-        + ", historyPersonalTrainingPayments := "
-        + Utils.toString(historyPersonalTrainingPayments)
-        + "}";
-  }
+
+    public String toString() {
+
+      return "Client{"
+              + "userID := "
+              + Utils.toString(id)
+              + ", name := "
+              + Utils.toString(name)
+              + ", age := "
+              + Utils.toString(age)
+              + ", gender := "
+              + Utils.toString(gender)
+              + ", nationality := "
+              + Utils.toString(nationality)
+              + ", inbox := "
+              + Utils.toString(inbox)
+              + ", access := "
+              + Utils.toString(access)
+              + ", trainer := "
+              + Utils.toString(trainer)
+              + ", personalTrainingFee := "
+              + Utils.toString(personalTrainingFee)
+              + ", classes := "
+              + Utils.toString(classes)
+              + ", trainingSessions := "
+              + Utils.toString(trainingSessions)
+              + ", gymAttendences := "
+              + Utils.toString(gymAttendences)
+              + ", productsBought := "
+              + Utils.toString(productsBought)
+              + ", totalSpentOnProducts := "
+              + Utils.toString(totalSpentOnProducts)
+              + ", gymFeePayments := "
+              + Utils.toString(gymFeePayments)
+              + ", productPayments := "
+              + Utils.toString(productPayments)
+              + ", personalTrainingPayments := "
+              + Utils.toString(personalTrainingPayments)
+              + ", historyGymFeePayments := "
+              + Utils.toString(historyGymFeePayments)
+              + ", historyProductPayments := "
+              + Utils.toString(historyProductPayments)
+              + ", historyPersonalTrainingPayments := "
+              + Utils.toString(historyPersonalTrainingPayments)
+              + "}";
+    }
 }

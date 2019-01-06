@@ -22,12 +22,12 @@ public class EmployeeCalendar {
     Number date = task.getDate();
     if (!(SetUtil.inSet(date, MapUtil.dom(Utils.copy(calendar))))) {
       calendar =
-          MapUtil.munion(Utils.copy(calendar), MapUtil.map(new Maplet(date, SeqUtil.seq(task))));
+              MapUtil.munion(Utils.copy(calendar), MapUtil.map(new Maplet(date, SeqUtil.seq(task))));
     } else {
       Utils.mapSeqUpdate(
-          calendar,
-          date,
-          SeqUtil.conc(Utils.copy(((VDMSeq) Utils.get(calendar, date))), SeqUtil.seq(task)));
+              calendar,
+              date,
+              SeqUtil.conc(Utils.copy(((VDMSeq) Utils.get(calendar, date))), SeqUtil.seq(task)));
     }
   }
 
@@ -47,52 +47,52 @@ public class EmployeeCalendar {
   }
 
   public static Boolean overlapsTask(
-      final Number startHour1,
-      final Number endHour1,
-      final Number startHour2,
-      final Number endHour2) {
+          final Number startHour1,
+          final Number endHour1,
+          final Number startHour2,
+          final Number endHour2) {
 
-    Boolean orResult_3 = false;
+    Boolean orResult_4 = false;
 
-    Boolean andResult_115 = false;
+    Boolean andResult_155 = false;
 
     if (startHour1.longValue() >= startHour2.longValue()) {
       if (startHour1.longValue() < endHour2.longValue()) {
-        andResult_115 = true;
+        andResult_155 = true;
       }
     }
 
-    if (andResult_115) {
-      orResult_3 = true;
+    if (andResult_155) {
+      orResult_4 = true;
     } else {
-      Boolean orResult_4 = false;
+      Boolean orResult_5 = false;
 
-      Boolean andResult_116 = false;
+      Boolean andResult_156 = false;
 
       if (endHour1.longValue() > startHour2.longValue()) {
         if (endHour1.longValue() <= endHour2.longValue()) {
-          andResult_116 = true;
+          andResult_156 = true;
         }
       }
 
-      if (andResult_116) {
-        orResult_4 = true;
+      if (andResult_156) {
+        orResult_5 = true;
       } else {
-        Boolean andResult_117 = false;
+        Boolean andResult_157 = false;
 
         if (startHour1.longValue() <= startHour2.longValue()) {
           if (endHour1.longValue() >= endHour2.longValue()) {
-            andResult_117 = true;
+            andResult_157 = true;
           }
         }
 
-        orResult_4 = andResult_117;
+        orResult_5 = andResult_157;
       }
 
-      orResult_3 = orResult_4;
+      orResult_4 = orResult_5;
     }
 
-    if (orResult_3) {
+    if (orResult_4) {
       return true;
 
     } else {

@@ -8,19 +8,19 @@ public class SalesRepresentative extends Employee {
   private VDMSet leads = SetUtil.set();
 
   public void cg_init_SalesRepresentative_1(
-      final String newName,
-      final Number newAge,
-      final Object newGender,
-      final String newNationality) {
+          final String newName,
+          final Number newAge,
+          final Object newGender,
+          final String newNationality) {
 
     cg_init_Employee_1(newName, newAge, ((Object) newGender), newNationality);
   }
 
   public SalesRepresentative(
-      final String newName,
-      final Number newAge,
-      final Object newGender,
-      final String newNationality) {
+          final String newName,
+          final Number newAge,
+          final Object newGender,
+          final String newNationality) {
 
     cg_init_SalesRepresentative_1(newName, newAge, newGender, newNationality);
   }
@@ -41,15 +41,17 @@ public class SalesRepresentative extends Employee {
     VDMMap tasks = calendar.getTasks();
     Number i = 0L;
     Task t = null;
-    IO.println("********* CLIENT STATISTICS *********");
-    IO.println("Number of leads: " + SeqUtil.toStr(SeqUtil.seq(numLeads)));
+    IO.println("********* SALES REPRESENTATIVE STATISTICS *********");
+    IO.print("Number of leads: ");
+    IO.println(numLeads);
     if (showAllTasks) {
-      for (Iterator iterator_31 = MapUtil.dom(Utils.copy(tasks)).iterator();
-          iterator_31.hasNext();
-          ) {
-        Number d = (Number) iterator_31.next();
+      for (Iterator iterator_36 = MapUtil.dom(Utils.copy(tasks)).iterator();
+           iterator_36.hasNext();
+              ) {
+        Number d = (Number) iterator_36.next();
         i = 0L;
-        IO.println("Date: " + SeqUtil.toStr(SeqUtil.seq(d)));
+        IO.print("Date: ");
+        IO.println(d);
         Boolean whileCond_1 = true;
         while (whileCond_1) {
           whileCond_1 = i.longValue() < ((VDMSeq) Utils.get(tasks, d)).size();
@@ -59,13 +61,12 @@ public class SalesRepresentative extends Employee {
 
           {
             t = ((Task) Utils.get(((VDMSeq) Utils.get(tasks, d)), i));
-            IO.println(
-                "\tTask: "
-                    + SeqUtil.toStr(SeqUtil.seq(t.getDescription()))
-                    + SeqUtil.toStr(SeqUtil.seq(" started at "))
-                    + SeqUtil.toStr(SeqUtil.seq(t.getStartHour()))
-                    + SeqUtil.toStr(SeqUtil.seq(" and ended at "))
-                    + SeqUtil.toStr(SeqUtil.seq(t.getEndHour())));
+            IO.print("\tTask: ");
+            IO.print(t.getDescription());
+            IO.print(" started at ");
+            IO.print(t.getStartHour());
+            IO.print(" and ended at ");
+            IO.println(t.getEndHour());
             i = i.longValue() + 1L;
           }
         }
@@ -75,7 +76,7 @@ public class SalesRepresentative extends Employee {
     }
 
     IO.println("");
-    IO.println("************************************");
+    IO.println("***************************************************");
   }
 
   public VDMSet getLeads() {

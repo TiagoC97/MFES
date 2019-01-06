@@ -35,7 +35,7 @@ public class CRM {
 
     }
 
-    if(sr != null)
+    if (sr != null)
       sr.addLead(lead);
 
     Utils.mapSeqUpdate(leads, lead, sr);
@@ -45,15 +45,11 @@ public class CRM {
   public void removeLead(final Lead lead) {
 
     VDMMap newLeads = MapUtil.map();
-    for (Iterator iterator_16 = MapUtil.dom(Utils.copy(leads)).iterator();
-        iterator_16.hasNext();
-        ) {
+    for (Iterator iterator_16 = MapUtil.dom(Utils.copy(leads)).iterator(); iterator_16.hasNext();) {
       Lead l = (Lead) iterator_16.next();
       if (!(Utils.equals(lead, l))) {
-        newLeads =
-            MapUtil.munion(
-                Utils.copy(newLeads),
-                MapUtil.map(new Maplet(l, ((SalesRepresentative) Utils.get(leads, l)))));
+        newLeads = MapUtil.munion(Utils.copy(newLeads),
+            MapUtil.map(new Maplet(l, ((SalesRepresentative) Utils.get(leads, l)))));
       }
     }
     if (!(Utils.equals(((SalesRepresentative) Utils.get(leads, lead)), null))) {

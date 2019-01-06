@@ -39,14 +39,14 @@ public class Group {
 
     if (!(SetUtil.inSet(user.getName(), MapUtil.dom(Utils.copy(groupInbox))))) {
       groupInbox =
-          MapUtil.munion(
-              MapUtil.map(new Maplet(user.getName(), SeqUtil.seq(msg))), Utils.copy(groupInbox));
+              MapUtil.munion(
+                      MapUtil.map(new Maplet(user.getName(), SeqUtil.seq(msg))), Utils.copy(groupInbox));
     } else {
       Utils.mapSeqUpdate(
-          groupInbox,
-          user.getName(),
-          SeqUtil.conc(
-              Utils.copy(((VDMSeq) Utils.get(groupInbox, user.getName()))), SeqUtil.seq(msg)));
+              groupInbox,
+              user.getName(),
+              SeqUtil.conc(
+                      Utils.copy(((VDMSeq) Utils.get(groupInbox, user.getName()))), SeqUtil.seq(msg)));
     }
   }
 
@@ -80,12 +80,12 @@ public class Group {
   public String toString() {
 
     return "Group{"
-        + "clients := "
-        + Utils.toString(clients)
-        + ", groupInbox := "
-        + Utils.toString(groupInbox)
-        + ", offers := "
-        + Utils.toString(offers)
-        + "}";
+            + "clients := "
+            + Utils.toString(clients)
+            + ", groupInbox := "
+            + Utils.toString(groupInbox)
+            + ", offers := "
+            + Utils.toString(offers)
+            + "}";
   }
 }

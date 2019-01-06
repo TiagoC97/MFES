@@ -10,19 +10,19 @@ public class Trainer extends Employee {
   private VDMSet trainingSessions = SetUtil.set();
 
   public void cg_init_Trainer_1(
-      final String newName,
-      final Number newAge,
-      final Object newGender,
-      final String newNationality) {
+          final String newName,
+          final Number newAge,
+          final Object newGender,
+          final String newNationality) {
 
     cg_init_Employee_1(newName, newAge, ((Object) newGender), newNationality);
   }
 
   public Trainer(
-      final String newName,
-      final Number newAge,
-      final Object newGender,
-      final String newNationality) {
+          final String newName,
+          final Number newAge,
+          final Object newGender,
+          final String newNationality) {
 
     cg_init_Trainer_1(newName, newAge, newGender, newNationality);
   }
@@ -55,33 +55,36 @@ public class Trainer extends Employee {
     VDMMap tasks = calendar.getTasks();
     Number i = 0L;
     Task t = null;
-    IO.println("********* CLIENT STATISTICS *********");
-    IO.println("Number of gym classes: " + SeqUtil.toStr(SeqUtil.seq(numClasses)));
-    IO.println("Number of training sessions: " + SeqUtil.toStr(SeqUtil.seq(numTrainingSessiosn)));
-    IO.println("Number of trainees: " + SeqUtil.toStr(SeqUtil.seq(numTrainees)));
+    IO.println("********* TRAINER STATISTICS *********");
+    IO.print("Number of gym classes: ");
+    IO.println(numClasses);
+    IO.print("Number of training sessions: ");
+    IO.println(numTrainingSessiosn);
+    IO.print("Number of trainees: ");
+    IO.println(numTrainees);
     if (showAllTasks) {
-      for (Iterator iterator_32 = MapUtil.dom(Utils.copy(tasks)).iterator();
-          iterator_32.hasNext();
-          ) {
-        Number d = (Number) iterator_32.next();
-        i = 0L;
-        IO.println("Date: " + SeqUtil.toStr(SeqUtil.seq(d)));
+      for (Iterator iterator_37 = MapUtil.dom(Utils.copy(tasks)).iterator();
+           iterator_37.hasNext();
+              ) {
+        Number d = (Number) iterator_37.next();
+        i = 1L;
+        IO.print("Date: ");
+        IO.println(d);
         Boolean whileCond_2 = true;
         while (whileCond_2) {
-          whileCond_2 = i.longValue() < ((VDMSeq) Utils.get(tasks, d)).size();
+          whileCond_2 = i.longValue() <= ((VDMSeq) Utils.get(tasks, d)).size();
           if (!(whileCond_2)) {
             break;
           }
 
           {
             t = ((Task) Utils.get(((VDMSeq) Utils.get(tasks, d)), i));
-            IO.println(
-                "\tTask: "
-                    + SeqUtil.toStr(SeqUtil.seq(t.getDescription()))
-                    + SeqUtil.toStr(SeqUtil.seq(" started at "))
-                    + SeqUtil.toStr(SeqUtil.seq(t.getStartHour()))
-                    + SeqUtil.toStr(SeqUtil.seq(" and ended at "))
-                    + SeqUtil.toStr(SeqUtil.seq(t.getEndHour())));
+            IO.print("\tTask: ");
+            IO.print(t.getDescription());
+            IO.print(" started at ");
+            IO.print(t.getStartHour());
+            IO.print(" and ended at ");
+            IO.println(t.getEndHour());
             i = i.longValue() + 1L;
           }
         }
@@ -91,7 +94,7 @@ public class Trainer extends Employee {
     }
 
     IO.println("");
-    IO.println("************************************");
+    IO.println("**************************************");
   }
 
   public VDMSet getTrainees() {
@@ -128,12 +131,12 @@ public class Trainer extends Employee {
             + Utils.toString(inbox)
             + ", access := "
             + Utils.toString(access)
-        + ", trainees := "
-        + Utils.toString(trainees)
-        + ", classes := "
-        + Utils.toString(classes)
-        + ", trainingSessions := "
-        + Utils.toString(trainingSessions)
-        + "}";
+            + ", trainees := "
+            + Utils.toString(trainees)
+            + ", classes := "
+            + Utils.toString(classes)
+            + ", trainingSessions := "
+            + Utils.toString(trainingSessions)
+            + "}";
   }
 }

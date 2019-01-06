@@ -8,11 +8,11 @@ public class ProductPayment extends Payment {
   private VDMSeq products = SeqUtil.seq();
 
   public void cg_init_ProductPayment_1(
-      final Client newClient,
-      final Product newProduct,
-      final Number qtt,
-      final Number newDate,
-      final Number newHour) {
+          final Client newClient,
+          final Product newProduct,
+          final Number qtt,
+          final Number newDate,
+          final Number newHour) {
 
     Number moneySpent = newProduct.getValue().doubleValue() * qtt.longValue();
     products = SeqUtil.seq(newProduct);
@@ -23,11 +23,11 @@ public class ProductPayment extends Payment {
   }
 
   public ProductPayment(
-      final Client newClient,
-      final Product newProduct,
-      final Number qtt,
-      final Number newDate,
-      final Number newHour) {
+          final Client newClient,
+          final Product newProduct,
+          final Number qtt,
+          final Number newDate,
+          final Number newHour) {
 
     cg_init_ProductPayment_1(newClient, newProduct, qtt, newDate, newHour);
   }

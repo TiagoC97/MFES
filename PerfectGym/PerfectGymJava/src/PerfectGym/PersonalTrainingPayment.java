@@ -8,7 +8,7 @@ public class PersonalTrainingPayment extends Payment {
   private Number fee;
 
   public void cg_init_PersonalTrainingPayment_1(
-      final Client newClient, final Number newFee, final Number newDate, final Number newHour) {
+          final Client newClient, final Number newFee, final Number newDate, final Number newHour) {
 
     fee = newFee;
     newClient.addPersonalTrainingPayment(this);
@@ -16,7 +16,7 @@ public class PersonalTrainingPayment extends Payment {
   }
 
   public PersonalTrainingPayment(
-      final Client newClient, final Number newFee, final Number newDate, final Number newHour) {
+          final Client newClient, final Number newFee, final Number newDate, final Number newHour) {
 
     cg_init_PersonalTrainingPayment_1(newClient, newFee, newDate, newHour);
   }

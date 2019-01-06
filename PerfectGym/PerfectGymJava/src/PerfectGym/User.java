@@ -16,11 +16,11 @@ public class User {
   protected String nationality;
 
   public void cg_init_User_1(
-      final String newName,
-      final Object acc,
-      final Number newAge,
-      final Object newGender,
-      final String newNationality) {
+          final String newName,
+          final Object acc,
+          final Number newAge,
+          final Object newGender,
+          final String newNationality) {
 
     club = null;
     name = newName;
@@ -33,11 +33,11 @@ public class User {
   }
 
   public User(
-      final String newName,
-      final Object acc,
-      final Number newAge,
-      final Object newGender,
-      final String newNationality) {
+          final String newName,
+          final Object acc,
+          final Number newAge,
+          final Object newGender,
+          final String newNationality) {
 
     cg_init_User_1(newName, acc, newAge, newGender, newNationality);
   }
@@ -56,36 +56,32 @@ public class User {
 
     if (!(SetUtil.inSet(user.getName(), MapUtil.dom(Utils.copy(inbox))))) {
       inbox =
-          MapUtil.munion(
-              MapUtil.map(new Maplet(user.getName(), SeqUtil.seq(msg))), Utils.copy(inbox));
+              MapUtil.munion(
+                      MapUtil.map(new Maplet(user.getName(), SeqUtil.seq(msg))), Utils.copy(inbox));
     } else {
       Utils.mapSeqUpdate(
-          inbox,
-          user.getName(),
-          SeqUtil.conc(SeqUtil.seq(msg), Utils.copy(((VDMSeq) Utils.get(inbox, user.getName())))));
+              inbox,
+              user.getName(),
+              SeqUtil.conc(SeqUtil.seq(msg), Utils.copy(((VDMSeq) Utils.get(inbox, user.getName())))));
     }
   }
 
   public void deleteLastMessageFromUser(final String user) {
 
-    Utils.mapSeqUpdate(
-        inbox,
-        getName(),
-        SeqUtil.tail(Utils.copy(((VDMSeq) Utils.get(inbox, getName())))));
+    Utils.mapSeqUpdate(inbox, user, SeqUtil.tail(Utils.copy(((VDMSeq) Utils.get(inbox, user)))));
   }
 
   public void deleteMessageNFromUser(final Number n, final String user) {
 
     Utils.mapSeqUpdate(
-        inbox,
-        getName(),
-        SeqUtil.conc(
-            SeqUtil.subSeq(
-                Utils.copy(((VDMSeq) Utils.get(inbox, getName()))), 1L, n.longValue() - 1L),
-            SeqUtil.subSeq(
-                Utils.copy(((VDMSeq) Utils.get(inbox, getName()))),
-                n.longValue() + 1L,
-                ((VDMSeq) Utils.get(inbox, getName())).size())));
+            inbox,
+            user,
+            SeqUtil.conc(
+                    SeqUtil.subSeq(Utils.copy(((VDMSeq) Utils.get(inbox, user))), 1L, n.longValue() - 1L),
+                    SeqUtil.subSeq(
+                            Utils.copy(((VDMSeq) Utils.get(inbox, user))),
+                            n.longValue() + 1L,
+                            ((VDMSeq) Utils.get(inbox, user)).size())));
   }
 
   public void setAccess(final Object newAccess) {
@@ -159,24 +155,24 @@ public class User {
   public String toString() {
 
     return "User{"
-        + "name := "
-        + Utils.toString(name)
-        + ", curUserID := "
-        + Utils.toString(curUserID)
-        + ", id := "
-        + Utils.toString(id)
-        + ", inbox := "
-        + Utils.toString(inbox)
-        + ", club := "
-        + Utils.toString(club)
-        + ", access := "
-        + Utils.toString(access)
-        + ", age := "
-        + Utils.toString(age)
-        + ", gender := "
-        + Utils.toString(gender)
-        + ", nationality := "
-        + Utils.toString(nationality)
-        + "}";
+            + "name := "
+            + Utils.toString(name)
+            + ", curUserID := "
+            + Utils.toString(curUserID)
+            + ", id := "
+            + Utils.toString(id)
+            + ", inbox := "
+            + Utils.toString(inbox)
+            + ", club := "
+            + Utils.toString(club)
+            + ", access := "
+            + Utils.toString(access)
+            + ", age := "
+            + Utils.toString(age)
+            + ", gender := "
+            + Utils.toString(gender)
+            + ", nationality := "
+            + Utils.toString(nationality)
+            + "}";
   }
 }

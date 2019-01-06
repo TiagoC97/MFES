@@ -1,7 +1,6 @@
 package PerfectGym;
 
 import java.util.*;
-
 import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
@@ -43,8 +42,7 @@ public class Session extends Task {
         return dayOfWeek;
     }
 
-    public Session() {
-    }
+    public Session() {}
 
     public String toString() {
 

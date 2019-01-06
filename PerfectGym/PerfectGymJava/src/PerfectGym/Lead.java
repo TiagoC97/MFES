@@ -13,10 +13,10 @@ public class Lead {
   public Number id = Lead.curLeadID;
 
   public void cg_init_Lead_1(
-      final String newName,
-      final Number newAge,
-      final Object newGender,
-      final String newNationality) {
+          final String newName,
+          final Number newAge,
+          final Object newGender,
+          final String newNationality) {
 
     name = newName;
     age = newAge;
@@ -27,10 +27,10 @@ public class Lead {
   }
 
   public Lead(
-      final String newName,
-      final Number newAge,
-      final Object newGender,
-      final String newNationality) {
+          final String newName,
+          final Number newAge,
+          final Object newGender,
+          final String newNationality) {
 
     cg_init_Lead_1(newName, newAge, newGender, newNationality);
   }
@@ -65,18 +65,18 @@ public class Lead {
   public String toString() {
 
     return "Lead{"
-        + "name := "
-        + Utils.toString(name)
-        + ", age := "
-        + Utils.toString(age)
-        + ", gender := "
-        + Utils.toString(gender)
-        + ", nationality := "
-        + Utils.toString(nationality)
-        + ", curLeadID := "
-        + Utils.toString(curLeadID)
-        + ", id := "
-        + Utils.toString(id)
-        + "}";
+            + "name := "
+            + Utils.toString(name)
+            + ", age := "
+            + Utils.toString(age)
+            + ", gender := "
+            + Utils.toString(gender)
+            + ", nationality := "
+            + Utils.toString(nationality)
+            + ", curLeadID := "
+            + Utils.toString(curLeadID)
+            + ", id := "
+            + Utils.toString(id)
+            + "}";
   }
 }

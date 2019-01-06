@@ -36,10 +36,10 @@ public class PerfectGym {
   public String toString() {
 
     return "PerfectGym{"
-        + "clubs := "
-        + Utils.toString(clubs)
-        + ", perfectGym := "
-        + Utils.toString(perfectGym)
-        + "}";
+            + "clubs := "
+            + Utils.toString(clubs)
+            + ", perfectGym := "
+            + Utils.toString(perfectGym)
+            + "}";
   }
 }

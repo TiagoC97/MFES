@@ -1,7 +1,6 @@
 package PerfectGym;
 
 import java.util.*;
-
 import org.overture.codegen.runtime.*;
 
 @SuppressWarnings("all")
@@ -10,13 +9,13 @@ public class TrainingSession extends Session {
 
     public void cg_init_TrainingSession_1(
             final String newDescription,
-            final Trainer newTrainer,
             final Client client,
             final Object newDayOfWeek,
             final Number newStartHour,
             final Number newEndHour,
             final Number newDate) {
 
+        Trainer newTrainer = client.getTrainer();
         trainee = client.getID();
         cg_init_Session_1(
                 newDescription, newTrainer, ((Object) newDayOfWeek), newStartHour, newEndHour, newDate);
@@ -30,13 +29,8 @@ public class TrainingSession extends Session {
             final Number newEndHour,
             final Number newDate) {
 
-        Trainer newTrainer = client.getTrainer();
-        date = newDate;
-        newTrainer.addTask(this);
-        newTrainer.addTrainingSession(this);
-        client.addTrainingSession(this);
         cg_init_TrainingSession_1(
-                newDescription, newTrainer, client, newDayOfWeek, newStartHour, newEndHour, newDate);
+                newDescription, client, newDayOfWeek, newStartHour, newEndHour, newDate);
     }
 
     public Number getTrainee() {
@@ -44,8 +38,7 @@ public class TrainingSession extends Session {
         return trainee;
     }
 
-    public TrainingSession() {
-    }
+    public TrainingSession() {}
 
     public String toString() {
 
