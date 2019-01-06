@@ -19,6 +19,7 @@ operations
 		new EmployeeTest().Run();
 		new ClientTest().Run();
 		new ClubTest().Run();
+		new UseCaseTest().Run();
 	    
 	    IO`println("\nFinalizing Test Runner");
 		);
