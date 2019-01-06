@@ -173,6 +173,12 @@ public class Client extends User {
     addPersonalTrainingPayment(payment);
   }
 
+  public void createProductPayment(final Product product, final Number qtt, final Number date, final Number hour) {
+
+    ProductPayment payment = new ProductPayment(this, product, qtt, date, hour);
+    addProductPayment(payment);
+  }
+
   public void addProductBought(final Product product, final Number qtt, final Number spent) {
 
     totalSpentOnProducts = totalSpentOnProducts.doubleValue() + spent.doubleValue();

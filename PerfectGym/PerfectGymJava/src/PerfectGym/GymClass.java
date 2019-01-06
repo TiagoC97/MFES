@@ -31,6 +31,7 @@ public class GymClass extends Session {
       final Number newEndHour,
       final Number newDate) {
 
+    date = newDate;
     newTrainer.addTask(this);
     newTrainer.addGymClass(this);
 

@@ -233,12 +233,16 @@ public class PerfectGymMenu extends JFrame{
         gymFeePayments.add(new GymFeePayment(clients.get(0), clubs.get(0).getFee(), cg_Utils.CreateDate(2019, 2, 23), cg_Utils.CreateHour(14, 23)));
         gymFeePayments.add(new GymFeePayment(clients.get(0), clubs.get(0).getFee(), cg_Utils.CreateDate(2019, 3, 23), cg_Utils.CreateHour(14, 23)));
         gymFeePayments.add(new GymFeePayment(clients.get(1), clubs.get(0).getFee(), cg_Utils.CreateDate(2019, 2, 23), cg_Utils.CreateHour(14, 23)));
+        gymFeePayments.add(new GymFeePayment(clients.get(1), clubs.get(0).getFee(), cg_Utils.CreateDate(2019, 3, 23), cg_Utils.CreateHour(14, 23)));
         gymFeePayments.add(new GymFeePayment(clients.get(2), clubs.get(0).getFee(), cg_Utils.CreateDate(2019, 2, 23), cg_Utils.CreateHour(14, 23)));
+        gymFeePayments.add(new GymFeePayment(clients.get(2), clubs.get(0).getFee(), cg_Utils.CreateDate(2019, 3, 23), cg_Utils.CreateHour(14, 23)));
+        gymFeePayments.add(new GymFeePayment(clients.get(2), clubs.get(0).getFee(), cg_Utils.CreateDate(2019, 4, 23), cg_Utils.CreateHour(14, 23)));
 
     }
 
     private void initpersonalTrainingPayments(){
         personalTrainingPayments.add(new PersonalTrainingPayment(clients.get(0), clients.get(0).getPersonalTrainingFee(), cg_Utils.CreateDate(2019, 2, 23), cg_Utils.CreateHour(14, 23)));
+        personalTrainingPayments.add(new PersonalTrainingPayment(clients.get(0), clients.get(0).getPersonalTrainingFee(), cg_Utils.CreateDate(2019, 3, 23), cg_Utils.CreateHour(14, 23)));
         personalTrainingPayments.add(new PersonalTrainingPayment(clients.get(1), clients.get(1).getPersonalTrainingFee(), cg_Utils.CreateDate(2019, 3, 23), cg_Utils.CreateHour(14, 23)));
         personalTrainingPayments.add(new PersonalTrainingPayment(clients.get(2), clients.get(2).getPersonalTrainingFee(), cg_Utils.CreateDate(2019, 2, 23), cg_Utils.CreateHour(14, 23)));
     }
@@ -246,8 +250,8 @@ public class PerfectGymMenu extends JFrame{
     private void initInvoices(){
         clubs.get(0).addInvoice(clients.get(0), SetUtil.set(productPayments.get(0), productPayments.get(1)), cg_Utils.CreateDate(2019, 5, 23), cg_Utils.CreateHour(14, 23), "product", owners.get(0));
         clubs.get(0).addInvoice(clients.get(0), SetUtil.set(gymFeePayments.get(0)), cg_Utils.CreateDate(2019, 5, 27), cg_Utils.CreateHour(14, 23), "gymFee", owners.get(0));
-        clubs.get(0).addInvoice(clients.get(1), SetUtil.set(gymFeePayments.get(1)), cg_Utils.CreateDate(2019, 5, 23), cg_Utils.CreateHour(14, 23), "gymFee", owners.get(0));
-        clubs.get(0).addInvoice(clients.get(2), SetUtil.set(gymFeePayments.get(2)), cg_Utils.CreateDate(2019, 5, 23), cg_Utils.CreateHour(14, 23), "gymFee", owners.get(0));
+        clubs.get(0).addInvoice(clients.get(1), SetUtil.set(gymFeePayments.get(2)), cg_Utils.CreateDate(2019, 5, 23), cg_Utils.CreateHour(14, 23), "gymFee", owners.get(0));
+        clubs.get(0).addInvoice(clients.get(2), SetUtil.set(gymFeePayments.get(4)), cg_Utils.CreateDate(2019, 5, 23), cg_Utils.CreateHour(14, 23), "gymFee", owners.get(0));
         clubs.get(0).addInvoice(clients.get(0), SetUtil.set(personalTrainingPayments.get(0)), cg_Utils.CreateDate(2019, 5, 23), cg_Utils.CreateHour(14, 23), "personalTraining", owners.get(0));
 
     }

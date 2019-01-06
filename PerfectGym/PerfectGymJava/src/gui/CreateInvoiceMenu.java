@@ -63,7 +63,6 @@ public class CreateInvoiceMenu {
         addPaymentButton.addActionListener(e -> {
             if (paymentsToAddCombo.getSelectedItem() != null) {
                 int index = paymentsToAddCombo.getSelectedIndex();
-                String name = paymentsToAddCombo.getSelectedItem().toString();
                 payments = SetUtil.union(payments, SetUtil.set(((Payment)paymentsToAddCombo.getSelectedItem())));
                 paymentsVector.add(((Payment)paymentsToAddCombo.getSelectedItem()));
                 addedPaymentsList.setListData(paymentsVector);

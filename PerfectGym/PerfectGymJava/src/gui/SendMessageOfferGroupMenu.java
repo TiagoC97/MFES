@@ -1,17 +1,22 @@
 package gui;
 
+import PerfectGym.Group;
 import PerfectGym.User;
+import org.overture.codegen.runtime.VDMMap;
+import org.overture.codegen.runtime.VDMSet;
 
 import javax.swing.*;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SendMessageOfferGroupMenu {
     private JTextField msgTextField;
-    private JTextField groupNameTextField;
     private JComboBox userCombo;
     private JButton cancelButton;
     private JButton confirmButton;
     private JPanel pane;
+    private JComboBox groupsCombo;
 
 
     private String type;
@@ -48,13 +53,27 @@ public class SendMessageOfferGroupMenu {
         usersOwnerAccess.forEach(u -> userCombo.addItem(u.getName()));
     }
 
+    public void setGroups(VDMMap newGroups) {
+        groupsCombo.removeAllItems();
+
+        if(newGroups.size() == 0)
+            confirmButton.setEnabled(false);
+        else
+            confirmButton.setEnabled(true);
+
+        newGroups.forEach((n, g) -> {
+            groupsCombo.addItem(n);
+        });
+
+    }
+
 
     public String getMessage() {
         return msgTextField.getText();
     }
 
     public String getGroupName() {
-        return groupNameTextField.getText();
+        return groupsCombo.getSelectedItem().toString();
     }
 
     public User getUser() {
@@ -65,7 +84,7 @@ public class SendMessageOfferGroupMenu {
         return type;
     }
 
-    public void setType(String type){
+    public void setType(String type) {
         this.type = type;
     }
 }

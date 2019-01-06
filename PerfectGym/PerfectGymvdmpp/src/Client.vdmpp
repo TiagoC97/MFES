@@ -263,6 +263,12 @@ operations
 		addPersonalTrainingPayment(payment);
 	);
 
+	public createProductPayment: Product * nat * Date * Hour ==> ()
+	createProductPayment(product, qtt, date, hour) == 
+	(
+		dcl payment: ProductPayment := new ProductPayment(self, product, qtt, date, hour);
+		addProductPayment(payment);
+	);
 	-- PRODUCTS
 
 	/**

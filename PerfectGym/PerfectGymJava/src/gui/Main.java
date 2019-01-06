@@ -20,6 +20,9 @@ public class Main extends JFrame {
     private CreateInvoiceMenu createInvoiceMenu;
 
     private ViewClientMenu viewClientMenu;
+    private ViewOwnerMenu viewOwnerMenu;
+    private ViewTrainerMenu viewTrainerMenu;
+    private ViewSalesRepresentativeMenu viewSalesRepresentativeMenu;
 
 
     private JPanel contentPane;
@@ -100,6 +103,15 @@ public class Main extends JFrame {
         viewClientMenu = new ViewClientMenu(this);
         viewClientMenu.setVisible();
 
+        viewOwnerMenu = new ViewOwnerMenu(this);
+        viewOwnerMenu.setVisible();
+
+        viewTrainerMenu = new ViewTrainerMenu(this);
+        viewTrainerMenu.setVisible();
+
+        viewSalesRepresentativeMenu = new ViewSalesRepresentativeMenu(this);
+        viewSalesRepresentativeMenu.setVisible();
+
         contentPane.add(mainMenu.getPane(), "Main Menu");
         contentPane.add(perfectGymMenu.getPane(), "PerfectGYM Menu");
         contentPane.add(createUserMenu.getPane(), "CreateUserMenu Menu");
@@ -115,6 +127,9 @@ public class Main extends JFrame {
         contentPane.add(createInvoiceMenu.getPane(), "CreateInvoiceMenu Menu");
 
         contentPane.add(viewClientMenu.getPane(), "ViewClientMenu Menu");
+        contentPane.add(viewOwnerMenu.getPane(), "ViewOwnerMenu Menu");
+        contentPane.add(viewTrainerMenu.getPane(), "ViewTrainerMenu Menu");
+        contentPane.add(viewSalesRepresentativeMenu.getPane(), "ViewSalesRepresentativeMenu Menu");
 
         addListeners();
 
@@ -227,32 +242,34 @@ public class Main extends JFrame {
 
         clubMenu.getSendMsgAllClientsButton().addActionListener(e -> {
             sendMessageDestMarkedMenu.setDestinatary("AllClients");
-            sendMessageToUserMenu.setUsersOwnerAccess(clubMenu.getUsersOwnerAccess());
+            sendMessageDestMarkedMenu.setUsersOwnerAccess(clubMenu.getUsersOwnerAccess());
             showLayout("SendMessageDestMarkedMenu Menu");
         });
 
         clubMenu.getSendMsgAllTrainersButton().addActionListener(e -> {
             sendMessageDestMarkedMenu.setDestinatary("AllTrainers");
-            sendMessageToUserMenu.setUsersOwnerAccess(clubMenu.getUsersOwnerAccess());
+            sendMessageDestMarkedMenu.setUsersOwnerAccess(clubMenu.getUsersOwnerAccess());
             showLayout("SendMessageDestMarkedMenu Menu");
         });
 
         clubMenu.getSendMsgAllSRsButton().addActionListener(e -> {
             sendMessageDestMarkedMenu.setDestinatary("AllSRs");
-            sendMessageToUserMenu.setUsersOwnerAccess(clubMenu.getUsersOwnerAccess());
+            sendMessageDestMarkedMenu.setUsersOwnerAccess(clubMenu.getUsersOwnerAccess());
             showLayout("SendMessageDestMarkedMenu Menu");
         });
 
         clubMenu.getSendMsgGroupButton().addActionListener(e -> {
             sendMessageOfferGroupMenu.setType("Group");
+            sendMessageOfferGroupMenu.setGroups(clubMenu.getClub().getGroups());
             sendMessageOfferGroupMenu.setUsersOwnerAccess(clubMenu.getUsersOwnerAccess());
-            showLayout("SendMessageDestMarkedMenu Menu");
+            showLayout("SendMessageOfferGroupMenu Menu");
         });
 
         clubMenu.getSendOfferToGroupButton().addActionListener(e -> {
             sendMessageOfferGroupMenu.setType("OfferGroup");
+            sendMessageOfferGroupMenu.setGroups(clubMenu.getClub().getGroups());
             sendMessageOfferGroupMenu.setUsersOwnerAccess(clubMenu.getUsersAtLeastEmployeeAccess());
-            showLayout("SendMessageDestMarkedMenu Menu");
+            showLayout("SendMessageOfferGroupMenu Menu");
         });
 
         sendMessageToUserMenu.getCancelButton().addActionListener(e -> showLayout("ClubMenu Menu"));
@@ -277,17 +294,17 @@ public class Main extends JFrame {
             switch (sendMessageDestMarkedMenu.getDestinatary()) {
                 case "AllClients":
                     clubMenu.sendMsgAllClients(sendMessageDestMarkedMenu.getMessage(),
-                            sendMessageToUserMenu.getUser());
+                            sendMessageDestMarkedMenu.getUser());
                     showLayout("ClubMenu Menu");
                     break;
                 case "AllTrainers":
-                    clubMenu.sendMsgAllTrainers(sendMessageToUserMenu.getMessage(),
-                            sendMessageToUserMenu.getUser());
+                    clubMenu.sendMsgAllTrainers(sendMessageDestMarkedMenu.getMessage(),
+                            sendMessageDestMarkedMenu.getUser());
                     showLayout("ClubMenu Menu");
                     break;
                 case "AllSRs":
-                    clubMenu.sendMessageAllSalesRepresentatives(sendMessageToUserMenu.getMessage(),
-                            sendMessageToUserMenu.getUser());
+                    clubMenu.sendMessageAllSalesRepresentatives(sendMessageDestMarkedMenu.getMessage(),
+                            sendMessageDestMarkedMenu.getUser());
                     showLayout("ClubMenu Menu");
                     break;
             }
@@ -386,6 +403,27 @@ public class Main extends JFrame {
         });
 
         viewClientMenu.getBackButton().addActionListener(e -> showLayout("ClubMenu Menu"));
+
+        clubMenu.getViewOwnerButton().addActionListener(e -> {
+            viewOwnerMenu.setOwner(clubMenu.getOwner());
+            showLayout("ViewOwnerMenu Menu");
+        });
+
+        viewOwnerMenu.getBackButton().addActionListener(e -> showLayout("ClubMenu Menu"));
+
+        clubMenu.getViewTrainerButton().addActionListener(e -> {
+            viewTrainerMenu.setTrainer(clubMenu.getTrainer());
+            showLayout("ViewTrainerMenu Menu");
+        });
+
+        viewTrainerMenu.getBackButton().addActionListener(e -> showLayout("ClubMenu Menu"));
+
+        clubMenu.getViewSalesRepresentativeButton().addActionListener(e -> {
+            viewSalesRepresentativeMenu.setSalesRepresentative(clubMenu.getSalesRepresentative());
+            showLayout("ViewSalesRepresentativeMenu Menu");
+        });
+
+        viewSalesRepresentativeMenu.getBackButton().addActionListener(e -> showLayout("ClubMenu Menu"));
     }
 
     public void showLayout(String layout) {

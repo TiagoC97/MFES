@@ -3,16 +3,18 @@ package gui;
 import PerfectGym.*;
 import PerfectGym.quotes.OwnerQuote;
 import org.overture.codegen.runtime.SetUtil;
+import org.overture.codegen.runtime.VDMSeq;
 import org.overture.codegen.runtime.VDMSet;
 
 import javax.swing.*;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ClubMenu {
     private JPanel pane;
     private JButton backButton;
     private JComboBox<String> clientsCombo;
-
 
 
     private JButton viewClientButton;
@@ -30,7 +32,6 @@ public class ClubMenu {
     private JTextArea ownerTextArea;
     private JButton addGroupButton;
     private JComboBox<String> groupsCombo;
-    private JButton viewGroupButton;
     private JTextArea groupsTextArea;
     private JComboBox<String> trainersCombo2;
     private JComboBox<String> traineeCombo;
@@ -41,11 +42,9 @@ public class ClubMenu {
     private JButton removePersonalTrainingButton;
     private JButton addGymClassButton;
     private JComboBox<String> gymClassesCombo;
-    private JButton viewGymClassButton;
     private JTextArea gymClassesTextArea;
     private JButton addTrainingSessionButton;
     private JComboBox<String> trainingSessionsCombo;
-    private JButton viewTrainingSessionButton;
     private JTextArea trainingSessionTextArea;
     private JComboBox<String> attendeesCombo;
     private JComboBox<String> attendeesUserCombo;
@@ -74,15 +73,12 @@ public class ClubMenu {
     private JSpinner qttSpinner;
     private JButton addQuantityButton;
     private JTextArea productsTextArea;
-
-
     private JButton addInvoiceButton;
     private JComboBox invoicesCombo;
     private JComboBox<String> productsUserCombo;
     private JTextArea invoicesTextArea;
     private JButton addLeadButton;
     private JTextArea crmTextArea;
-
 
 
     private JButton addLeadWithSalesButton;
@@ -95,6 +91,8 @@ public class ClubMenu {
     private JButton transformLeadButton;
     private JComboBox invoicePaymentsCombo;
     private JButton addPaymentToInvoiceButton;
+    private JComboBox invoiceCurPaymentsCombo;
+    private JButton removePayFromInvoiceButton;
 
     private Main parent;
 
@@ -110,12 +108,14 @@ public class ClubMenu {
     private ArrayList<Trainer> trainers = new ArrayList<>();
     private ArrayList<SalesRepresentative> salesRepresentatives = new ArrayList<>();
     private ArrayList<Employee> employees = new ArrayList<>();
-    private ArrayList<Group> groups = new ArrayList<>();
+    private Map<String, Group> groups;
     private ArrayList<GymClass> gymClasses = new ArrayList<>();
     private ArrayList<TrainingSession> trainingSessions = new ArrayList<>();
     private ArrayList<Product> products = new ArrayList<>();
     private ArrayList<Lead> leads = new ArrayList<>();
-    private ArrayList<Invoice> invoices= new ArrayList<>();
+    private ArrayList<Invoice> invoices = new ArrayList<>();
+    private ArrayList<Payment> paymentsToAdd = new ArrayList<>();
+    private ArrayList<Payment> paymentsAdded = new ArrayList<>();
 
     private ArrayList<Client> clientsInGroup = new ArrayList<>();
     private ArrayList<Client> clientsNotInGroup = new ArrayList<>();
@@ -136,28 +136,31 @@ public class ClubMenu {
 
 
         club.getClients().forEach(c -> {
+            clients.add((Client) c);
             clientsCombo.addItem(((Client) c).getName());
             traineeCombo.addItem(((Client) c).getName());
             attendeesCombo.addItem(((Client) c).getName());
-            clients.add((Client) c);
+
         });
 
         club.getTrainers().forEach(t -> {
+            trainers.add((Trainer) t);
             trainersCombo.addItem(((Trainer) t).getName());
             trainersCombo2.addItem(((Trainer) t).getName());
 
-            trainers.add((Trainer) t);
+
         });
 
         leadSRsCombo.addItem("");
         club.getSalesRepresentatives().forEach(s -> {
+            salesRepresentatives.add((SalesRepresentative) s);
             salesRepresentativesCombo.addItem(((SalesRepresentative) s).getName());
             leadSRsCombo.addItem(((SalesRepresentative) s).getName());
-            salesRepresentatives.add((SalesRepresentative) s);
+
         });
 
         club.getEmployees().forEach(e -> {
-
+            employees.add((Employee) e);
             if (((User) e).getAccess().toString().equals(OwnerQuote.getInstance().toString())) {
                 usersOwnerAccess.add((User) e);
                 usersAtLeastEmployeeAccess.add((User) e);
@@ -166,40 +169,49 @@ public class ClubMenu {
                 usersAtLeastEmployeeAccess.add((User) e);
                 usersEmployeeAccess.add((User) e);
             }
-            employees.add((Employee) e);
+
         });
 
-        club.getGroups().keySet().forEach(g -> {
-            groupsCombo.addItem((String) g);
-            groups.add((Group) club.getGroups().get(g));
+        club.getGroups().forEach((n, g) -> {
+            groups.put(n.toString(), (Group) g);
+            groupsCombo.addItem(n.toString());
+
         });
 
         club.getGymClasses().forEach(g -> {
-            gymClassesCombo.addItem(((GymClass) g).getName() + " -> " + ((GymClass) g).getDescription());
             gymClasses.add((GymClass) g);
+            gymClassesCombo.addItem(((GymClass) g).getName() + " -> " + ((GymClass) g).getDescription());
+
         });
 
         club.getTrainingSessions().forEach(t -> {
-            trainingSessionsCombo.addItem(((TrainingSession) t).getDescription());
             trainingSessions.add((TrainingSession) t);
+            trainingSessionsCombo.addItem(((TrainingSession) t).getDescription());
+
         });
 
         club.getProducts().forEach(p -> {
-            productsCombo.addItem(((Product) p).getName());
             products.add((Product) p);
+            productsCombo.addItem(((Product) p).getName());
+
         });
 
         club.getCRM().getLeads().keySet().forEach(l -> {
+            leads.add((Lead) l);
             leadsCombo.addItem(((Lead) l).getName());
 
-            leads.add((Lead) l);
+
         });
 
         club.getInvoices().forEach(i -> {
+            invoices.add((Invoice) i);
             invoicesCombo.addItem("Client: " + ((Invoice) i).getClient().getName() + " Type: " + ((Invoice) i).getType() +
                     " Date: " + ((Invoice) i).getDate());
-            invoices.add((Invoice) i);
+
+
         });
+
+        setInvoicePayments();
 
 
         usersOwnerAccess.forEach(u -> {
@@ -238,7 +250,7 @@ public class ClubMenu {
         setInvoicesTextArea();
 
         if (groupsCombo.getItemCount() > 0) {
-            Group gr = groups.get(groupsCombo.getSelectedIndex());
+            Group gr = groups.get(groupsCombo.getSelectedItem().toString());
             gr.getClients().forEach(c -> {
                 clientsInGroup.add(((Client) c));
                 clientsInGroupCombo.addItem(((Client) c).getName());
@@ -261,15 +273,16 @@ public class ClubMenu {
         trainers = new ArrayList<>();
         salesRepresentatives = new ArrayList<>();
         employees = new ArrayList<>();
-        groups = new ArrayList<>();
+        groups = new HashMap<>();
         gymClasses = new ArrayList<>();
         trainingSessions = new ArrayList<>();
         clientsInGroup = new ArrayList<>();
         clientsNotInGroup = new ArrayList<>();
         products = new ArrayList<>();
         leads = new ArrayList<>();
-        invoices= new ArrayList<>();
-
+        invoices = new ArrayList<>();
+        paymentsToAdd = new ArrayList<>();
+        paymentsAdded = new ArrayList<>();
 
         employeeUserAccessCombo.removeAllItems();
         userAccessUsersCombo.removeAllItems();
@@ -291,6 +304,9 @@ public class ClubMenu {
         leadsCombo.removeAllItems();
         crmUserCombo.removeAllItems();
         leadSRsCombo.removeAllItems();
+        invoicesCombo.removeAllItems();
+        invoicePaymentsCombo.removeAllItems();
+        invoiceCurPaymentsCombo.removeAllItems();
         invoicesCombo.removeAllItems();
     }
 
@@ -342,13 +358,13 @@ public class ClubMenu {
         });
 
         groupsCombo.addActionListener(e -> {
-            if(groupsCombo.getItemCount() == 0 || groups.size() == 0)
+            if (groupsCombo.getItemCount() == 0 || groups.size() == 0)
                 return;
             clientsInGroup.clear();
             clientsNotInGroup.clear();
             clientsInGroupCombo.removeAllItems();
             clientsNotInGroupCombo.removeAllItems();
-            Group gr = groups.get(groupsCombo.getSelectedIndex());
+            Group gr = groups.get(groupsCombo.getSelectedItem().toString());
             gr.getClients().forEach(c -> {
                 clientsInGroup.add(((Client) c));
                 clientsInGroupCombo.addItem(((Client) c).getName());
@@ -360,33 +376,35 @@ public class ClubMenu {
         });
 
         addGroupClientButton.addActionListener(e -> {
-            if (clientsNotInGroupCombo.getItemCount() > 0) {
-                int index = clientsNotInGroupCombo.getSelectedIndex();
-                Client c1 = clientsNotInGroup.get(index);
+            if (groupsCombo.getItemCount() == 0 || clientsNotInGroupCombo.getItemCount() == 0 || groups.size() == 0)
+                return;
+            int index = clientsNotInGroupCombo.getSelectedIndex();
+            Client c1 = clientsNotInGroup.get(index);
 
-                clientsInGroup.add(c1);
-                clientsInGroupCombo.addItem(c1.getName());
-                clientsNotInGroup.remove(c1);
-                clientsNotInGroupCombo.removeItemAt(index);
-                club.addGroupClient(groupsCombo.getSelectedItem().toString(), c1, owner);
+            clientsInGroup.add(c1);
+            clientsInGroupCombo.addItem(c1.getName());
+            clientsNotInGroup.remove(c1);
+            clientsNotInGroupCombo.removeItemAt(index);
+            club.addGroupClient(groupsCombo.getSelectedItem().toString(), c1, owner);
 
-                setGroupsTextArea();
-            }
+            setGroupsTextArea();
+
         });
 
         removeGroupClientButton.addActionListener(e -> {
-            if (clientsInGroupCombo.getItemCount() > 0) {
-                int index = clientsInGroupCombo.getSelectedIndex();
-                Client c1 = clientsInGroup.get(index);
+            if (groupsCombo.getItemCount() == 0 || clientsInGroupCombo.getItemCount() == 0 || groups.size() == 0)
+                return;
+            int index = clientsInGroupCombo.getSelectedIndex();
+            Client c1 = clientsInGroup.get(index);
 
-                clientsNotInGroup.add(c1);
-                clientsNotInGroupCombo.addItem(c1.getName());
-                clientsInGroup.remove(c1);
-                clientsInGroupCombo.removeItemAt(index);
-                club.removeGroupClient(groupsCombo.getSelectedItem().toString(), c1, owner);
+            clientsNotInGroup.add(c1);
+            clientsNotInGroupCombo.addItem(c1.getName());
+            clientsInGroup.remove(c1);
+            clientsInGroupCombo.removeItemAt(index);
+            club.removeGroupClient(groupsCombo.getSelectedItem().toString(), c1, owner);
 
-                setGroupsTextArea();
-            }
+            setGroupsTextArea();
+
         });
 
         addQuantityButton.addActionListener(e -> {
@@ -456,41 +474,80 @@ public class ClubMenu {
         });
 
         invoicesCombo.addActionListener(e -> {
+            if(invoices.size() == 0 || invoicesCombo.getItemCount() == 0)
+                return;
             invoicePaymentsCombo.removeAllItems();
-            Invoice i = invoices.get(invoicesCombo.getSelectedIndex());
-            switch (i.getType()) {
-                case "product":
-                    if(i.getClient().getProductPayments().size() > 0)
-                        i.getClient().getProductPayments().forEach(p -> {
-                            invoicePaymentsCombo.addItem(p);
-                        });
-                    break;
-                case "gymFee":
-                    if(i.getClient().getGymFeePayments().size() > 0)
-                        i.getClient().getGymFeePayments().forEach(p -> {
-                            invoicePaymentsCombo.addItem(p);
-                        });
-                    break;
-                case "personalTraining":
-                    if(i.getClient().getPersonalTrainingPayments().size() > 0)
-                        i.getClient().getPersonalTrainingPayments().forEach(p -> {
-                            invoicePaymentsCombo.addItem(p);
-                        });
-                    break;
-
-            }
+            invoiceCurPaymentsCombo.removeAllItems();
+            paymentsAdded.clear();
+            paymentsToAdd.clear();
+            setInvoicePayments();
         });
 
         addPaymentToInvoiceButton.addActionListener(e -> {
-            System.out.println(SetUtil.set(invoicePaymentsCombo.getSelectedItem()));
-            club.addPaymentToInvoice(invoices.get(invoicesCombo.getSelectedIndex()), SetUtil.set(invoicePaymentsCombo.getSelectedItem()) ,owner);
+            club.addPaymentToInvoice(invoices.get(invoicesCombo.getSelectedIndex()), SetUtil.set(paymentsToAdd.get(invoicePaymentsCombo.getSelectedIndex())), owner);
+            paymentsToAdd.remove(invoicePaymentsCombo.getSelectedIndex());
             invoicePaymentsCombo.removeItemAt(invoicePaymentsCombo.getSelectedIndex());
+
+            setInvoicesTextArea();
+        });
+
+        removePayFromInvoiceButton.addActionListener(e -> {
+            club.removePaymentFromInvoice(invoices.get(invoicesCombo.getSelectedIndex()), SetUtil.set(paymentsAdded.get(invoiceCurPaymentsCombo.getSelectedIndex())), owner);
+            paymentsAdded.remove(invoiceCurPaymentsCombo.getSelectedIndex());
+            invoiceCurPaymentsCombo.removeItemAt(invoiceCurPaymentsCombo.getSelectedIndex());
+
             setInvoicesTextArea();
         });
     }
 
+    private void setInvoicePayments(){
+        if(invoices.size() == 0 || invoicesCombo.getItemCount() == 0)
+            return;
+        Invoice i = invoices.get(invoicesCombo.getSelectedIndex());
+        switch (i.getType()) {
+            case "product":
+
+                if (i.getClient().getProductPayments().size() > 0)
+                    i.getClient().getProductPayments().forEach(p -> {
+                        invoicePaymentsCombo.addItem("ProductPayment on " + ((ProductPayment) p).getDate());
+                        paymentsToAdd.add((Payment) p);
+                    });
+                if (i.getPayments().size() > 0)
+                    i.getPayments().forEach(p -> {
+                        invoiceCurPaymentsCombo.addItem("ProductPayment on " + ((ProductPayment) p).getDate());
+                        paymentsAdded.add((Payment) p);
+                    });
+                break;
+            case "gymFee":
+                if (i.getClient().getGymFeePayments().size() > 0)
+                    i.getClient().getGymFeePayments().forEach(p -> {
+                        invoicePaymentsCombo.addItem("GymFeePayment on " + ((GymFeePayment) p).getDate());
+                        paymentsToAdd.add((Payment) p);
+                    });
+                if (i.getPayments().size() > 0)
+                    i.getPayments().forEach(p -> {
+                        invoiceCurPaymentsCombo.addItem("GymFeePayment on " + ((GymFeePayment) p).getDate());
+                        paymentsAdded.add((Payment) p);
+                    });
+                break;
+            case "personalTraining":
+                if (i.getClient().getPersonalTrainingPayments().size() > 0)
+                    i.getClient().getPersonalTrainingPayments().forEach(p -> {
+                        invoicePaymentsCombo.addItem("PTPayment on " + ((PersonalTrainingPayment) p).getDate());
+                        paymentsToAdd.add((Payment) p);
+                    });
+                if (i.getPayments().size() > 0)
+                    i.getPayments().forEach(p -> {
+                        invoiceCurPaymentsCombo.addItem("PTPayment on " + ((PersonalTrainingPayment) p).getDate());
+                        paymentsAdded.add((Payment) p);
+                    });
+                break;
+
+        }
+    }
+
     private void setSRFromLead() {
-        if(leadsCombo.getItemCount() == 0 || leads.size() == 0)
+        if (leadsCombo.getItemCount() == 0 || leads.size() == 0)
             return;
         SalesRepresentative leadSR = club.getCRM().getLeadSR(leads.get(leadsCombo.getSelectedIndex()));
         if (club.getCRM().getLeadSR(leads.get(leadsCombo.getSelectedIndex())) == null) {
@@ -567,7 +624,7 @@ public class ClubMenu {
     public void addGroup(String n, VDMSet clients, User u) {
         club.addGroup(n, clients, u);
         groupsCombo.addItem(n);
-        groups.add((Group) club.getGroups().get(n));
+        groups.put(n, (Group) club.getGroups().get(n));
         setGroupsTextArea();
     }
 
@@ -593,30 +650,38 @@ public class ClubMenu {
 
     public void sendMsgToClient(String m, Client c, User u) {
         club.sendMessageClient(m, c, u);
+        setClientsTextArea();
     }
 
     public void sendMsgToEmployee(String m, Employee e, User u) {
         club.sendMessageEmployee(m, e, u);
+        setTrainerTextArea();
+        setSalesRepresentativesTextArea();
     }
 
     public void sendMsgAllClients(String m, User u) {
         club.sendMessageAllClients(m, u);
+        setClientsTextArea();
     }
 
     public void sendMsgAllTrainers(String m, User u) {
         club.sendMessageAllTrainers(m, u);
+        setTrainerTextArea();
     }
 
     public void sendMessageAllSalesRepresentatives(String m, User u) {
         club.sendMessageAllSalesRepresentatives(m, u);
+        setSalesRepresentativesTextArea();
     }
 
     public void sendMsgGroup(String m, String g, User u) {
         club.sendMessageToGroup(m, g, u);
+        setGroupsTextArea();
     }
 
     public void sendSendOfferToGroup(String m, String g, User u) {
         club.sendOfferToGroup(m, g, u);
+        setGroupsTextArea();
     }
 
     public void addProduct(String n, Number v, Number q) {
@@ -632,7 +697,7 @@ public class ClubMenu {
     public void addInvoice(VDMSet payments, Number date, Number hour, String type, boolean allActivePayments, Client c, User u) {
         System.out.println(payments);
         Invoice i = new Invoice(payments, date, hour, type, allActivePayments, c);
-        if(!allActivePayments)
+        if (!allActivePayments)
             club.addInvoice(c, payments, date, hour, type, u);
         else
             club.addInvoiceWithAllActivePayments(c, date, hour, type, u);
@@ -670,9 +735,30 @@ public class ClubMenu {
 
     private void setGroupsTextArea() {
         StringBuilder sb = new StringBuilder();
-        for (Object g : club.getGroups().keySet()) {
-            sb.append("Group " + g.toString() + ": " + club.getGroups().get(g).toString()).append("\n");
-        }
+        groups.forEach((n, g) -> {
+            sb.append("Group " + n + "\n" + "Members: ").append("\n");
+            g.getClients().forEach(c -> {
+                sb.append(" - " + c.toString()).append("\n");
+            });
+            sb.append("Messages:  " ).append("\n");
+            Client groupClient = null;
+            for(Object c : g.getClients()){
+                groupClient = (Client) c;
+                break;
+            }
+
+            g.checkInbox(groupClient).forEach((s, msgs) -> {
+                for (Object m : ((VDMSeq) msgs)) {
+                    sb.append(" - Sender: " + s + ": Msg: " + m + ";").append("\n");
+                }
+            });
+            sb.append("Offers: ").append("\n");
+            g.checkOffers(groupClient).forEach(m -> {
+                sb.append(" - " + m.toString()).append("\n");
+            });
+
+        });
+
         groupsTextArea.setText(sb.toString());
     }
 
@@ -703,7 +789,6 @@ public class ClubMenu {
     }
 
 
-
     private void setProductsTextArea() {
         StringBuilder sb = new StringBuilder();
         for (Object t : club.getProducts()) {
@@ -718,7 +803,7 @@ public class ClubMenu {
         club.getCRM().getLeads().forEach((l, sr) -> {
             String srString = " nil";
             if (sr != null)
-                    srString = sr.toString();
+                srString = sr.toString();
             sb.append(l.toString() + "|->" + srString).append("\n");
         });
         sb.append("}").append("\n");
@@ -857,20 +942,25 @@ public class ClubMenu {
         return viewTrainerButton;
     }
 
-    public JButton getViewGroupButton() {
-        return viewGroupButton;
-    }
-
-    public JButton getViewGymClassButton() {
-        return viewGymClassButton;
-    }
-
-    public JButton getViewTrainingSessionButton() {
-        return viewTrainingSessionButton;
-    }
 
     public Client getClient() {
         return clients.get(clientsCombo.getSelectedIndex());
+    }
+
+    public Owner getOwner() {
+        return owner;
+    }
+
+    public Trainer getTrainer() {
+        return trainers.get(trainersCombo.getSelectedIndex());
+    }
+
+    public SalesRepresentative getSalesRepresentative() {
+        return salesRepresentatives.get(salesRepresentativesCombo.getSelectedIndex());
+    }
+
+    public Club getClub(){
+        return club;
     }
 }
 

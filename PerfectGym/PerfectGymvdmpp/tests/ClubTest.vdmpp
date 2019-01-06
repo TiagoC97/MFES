@@ -146,7 +146,7 @@ operations
 		"gymFee", owner1);
 		
 		assertEqual(1, card club1.getInvoices());
-		IO`println(client1.getGymFeePayments());		
+	
 		club1.addInvoiceWithAllActivePayments(client1,
 		Utils`CreateDate(2019, 04, 23), 
 	  	Utils`CreateHour(08, 00),
@@ -155,7 +155,7 @@ operations
 		club1.addPaymentToInvoice(invoice1, {new GymFeePayment(client1, 80,
 		Utils`CreateDate(2019, 02, 22), 
 	  	Utils`CreateHour(18, 00))}, owner1);
-IO`println("Initiate Invoice");		
+	
 		club1.removePaymentFromInvoice(invoice1, {personalTrainingPayment1}, owner1);
 
 		IO`println("Initiate Clients");
