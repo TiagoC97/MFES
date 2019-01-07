@@ -1,0 +1,86 @@
+class SalesRepresentative is subclass of Employee
+types
+	
+values
+	
+instance variables
+	private leads: set of String1 := {};
+operations
+	/**
+	 * SalesRepresentative constructor
+	 */
+	public SalesRepresentative: String1 * nat * Gender * String1 ==> SalesRepresentative
+ 	SalesRepresentative(newName, newAge, newGender, newNationality) == Employee(newName, newAge, newGender, newNationality)
+ 	post leads = {};
+ 	
+	/**
+	 * Add a lead to this sales representative
+	 */
+ 	public addLead: Lead ==> ()
+ 	addLead(lead) == leads := leads union {lead.getName()}
+ 	pre lead.getName() not in set leads
+ 	post leads= leads~ union {lead.getName()};
+ 	
+	/**
+	 * Remove a lead from this sales representative
+	 */
+ 	public removeLead: Lead ==> ()
+ 	removeLead(lead) == leads := leads \ {lead.getName()}
+ 	pre lead.getName() in set leads
+ 	post leads= leads~ \ {lead.getName()};
+
+	-- GETTERS
+
+/**
+	 * Get sales representative activity
+	 */
+
+	 public getActivity: bool ==> ()
+		getActivity(showAllTasks) ==
+		(
+			dcl numLeads: nat := card leads;
+			dcl tasks: map Date to seq of Task := calendar.getTasks();
+			dcl i: nat := 0;
+			dcl t: Task;
+
+			IO`println("********* SALES REPRESENTATIVE STATISTICS *********");
+			IO`print("Number of leads: ");
+			IO`println(numLeads);
+			
+			if showAllTasks then
+				(
+					for all d in set dom tasks do
+					(
+						i := 0;
+						IO`print("Date: " );	
+						IO`println(d);
+
+						while i < len tasks(d) do
+						( 
+							t := tasks(d)(i); 
+							IO`print("	Task: ");
+							IO`print(t.getDescription());
+							IO`print(" started at ");
+							IO`print(t.getStartHour());
+							IO`print(" and ended at ");
+							IO`println(t.getEndHour());
+							i:= i + 1;
+						);
+						IO`println("");
+					)		
+				);
+			
+			IO`println("");
+			IO`println("***************************************************");
+		);
+		
+    /**
+	 * Gets the SalesRepresentative leads
+	 * 
+	 * @return set of String1
+	 */
+	public pure getLeads: () ==> set of String1
+ 	getLeads() == return leads
+ 	post RESULT = leads;
+
+end SalesRepresentative

@@ -1,0 +1,34 @@
+class TrainingSession is subclass of Session
+types
+
+values
+
+instance variables
+
+    private trainee: int;
+	
+operations
+	/**
+	 * TrainingSession constructor
+	 */
+   public TrainingSession: String1 * Client * DayOfWeek * Hour * Hour * Date ==> TrainingSession
+ 	TrainingSession(newDescription, client, newDayOfWeek, newStartHour, newEndHour, newDate) == 
+ 	(
+		dcl newTrainer: Trainer := client.getTrainer();
+		trainee := client.getID();
+ 		Session(newDescription, newTrainer, newDayOfWeek, newStartHour, newEndHour, newDate);
+ 	)
+	 pre client.getTrainer() <> nil
+	post trainee = client.getID();
+
+	-- GETTERS
+ 	/**
+	  * Get trainee
+	  * 
+	  * @return trainee
+	  */
+ 	public pure getTrainee: () ==> int
+ 	getTrainee() == return trainee
+ 	post RESULT = trainee;
+ 		
+end TrainingSession

@@ -1,0 +1,56 @@
+class GymClass is subclass of Session
+types
+
+values
+	
+instance variables
+	private name: String1;
+	private attendees: set of int := {};
+	
+operations
+	/**
+	 * GymClass constructor
+	 */
+	public GymClass: String1 * String1 * Trainer * DayOfWeek * Hour * Hour * Date==> GymClass
+ 	GymClass(newDescription, className, newTrainer, newDayOfWeek, newStartHour, newEndHour, newDate) == 
+ 	(
+		name := className;
+		Session(newDescription, newTrainer, newDayOfWeek, newStartHour, newEndHour, newDate);
+ 	)
+	pre className <> ""
+	post name = className;
+	 	
+	/**
+	 * Add an attendee to this class
+	 */
+	public addAttendee: Client ==> ()
+	addAttendee(client) == 
+	(
+		attendees:= attendees union {client.getID()};
+		client.addGymClass(self);
+	)
+	post attendees = attendees~ union {client.getID()};
+
+ 	
+ 	-- GETTERS
+	 
+	/**
+	 * Gets the gym class name
+	 * 
+	 * @return String1
+	 */
+ 	public pure getName: () ==> String1
+ 	getName() == return name
+ 	post RESULT = name;
+		 
+	/**
+	 * Gets the gym class attendees
+	 * 
+	 * @return set of int
+	 */
+	public pure getAttendees: () ==> set of int
+ 	getAttendees() == return attendees
+ 	post RESULT = attendees;
+
+
+end GymClass

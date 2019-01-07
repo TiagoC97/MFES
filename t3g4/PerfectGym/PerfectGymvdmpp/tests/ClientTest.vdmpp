@@ -1,0 +1,73 @@
+class ClientTest is subclass of MyTestCase
+
+instance variables
+
+	owner1: Owner := new Owner("Rui", 21, <Male>, "portuguese");
+
+	club1: Club := new Club("Bombados", owner1, 17);
+
+	client1: Client := new Client("Vasco", 25, <Male>, "brazilian");
+
+	trainer1: Trainer := new Trainer("Alex", 33, <Male>, "english");
+
+	product1: Product := new Product("Prota", 29.99, 40);
+
+	gymClass1: GymClass := new GymClass("Aula de baixa intensidade", "Pilates", trainer1, <Tuesday>, 
+		Utils`CreateHour(09, 00), 
+		Utils`CreateHour(10, 00), 
+		Utils`CreateDate(2019, 01, 11));
+
+	gymFeePayment1: GymFeePayment := new GymFeePayment(client1, 80,
+		Utils`CreateDate(2019, 01, 22), 
+	  	Utils`CreateHour(08, 00));
+
+	productPayment1: ProductPayment := new ProductPayment(client1, product1, 2,
+		Utils`CreateDate(2019, 01, 30), 
+	  	Utils`CreateHour(18, 29));
+
+	personalTrainingPayment1: PersonalTrainingPayment := new PersonalTrainingPayment(client1, 30,
+		Utils`CreateDate(2019, 01, 23), 
+	  	Utils`CreateHour(08, 00));
+	
+operations
+	public Run: () ==> ()
+	Run() == (
+		IO`println("\nClient Tests");
+
+		club1.addTrainer(trainer1, owner1);
+		club1.addClient(client1, owner1);
+
+		client1.addTrainer(trainer1, 30);
+		client1.addGymClass(gymClass1);
+		client1.addGymAttendence(20191111);
+
+		assertEqual(trainer1, client1.getTrainer());
+		assertEqual(30, client1.getPersonalTrainingFee());
+		assertEqual({gymClass1}, client1.getClasses());
+		assertEqual({20190111, 20191111}, client1.getGymAttendences());
+
+		IO`println("\nInitiate GetPayments");
+		assertEqual({gymFeePayment1}, client1.getGymFeePayments());
+		assertEqual({productPayment1}, client1.getProductPayments());
+		assertEqual({personalTrainingPayment1}, client1.getPersonalTrainingPayments());
+
+		IO`println("\nInitiate RemovePayments");
+		client1.removeGymFeePayment(gymFeePayment1);
+		client1.removeProductPayment(productPayment1);
+		client1.removePersonalTrainingPayment(personalTrainingPayment1);
+
+		IO`println("\nInitiate GetHistoryPayments");
+		assertEqual({gymFeePayment1}, client1.getHistoryGymFeePayments());
+		assertEqual({productPayment1}, client1.getHistoryProductPayments());
+		assertEqual({personalTrainingPayment1}, client1.getHistoryPersonalTrainingPayments());
+
+		IO`println("\nInitiate Products");
+		client1.addProductBought(product1, 1, 29.99);
+		assertEqual(89.97, client1.getTotalSPentOnProducts());
+		assertEqual({"Prota" |-> 3}, client1.getProductsBought());
+
+		IO`println("Finalizing Client Tests");
+
+	);
+	
+end ClientTest

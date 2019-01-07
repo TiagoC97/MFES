@@ -1,0 +1,28 @@
+class SalesRepresentativeTest is subclass of MyTestCase
+
+instance variables
+
+	salesRepresentative1: SalesRepresentative := new SalesRepresentative("Vasco", 25, <Male>, "brazilian");
+
+	lead1: Lead := new Lead("Maria", 23, <Female>, "portuguese");
+	lead2: Lead := new Lead("Jorge", 25, <Male>, "spanish");
+	
+	
+operations
+	public Run: () ==> ()
+	Run() == (
+		IO`println("\nSalesRepresentative Tests");
+
+		salesRepresentative1.addLead(lead1);
+		salesRepresentative1.addLead(lead2);
+		assertEqual({lead1.getName(), lead2.getName()}, salesRepresentative1.getLeads());
+		salesRepresentative1.removeLead(lead2);
+		assertEqual({lead1.getName()}, salesRepresentative1.getLeads());
+
+		salesRepresentative1.getActivity(true);
+
+		IO`println("Finalizing SalesRepresentative Tests");
+
+	);
+	
+end SalesRepresentativeTest

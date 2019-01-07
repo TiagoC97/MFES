@@ -1,0 +1,29 @@
+class GymFeePayment is subclass of Payment
+instance variables
+    private fee: rat;
+operations
+    /**
+	 * GymFeePayment constructor
+	 */
+	public GymFeePayment: Client * rat * Date * Hour==> GymFeePayment
+ 	GymFeePayment(newClient, newFee, newDate, newHour) == 
+ 	(
+		fee:= newFee;
+		newClient.addGymFeePayment(self);
+        Payment(newClient, newDate, newHour, newFee);
+    )
+    pre newFee >= 0
+    post fee = newFee ;
+
+    -- GETTERS
+
+	/**
+	 * Gets the GymFeePayment fee
+	 * 
+	 * @return fee
+	 */
+	public pure getFee : () ==> rat
+	getFee() == return fee
+	post RESULT = fee;    
+
+end GymFeePayment

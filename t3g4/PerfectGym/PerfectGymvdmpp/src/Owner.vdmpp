@@ -1,0 +1,15 @@
+class Owner is subclass of User
+types
+	
+values
+-- TODO Define values here
+instance variables
+-- TODO Define instance variables here
+operations
+	/**
+	 * Owner constructor
+	 */
+	public Owner: String1 * nat * Gender * String1 ==> Owner
+ 	Owner(newName, newAge, newGender, newNationality) == User(newName,  <Owner>, newAge, newGender, newNationality);
+
+end Owner

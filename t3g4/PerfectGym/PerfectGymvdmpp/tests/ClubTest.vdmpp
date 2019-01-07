@@ -1,0 +1,223 @@
+class ClubTest is subclass of MyTestCase
+
+instance variables
+
+  	owner1: Owner := new Owner("Rui", 21, <Male>, "portuguese");
+
+	club1: Club := new Club("Bombados", owner1, 17);
+
+	client1: Client := new Client("Maria", 23, <Female>, "portuguese");
+	client2: Client := new Client("Jorge", 25, <Male>, "spanish");
+
+	trainer1: Trainer := new Trainer("Vasco", 25, <Male>, "brazilian");
+	trainer2: Trainer := new Trainer("Alex", 33, <Male>, "english");
+
+	salesRepresentative1: SalesRepresentative := new SalesRepresentative("Joana", 21, <Female>, "portuguese");
+	salesRepresentative2: SalesRepresentative := new SalesRepresentative("Manuel", 33, <Male>, "french");
+
+	gymClass1: GymClass := new GymClass("Aula de baixa intensidade", "Pilates", trainer1, <Tuesday>, 
+		Utils`CreateHour(09, 00), 
+		Utils`CreateHour(10, 00), 
+		Utils`CreateDate(2019, 01, 11));
+
+	gymFeePayment1: GymFeePayment := new GymFeePayment(client1, 80,
+		Utils`CreateDate(2019, 01, 22), 
+	  	Utils`CreateHour(08, 00));
+
+	gymFeePayment2: GymFeePayment := new GymFeePayment(client1, 80,
+		Utils`CreateDate(2019, 04, 22), 
+	  	Utils`CreateHour(08, 00));
+
+
+	gymFeePayment3: GymFeePayment := new GymFeePayment(client1, 80,
+		Utils`CreateDate(2019, 03, 22), 
+	  	Utils`CreateHour(18, 00));
+
+	invoice1: Invoice := new Invoice({gymFeePayment3},
+		Utils`CreateDate(2019, 04, 23), 
+	  	Utils`CreateHour(08, 00),
+		"gymFee", false, client1);
+
+	personalTrainingPayment1: PersonalTrainingPayment := new PersonalTrainingPayment(client1, 50,
+		Utils`CreateDate(2019, 03, 13), 
+	  	Utils`CreateHour(08, 00));
+
+	lead1: Lead := new Lead("Maria", 23, <Female>, "portuguese");
+	lead2: Lead := new Lead("Jorge", 25, <Male>, "spanish");
+
+	task1: Task := new Task("Reunião com o patrão", 
+	  Utils`CreateHour(09, 00), 
+	  Utils`CreateHour(10, 00), 
+	  Utils`CreateDate(2019, 01, 12));
+
+	product1: Product := new Product("Prota", 29.99, 40);
+	
+	
+operations
+	public Run: () ==> ()
+	Run() == (
+		IO`println("\nClub Tests");
+
+		IO`println("Initiate addClient");
+		club1.addClient(client1, owner1);
+		club1.addClient(client2, owner1);
+
+		IO`println("Initiate addTrainer");
+		club1.addTrainer(trainer1, owner1);
+		club1.addTrainer(trainer2, owner1);
+
+		IO`println("Initiate addSalesRepresentative");
+		club1.addSalesRepresentative(salesRepresentative1, owner1);
+		club1.addSalesRepresentative(salesRepresentative2, owner1);
+
+
+		trainer1.addGymClass(gymClass1);
+		trainer1.addTask(gymClass1);
+		assertEqual({20190111 |-> [gymClass1]}, club1.getEmployeeCalendar(trainer1));
+		assertEqual([gymClass1], club1.getEmployeeTasksForGivenDate(trainer1, 20190111));
+
+		IO`println("Initiate addGroup");
+		club1.addGroup("PuxadoresDeFerro", {client1}, owner1);
+
+		IO`println("Initiate addPersonalTraining");
+		club1.addPersonalTraining(trainer1, client1, 40, owner1);
+		
+		IO`println("Initiate addGymClass");
+		club1.addGymClass(gymClass1, owner1);
+		assertEqual({gymClass1}, club1.getGymClasses());
+		
+		IO`println("Initiate GymClass");
+		club1.addGymClass("Aula de alta intensidade", "Zumba", trainer1, <Monday>, 
+		Utils`CreateHour(16, 00), 
+	  	Utils`CreateHour(17, 00), 
+	  	Utils`CreateDate(2019, 01, 14), owner1);
+		  IO`println("Finalizing GymClass1");
+		club1.addGymClass("Aula de baixa intensidade", "Pilates", trainer2, <Tuesday>, 
+		Utils`CreateHour(09, 00), 
+	  	Utils`CreateHour(10, 00), 
+	  	Utils`CreateDate(2019, 01, 15), owner1);
+		  IO`println("Finalizing GymClass2");
+
+		club1.addAttendeeToGymClass(gymClass1, client1, owner1);
+		club1.addAttendeeToGymClass(gymClass1, client2, owner1);
+
+		club1.addTrainingSession("Aula iniciante", client1, <Monday>, 
+		Utils`CreateHour(14, 00), 
+	  	Utils`CreateHour(15, 00), 
+	  	Utils`CreateDate(2019, 01, 14), owner1);
+		  IO`println("Finalizing TrainingSession1");
+
+		assertEqual(club1.getTrainingSessions(), trainer1.getTrainingSessions());
+
+
+		club1.removeTraineeFromTrainer(trainer1, client1, owner1);
+
+		club1.setUserAccess(owner1, trainer1, <Owner>);
+
+		IO`println("Initiate addNewsletter");
+		club1.addNewsletter("Sales", owner1);
+
+		IO`println("Initiate sendMessageClient");
+		club1.sendMessageClient("Bom Ano", client1, owner1);
+
+		IO`println("Initiate sendMessageEmployee");
+		club1.sendMessageEmployee("Tas despedido bro!", trainer1, owner1);
+
+		IO`println("Initiate sendMessageAllClients");
+		club1.sendMessageAllClients("Feliz Natal", owner1);
+		IO`println("Initiate sendMessageAllTrainers");
+		club1.sendMessageAllTrainers("Feliz Natal", owner1);
+		IO`println("Initiate sendMessageAllSalesRepresentatives");
+		club1.sendMessageAllSalesRepresentatives("Feliz Natal", owner1);
+
+		IO`println("Initiate sendMessageToGroup");
+		club1.sendMessageToGroup("Feliz Natal", "PuxadoresDeFerro", owner1);
+		club1.sendOfferToGroup("Prota com 10% de desconto esta semana!! :O", "PuxadoresDeFerro", owner1);
+
+		IO`println("Initiate AddGroupClient");
+		club1.addGroupClient("PuxadoresDeFerro", client2, owner1);
+		club1.removeGroupClient("PuxadoresDeFerro", client2, owner1);
+
+		IO`println("Initiate Invoice");		
+
+		club1.addInvoice(client1, {gymFeePayment1},
+		Utils`CreateDate(2019, 04, 23), 
+	  	Utils`CreateHour(08, 00),
+		"gymFee", owner1);
+		
+		assertEqual(1, card club1.getInvoices());
+	
+		club1.addInvoiceWithAllActivePayments(client1,
+		Utils`CreateDate(2019, 04, 23), 
+	  	Utils`CreateHour(08, 00),
+		"gymFee", owner1);
+
+		club1.addPaymentToInvoice(invoice1, {new GymFeePayment(client1, 80,
+		Utils`CreateDate(2019, 02, 22), 
+	  	Utils`CreateHour(18, 00))}, owner1);
+	
+		club1.removePaymentFromInvoice(invoice1, {personalTrainingPayment1}, owner1);
+
+		IO`println("Initiate Clients");
+		assertEqual({client1, client2}, club1.getClients());
+		assertEqual({owner1, client1, client2, trainer1, trainer2, salesRepresentative1, salesRepresentative2}, club1.getUsers());
+		assertEqual({client1}, club1.getClientByName("Maria"));
+
+		IO`println("Initiate CRM");
+		
+
+		assertEqual({|->}, club1.getCRM().getLeads());
+
+		club1.addLeadToCRM(lead1, owner1);
+		club1.setCRMLeadSR(lead1, salesRepresentative1, owner1);
+
+		club1.addLeadSRToCRM(lead2, salesRepresentative2, owner1);
+
+		assertEqual({lead2.getName()}, salesRepresentative2.getLeads());
+	  	assertEqual(salesRepresentative1, club1.getCRM().getLeadSR(lead1));
+
+		IO`println("Initiate removeLeadSR");
+		club1.removeLeadSR(lead1, owner1);
+		IO`println("Initiate removeCRMLead");
+		club1.removeCRMLead(lead1, owner1);
+
+		club1.transformLeadIntoClient(lead2, owner1);
+
+		IO`println("Initiate addTaskToEmployee");
+		club1.addTaskToEmployee(trainer1, owner1, task1);
+
+		IO`println("Initiate Products");
+		club1.addProduct(product1, owner1);
+		club1.addStockOfProduct(product1, 7, owner1);
+		assertEqual({product1}, club1.getProducts());
+		club1.removeProduct(product1, owner1);
+		assertEqual({}, club1.getProducts());
+		club1.addProduct("Shaker", 3.99, 20, owner1);
+
+		IO`println("Initiate Getters");
+		assertEqual({trainer1, trainer2}, club1.getTrainers());
+		assertEqual({salesRepresentative1, salesRepresentative2}, club1.getSalesRepresentatives());
+		assertEqual({trainer1, trainer2, salesRepresentative1, salesRepresentative2}, club1.getEmployees());
+
+		assertEqual({trainer1}, club1.getEmployeeByName("Vasco"));
+		assertEqual({trainer1}, club1.getUserByName("Vasco"));
+
+		assertEqual(owner1, club1.getOwner());
+		assertEqual("Bombados", club1.getName());
+		assertEqual("Sales", club1.getNewsletter());
+
+		assertEqual(1, card dom club1.getGroups());
+
+		assertEqual(17, club1.getFee());
+
+		assertEqual(club1, owner1.getClub());
+
+		IO`println("Initiate Stats");
+		club1.getReportOnClubStatistics(owner1);
+		club1.getClientActivity(client1, owner1);
+		club1.getEmployeeActivity(trainer1, true, owner1);
+
+		IO`println("Finalizing Club Tests");
+	);
+	
+end ClubTest

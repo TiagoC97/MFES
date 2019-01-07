@@ -1,0 +1,34 @@
+class PersonalTrainingPayment is subclass of Payment
+instance variables
+     private fee: rat;
+
+operations
+    /**
+	 * PersonalTrainingPayment constructor
+	 */
+	public PersonalTrainingPayment: Client * rat * Date * Hour==> PersonalTrainingPayment
+ 	PersonalTrainingPayment(newClient, newFee, newDate, newHour) == 
+ 	(
+		fee:= newFee;
+		newClient.addPersonalTrainingPayment(self);
+        Payment(newClient, newDate, newHour, newFee);
+    )
+    pre newFee >= 0
+    post fee = newFee ;
+
+    -- GETTERS
+
+    /**
+	 * Gets the PersonalTrainingPayment fee
+	 * 
+	 * @return fee
+	 */
+	public pure getFee: () ==> rat
+	getFee() == return fee
+	post RESULT = fee;
+
+functions
+-- TODO Define functiones here
+traces
+-- TODO Define Combinatorial Test Traces here
+end PersonalTrainingPayment

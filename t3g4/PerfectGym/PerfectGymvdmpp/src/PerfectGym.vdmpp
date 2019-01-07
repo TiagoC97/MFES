@@ -1,0 +1,46 @@
+class PerfectGym
+types
+	public String1= seq1 of char;
+instance variables
+
+	private clubs: map String1 to Club := {|->};
+	
+	private static perfectGym: PerfectGym := new PerfectGym();
+operations
+	/**
+	 * PerfectGym constructor
+	 */
+	public PerfectGym: () ==> PerfectGym
+	PerfectGym() == (return self)
+	post clubs = {|->};		
+		
+	/**
+	 * Add a new club to the PerfectGym
+	 */
+	public addClub: Club ==> ()
+	addClub(club) == clubs := clubs munion {club.getName() |-> club}
+	pre club.getName() not in set dom clubs
+	post clubs = clubs~ munion {club.getName() |-> club};
+
+	-- GETTERS
+
+	/**
+	 * Gets the perfectGym instance (Singleton)
+	 * 
+	 * @return perfectGym
+	 */
+	public pure static getInstance: () ==> PerfectGym
+	getInstance() == return perfectGym
+	post RESULT = perfectGym;
+		
+	/**
+	 * Gets the perfectGym clubs
+	 * 
+	 * @return clubs
+	 */
+	public pure getClubs: () ==> map String1 to Club
+	getClubs() == return clubs
+	post RESULT = clubs;
+		
+
+end PerfectGym

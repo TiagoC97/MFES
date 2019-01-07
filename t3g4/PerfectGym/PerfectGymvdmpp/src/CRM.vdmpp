@@ -1,0 +1,96 @@
+class CRM
+types
+	public String1 = seq of char;
+instance variables
+	private leads: map Lead to [SalesRepresentative] := {|->};
+operations
+	/**
+	 * CRM constructor
+	 */
+	public CRM: () ==> CRM
+ 	CRM() == return self
+ 	post leads = {|->};
+	 
+	 /**
+	  * Add lead
+	  */
+ 	public addLead: Lead ==> ()
+	addLead(lead) == 
+	(
+		leads := leads munion {lead |-> nil}
+	)
+ 	pre lead not in set dom leads;
+	 
+	/**
+	 * Add lead with sales representative
+	 */
+ 	public addLeadWithSR: Lead * SalesRepresentative ==> ()
+	 addLeadWithSR(lead, sr) ==
+	 (
+		leads := leads munion {lead |-> sr};
+		sr.addLead(lead);
+	 ) 
+ 	pre lead not in set dom leads;
+	 
+	/**
+	 * Set lead with sales representative
+	 */
+ 	public setLeadSR: Lead * [SalesRepresentative] ==> ()
+ 	setLeadSR(lead, sr) == 
+ 	(
+ 		if leads(lead) <> nil then
+		(
+			leads(lead).removeLead(lead);
+			
+		);
+
+		if(sr <> nil) then
+			sr.addLead(lead);
+ 		
+ 		leads(lead) := sr;
+ 		
+ 	)
+	 pre lead in set dom leads;
+	 
+	/**
+	 * Remove lead
+	 */
+	public removeLead: Lead ==> ()
+	removeLead(lead) == 
+	(
+		dcl newLeads: map Lead to [SalesRepresentative] := {|->};
+		for all l in set dom leads do
+			if(lead <> l) then
+				newLeads := newLeads munion {l|->leads(l)};
+
+		if leads(lead) <> nil then
+			leads(lead).removeLead(lead);
+
+		leads := newLeads;
+	)
+	pre leads <> {|->} and lead in set dom leads;
+
+	-- GETTERS
+
+	/**
+	 * Gets the client leads
+	 * 
+	 * @return map Lead to [SalesRepresentative]
+	 */
+	public pure  getLeads: () ==> map Lead to [SalesRepresentative]
+	getLeads() == return leads
+	post RESULT = leads;
+
+	/**
+	 * Gets one of the client leads sales representative
+	 * 
+	 * @return SalesRepresentative
+	 */
+	public pure getLeadSR: Lead ==> SalesRepresentative
+	getLeadSR(lead) == return leads(lead)
+	pre lead in set dom leads
+	and leads(lead) <> nil
+	post RESULT = leads(lead);
+ 	
+ 	
+end CRM

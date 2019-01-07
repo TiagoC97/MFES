@@ -1,0 +1,155 @@
+class Trainer is subclass of Employee
+types
+	
+values
+-- TODO Define values here
+instance variables	
+	private trainees: set of int := {};
+	private classes: set of GymClass := {};
+	private trainingSessions: set of TrainingSession := {};
+
+	inv not exists c1, c2 in set classes &
+		c1 <> c2 and 
+		c1.getTrainer() = c2.getTrainer() and 
+		c1.getDate() = c2.getDate() and
+		Utils`overlaps(c1.getStartHour(), c1.getEndHour(), c2.getStartHour(), c2.getEndHour());
+
+	inv not exists t1, t2 in set trainingSessions &
+		t1 <> t2 and (t1.getTrainer() = t2.getTrainer() or t1.getTrainee() = t2.getTrainee()) and
+		t1.getDate() = t2.getDate() and Utils`overlaps(t1.getStartHour(), t1.getEndHour(), t2.getStartHour(), t2.getEndHour());
+
+operations
+	/**
+	 * Trainer constructor
+	 */
+	public Trainer: String1 * nat * Gender * String1  ==> Trainer
+ 	Trainer(newName, newAge, newGender, newNationality) == Employee(newName, newAge, newGender, newNationality)
+ 	post trainees = {} and classes = {} and trainingSessions = {};
+
+	/**
+	 * Add trainee to this trainer
+	 */
+	public addTrainee: Client ==> ()
+	addTrainee(client) == trainees := trainees union {client.getID()}
+	pre client.getID() not in set trainees
+	post trainees = trainees~ union {client.getID()};
+
+	/**
+	 * Remove trainee from this trainer
+	 */
+	public removeTrainee: Client ==> ()
+	removeTrainee(client) == trainees := trainees \ {client.getID()}
+	pre trainees <> {} and client.getID() in set trainees
+	post trainees = trainees~ \ {client.getID()};
+
+	 -- GYM CLASSES
+	
+	/**
+	 * Add gym class
+	 */
+	public addGymClass: GymClass ==> ()
+	addGymClass(gymClass) == classes := classes union {gymClass}
+	pre gymClass not in set classes
+	post classes = classes~ union {gymClass} and
+		not exists c1, c2 in set classes &
+		c1 <> c2 and c1.getTrainer() = c2.getTrainer() and c1.getDate() = c2.getDate() and
+		Utils`overlaps(c1.getStartHour(), c1.getEndHour(), c2.getStartHour(), c2.getEndHour());
+
+	-- TRAINING SESSIONS
+	
+	/**
+	 * Add training session
+	 */
+	public addTrainingSession: TrainingSession ==> ()
+	addTrainingSession(trainingSession) == trainingSessions := trainingSessions union {trainingSession}
+	pre trainingSession not in set trainingSessions
+	post trainingSessions = trainingSessions~ union {trainingSession} and
+		not exists t1, t2 in set trainingSessions &
+		t1 <> t2 and (t1.getTrainer() = t2.getTrainer() or t1.getTrainee() = t2.getTrainee()) and
+		t1.getDate() = t2.getDate() and Utils`overlaps(t1.getStartHour(), t1.getEndHour(), t2.getStartHour(), t2.getEndHour());
+	
+	-- GETTERS
+	
+	/**
+	 * Get trainer activity
+	 */
+
+	 public getActivity: bool ==> ()
+		getActivity(showAllTasks) ==
+		(
+			dcl numClasses: nat := card classes;
+			dcl numTrainingSessiosn: nat := card trainingSessions;
+			dcl numTrainees: nat := card trainees;
+			dcl tasks: map Date to seq of Task := calendar.getTasks();
+			dcl i: nat := 0;
+			dcl t: Task;
+
+			IO`println("********* TRAINER STATISTICS *********");
+			IO`print("Number of gym classes: ");
+			IO`println(numClasses);
+			IO`print("Number of training sessions: ");
+			IO`println(numTrainingSessiosn);
+			IO`print("Number of trainees: " );
+			IO`println(numTrainees);
+
+			if showAllTasks then
+				(
+					for all d in set dom tasks do
+					(
+						i := 1;
+						IO`print("Date: " );	
+						IO`println(d);
+
+
+						while i <= len tasks(d) do
+						( 
+							t := tasks(d)(i); 
+							IO`print("	Task: ");
+							IO`print(t.getDescription());
+							IO`print(" started at ");
+							IO`print(t.getStartHour());
+							IO`print(" and ended at ");
+							IO`println(t.getEndHour());							
+							i:= i + 1;
+						);
+						IO`println("");
+					)		
+				);
+			
+			IO`println("");
+			IO`println("**************************************");
+		);
+
+	/**
+	 * Gets the trainer trainees
+	 * 
+	 * @return set of int
+	 */
+	public pure getTrainees : () ==> set of int
+	getTrainees() == return trainees
+	post RESULT = trainees;
+
+	/**
+	 * Gets the trainer classes
+	 * 
+	 * @return set of GymClass
+	 */
+	public pure getClasses: () ==> set of GymClass
+	getClasses() == return classes
+	post RESULT = classes;
+
+	/**
+	 * Gets the trainer training sessions
+	 * 
+	 * @return set of TrainingSession
+	 */
+	public pure getTrainingSessions: () ==> set of TrainingSession
+	getTrainingSessions() == return trainingSessions
+	post RESULT = trainingSessions;
+
+		
+functions
+-- TODO Define functiones here
+traces
+-- TODO Define Combinatorial Test Traces here
+end Trainer

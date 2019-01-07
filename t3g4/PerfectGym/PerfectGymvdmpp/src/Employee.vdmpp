@@ -1,0 +1,45 @@
+class Employee is subclass of User
+types
+
+instance variables
+
+	protected calendar: EmployeeCalendar;
+	
+
+operations
+	/**
+	 * Employee constructor
+	 */
+	public Employee: String1 * nat * Gender * String1 ==> Employee
+ 	Employee(newName, newAge, newGender, newNationality) == 
+ 	(
+ 		calendar:= new EmployeeCalendar();
+ 		User(newName, <Employee>, newAge, newGender, newNationality);
+	);
+
+ 	/**
+	 * Add task to employee
+	 */
+ 	public addTask: Task ==> ()
+ 	addTask(task) == calendar.addTask(task);
+	 
+	-- GETTERS
+
+	/**
+	 * Get employee activity
+	 */
+		public getActivity: bool ==> ()
+		getActivity(showAllTasks) == skip;
+ 	
+ 	/**
+	 * Get employee calendar
+	 * 
+	 * @return calendar
+	 */
+ 	public pure getCalendar: () ==> EmployeeCalendar
+ 	getCalendar() == return calendar
+	post RESULT = calendar;
+	 
+
+	 
+end Employee

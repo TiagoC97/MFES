@@ -1,0 +1,45 @@
+class PaymentTest is subclass of MyTestCase
+
+instance variables
+
+	client1: Client := new Client("Maria", 23, <Female>, "portuguese");
+
+	product1: Product := new Product("Prota", 29.99, 40);
+	product2: Product := new Product("Shaker", 3.99, 60);
+
+	gymFeePayment1: GymFeePayment := new GymFeePayment(client1, 80,
+		Utils`CreateDate(2019, 01, 22), 
+	  	Utils`CreateHour(08, 00));
+
+	personalTrainingPayment1: PersonalTrainingPayment := new PersonalTrainingPayment(client1, 50,
+		Utils`CreateDate(2019, 01, 23), 
+	  	Utils`CreateHour(08, 00));
+
+	productPayment1: ProductPayment := new ProductPayment(client1, product1, 2,
+		Utils`CreateDate(2019, 01, 30), 
+	  	Utils`CreateHour(18, 29));
+	
+operations
+	public Run: () ==> ()
+	Run() == (
+		IO`println("\nPayment Tests");
+
+		assertEqual(80, gymFeePayment1.getFee());
+
+		assertEqual(50, personalTrainingPayment1.getFee());
+
+		assertEqual([product1], productPayment1.getProducts());
+		productPayment1.addProduct(product2, 1);
+		assertEqual([product1, product2], productPayment1.getProducts());
+
+		assertEqual(20190122, gymFeePayment1.getDate());
+		assertEqual(0800, gymFeePayment1.getHour());
+		assertEqual(80, gymFeePayment1.getAmount());
+		assertEqual(client1, gymFeePayment1.getClient());
+		assertEqual(0, gymFeePayment1.getID());
+
+		IO`println("Finalizing Payment Tests");
+
+	);
+	
+end PaymentTest

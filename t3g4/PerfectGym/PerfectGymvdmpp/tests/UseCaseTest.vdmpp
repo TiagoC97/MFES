@@ -1,0 +1,132 @@
+class UseCaseTest is subclass of MyTestCase
+
+instance variables
+
+	owner3: Owner := new Owner("Bernardo", 21, <Male>, "portuguese");
+
+	club3: Club := new Club("Protas", owner3, 47);
+
+	perfectGym1: PerfectGym := PerfectGym`getInstance();
+
+	client1: Client := new Client("Maria", 23, <Female>, "portuguese");
+	client2: Client := new Client("Jorge", 25, <Male>, "spanish");
+
+	trainer1: Trainer := new Trainer("Vasco", 25, <Male>, "brazilian");
+	trainer2: Trainer := new Trainer("Alex", 33, <Male>, "english");
+
+	salesRepresentative1: SalesRepresentative := new SalesRepresentative("Joana", 21, <Female>, "portuguese");
+	salesRepresentative2: SalesRepresentative := new SalesRepresentative("Manuel", 33, <Male>, "french");
+
+	employee1: Employee := new Employee("Zeca", 25, <Male>, "brazilian");
+
+	lead1: Lead := new Lead("Maria", 23, <Female>, "portuguese");
+	lead2: Lead := new Lead("Jorge", 25, <Male>, "spanish");
+
+	gymFeePayment1: GymFeePayment := new GymFeePayment(client1, 80,
+		Utils`CreateDate(2019, 01, 22), 
+	  	Utils`CreateHour(08, 00));
+
+	task1: Task := new Task("Reunião com o patrão", 
+	  Utils`CreateHour(09, 00), 
+	  Utils`CreateHour(10, 00), 
+	  Utils`CreateDate(2019, 01, 12));
+	
+	product1: Product := new Product("Prota", 29.99, 40);
+
+	productPayment1: ProductPayment := new ProductPayment(client1, product1, 2,
+		Utils`CreateDate(2019, 01, 30), 
+	  	Utils`CreateHour(18, 29));
+	
+	
+operations
+	public Run: () ==> ()
+	Run() == (
+		IO`println("\nUseCase Tests");
+
+		IO`println("Use Case R1");
+		perfectGym1.addClub(club3);
+
+		IO`println("Use Case R2");
+		club3.addClient(client1, owner3);
+		club3.addClient(client2, owner3);
+		club3.addTrainer(trainer1, owner3);
+		club3.addTrainer(trainer2, owner3);
+		club3.addSalesRepresentative(salesRepresentative1, owner3);
+		club3.addSalesRepresentative(salesRepresentative2, owner3);
+
+		IO`println("Use Case R3");
+		club3.setUserAccess(owner3, trainer1, <Owner>);
+
+		IO`println("Use Case R4");
+		club3.getReportOnClubStatistics(owner3);
+		club3.getClientActivity(client1, owner3);
+		club3.getEmployeeActivity(trainer1, true, owner3);
+
+		IO`println("Use Case R5");
+		assertEqual({|->}, club3.getCRM().getLeads());
+		club3.addLeadToCRM(lead1, owner3);
+		club3.setCRMLeadSR(lead1, salesRepresentative1, owner3);
+		club3.addLeadSRToCRM(lead2, salesRepresentative2, owner3);
+		assertEqual({lead2.getName()}, salesRepresentative2.getLeads());
+	  	assertEqual(salesRepresentative1, club3.getCRM().getLeadSR(lead1));
+		club3.removeLeadSR(lead1, owner3);
+		club3.removeCRMLead(lead1, owner3);
+		club3.transformLeadIntoClient(lead2, owner3);
+
+		IO`println("Use Case R6");
+		club3.addNewsletter("Sales", owner3);
+		club3.sendMessageClient("Bom Ano", client1, owner3);
+		club3.sendMessageEmployee("Tas despedido bro!", trainer1, owner3);
+		club3.sendMessageAllClients("Feliz Natal", owner3);
+		club3.sendMessageAllTrainers("Feliz Natal", owner3);
+
+		IO`println("Use Case R7");
+		club3.addInvoice(client1, {gymFeePayment1},
+		Utils`CreateDate(2019, 04, 23), 
+	  	Utils`CreateHour(08, 00),
+		"gymFee", owner3);
+		assertEqual(1, card club3.getInvoices());
+
+		IO`println("Use Case R8");
+		employee1.addTask(task1);
+		assertEqual({20190112 |-> [task1]}, employee1.getCalendar().getTasks());
+
+		IO`println("Use Case R9");
+		client1.addTrainer(trainer1, 30);
+		assertEqual(trainer1, client1.getTrainer());
+
+		IO`println("Use Case R10");
+		assertEqual("Prota", product1.getName());
+		assertEqual(29.99, product1.getValue());
+		assertEqual(38, product1.getQuantity());
+		product1.addQuantity(12);
+		assertEqual(50, product1.getQuantity());
+		product1.removeQuantity(30);
+		assertEqual(20, product1.getQuantity());
+
+		IO`println("Use Case R11");
+		client2.sendMessage(client1, "ola");
+		assertEqual({"Jorge" |-> ["ola"], "Bernardo" |-> ["Sales", "Feliz Natal", "Sales", "Bom Ano"]}, client1.checkInbox());
+		assertEqual(["ola"], client1.readMessagesFromUser(client2));
+		assertEqual("ola", client1.readLastMessageFromUser(client2));
+		assertEqual("ola", client1.readMessageNFromUser(1, client2));
+		client1.deleteLastMessageFromUser("Jorge");
+		client2.sendMessage(client1, "ola");
+		client1.deleteMessageNFromUser(1, "Jorge");
+
+		IO`println("Use Case R12");
+		club3.addGroup("PuxadoresDeFerro", {client1}, owner3);
+		club3.sendMessageToGroup("Feliz Natal", "PuxadoresDeFerro", owner3);
+
+		IO`println("Use Case R13");
+		assertEqual({productPayment1}, client1.getProductPayments());
+		client1.removeProductPayment(productPayment1);
+		assertEqual({productPayment1}, client1.getHistoryProductPayments());
+		client1.addProductBought(product1, 1, 29.99);
+		assertEqual(89.97, client1.getTotalSPentOnProducts());
+		assertEqual({"Prota" |-> 3}, client1.getProductsBought());
+
+		IO`println("Finalizing UseCase Tests");
+	);
+	
+end UseCaseTest

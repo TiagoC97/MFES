@@ -1,0 +1,26 @@
+class ProductTest is subclass of MyTestCase
+
+instance variables
+
+  	product1: Product := new Product("Prota", 29.99, 40);
+	
+	
+operations
+	public Run: () ==> ()
+	Run() == (
+		IO`println("\nProduct Tests");
+
+		assertEqual("Prota", product1.getName());
+		assertEqual(29.99, product1.getValue());
+		assertEqual(40, product1.getQuantity());
+
+		product1.addQuantity(10);
+		assertEqual(50, product1.getQuantity());
+
+		product1.removeQuantity(30);
+		assertEqual(20, product1.getQuantity());
+			
+		IO`println("Finalizing Product Tests");
+	);
+	
+end ProductTest

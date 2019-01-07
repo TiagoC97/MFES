@@ -1,0 +1,92 @@
+class Lead
+
+types
+	
+	public String1 = seq of char;
+	public Gender = <Male> | <Female>;
+values
+	
+instance variables
+	private name: String1;
+	private age: nat;
+	private gender: Gender;
+	private nationality: String1;
+	public static curLeadID : int := 0;
+	public id : int := curLeadID;
+
+operations
+  	/**
+	 * Lead constructor
+	 */
+	public Lead: String1 * nat * Gender * String1 ==> Lead
+	Lead(newName, newAge, newGender, newNationality) == 
+	(
+		name := newName; 
+		age := newAge;
+ 		gender := newGender;
+ 		nationality := newNationality;
+		curLeadID := curLeadID +1;
+		return self
+	)
+	pre newName <> "" and newNationality <> ""
+	post name = newName and 
+		 age = newAge and
+		 gender = newGender and
+		 nationality = newNationality and
+		 id = curLeadID~ and
+		 curLeadID = curLeadID~ + 1;
+
+
+	-- GETTERS
+
+	/**
+	 * Gets the lead name
+	 * 
+	 * @return name
+	 */
+	public pure getName: () ==> String1
+ 	getName() == return name
+	post RESULT = name;
+
+	/**
+	 * Gets the lead age
+	 * 
+	 * @return age
+	 */
+	public pure getAge : () ==> nat
+	getAge() == return age
+	post RESULT = age;
+
+	/**
+	 * Gets the lead gender
+	 * 
+	 * @return gender
+	 */
+	public pure getGender : () ==> Gender
+	getGender() == return gender
+	post RESULT = gender;
+
+	/**
+	 * Gets the lead nationality
+	 * 
+	 * @return nationality
+	 */
+	public pure getNationality : () ==> String1
+	getNationality() == return nationality
+	post RESULT = nationality;
+
+	/**
+	 * Gets the lead id
+	 * 
+	 * @return id
+	 */
+	public pure getID: () ==> int
+ 	getID() == return id
+	post RESULT = id;
+ 	
+	 
+functions
+-- TODO Define functiones here
+traces
+-- TODO Define Combinatorial Test Traces here
+end Lead
