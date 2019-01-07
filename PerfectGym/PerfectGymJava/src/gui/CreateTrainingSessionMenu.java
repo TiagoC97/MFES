@@ -24,6 +24,7 @@ public class CreateTrainingSessionMenu {
 
     private Main parent;
     private ArrayList<Client> clients;
+    private ArrayList<Client> clientsToChoose;
     private ArrayList<User> usersAtLeastEmployees;
 
     public CreateTrainingSessionMenu(Main parent) {
@@ -53,8 +54,14 @@ public class CreateTrainingSessionMenu {
 
     public void setClients(ArrayList<Client> clients) {
         this.clients = clients;
+        clientsToChoose = new ArrayList<>();
         clientsCombo.removeAllItems();
-        clients.forEach(c -> clientsCombo.addItem(c.getName()));
+        clients.forEach(c -> {
+            if(((Client) c).getTrainer() != null) {
+                clientsCombo.addItem(c.getName());
+                clientsToChoose.add((Client) c);
+            }
+        });
     }
 
     private void setDaysOfWeek(){
@@ -70,7 +77,7 @@ public class CreateTrainingSessionMenu {
     }
 
     public String getDescription(){ return descriptionTextField.getText();}
-    public Client getClient(){ return clients.get(clientsCombo.getSelectedIndex());}
+    public Client getClient(){ return clientsToChoose.get(clientsCombo.getSelectedIndex());}
     public Object getDayOfWeek(){ return dayOfWeekCombo.getSelectedItem();}
     public Number getStartHour(){ return  Integer.parseInt(startHourTextField.getText());}
     public Number getEndHour(){ return  Integer.parseInt(endHourTextField.getText());}

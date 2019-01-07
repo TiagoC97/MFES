@@ -9,6 +9,7 @@ public class MyTestRunner {
 
     IO.println("Initializing Test Runner");
     new PerfectGymTest().Run();
+    new UserTest().Run();
     new ProductTest().Run();
     new TaskTest().Run();
     new SessionTest().Run();
@@ -24,7 +25,8 @@ public class MyTestRunner {
     IO.println("\nFinalizing Test Runner");
   }
 
-  public MyTestRunner() {}
+  public MyTestRunner() {
+  }
 
   public String toString() {
 

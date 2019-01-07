@@ -46,10 +46,12 @@ public class ViewOwnerMenu {
         });
 
         removeMessageButton.addActionListener(e -> {
+            if(receivedCombo.getItemCount() == 0)
+                return;
             Map map;
             int index = receivedCombo.getSelectedIndex();
             map = inbox.get(index);
-            owner.deleteMessageNFromUser(Integer.parseInt(map.get(0).toString()), senders.get(index));
+            owner.deleteMessageNFromUser(Integer.parseInt(map.get(senders.get(index)).toString()), senders.get(index));
             senders.remove(index);
             receivedCombo.removeItemAt(index);
             inbox.remove(index);
@@ -80,11 +82,11 @@ public class ViewOwnerMenu {
         receiversCombo.removeAllItems();
 
         club.getUsers().forEach(u -> {
-            receivers.add((User) u);
-            receiversCombo.addItem(((User) u).getName());
+            if (!(((User) u).getID() == owner.getID())) {
+                receivers.add((User) u);
+                receiversCombo.addItem(((User) u).getName());
+            }
         });
-
-        receivers.remove((User) owner);
 
         owner.checkInbox().forEach((sender, msgs) -> {
             int i = 1;

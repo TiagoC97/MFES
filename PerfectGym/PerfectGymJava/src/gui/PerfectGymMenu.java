@@ -91,8 +91,12 @@ public class PerfectGymMenu extends JFrame{
         owners.add(new Owner("Rui", 21, MaleQuote.getInstance(), "portuguese"));
         owners.add(new Owner("Tiago", 21, MaleQuote.getInstance(), "portuguese"));
 
+        owners.add(new Owner("Rita", 21, FemaleQuote.getInstance(), "portuguese"));
+        owners.add(new Owner("Lala", 21, FemaleQuote.getInstance(), "portuguese"));
+
         setOwnersShowArea();
-        owners.forEach(o -> ownersCombo.addItem(o.getName()));
+        ownersCombo.addItem(owners.get(2).getName());
+        ownersCombo.addItem(owners.get(3).getName());
     }
 
     private void initClubs(){

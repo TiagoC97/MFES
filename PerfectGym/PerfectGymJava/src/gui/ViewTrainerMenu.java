@@ -56,7 +56,7 @@ public class ViewTrainerMenu {
             Map map;
             int index = receivedCombo.getSelectedIndex();
             map = inbox.get(index);
-            trainer.deleteMessageNFromUser(Integer.parseInt(map.get(0).toString()), senders.get(index));
+            trainer.deleteMessageNFromUser(Integer.parseInt(map.get(senders.get(index)).toString()), senders.get(index));
             senders.remove(index);
             receivedCombo.removeItemAt(index);
             inbox.remove(index);
@@ -88,8 +88,10 @@ public class ViewTrainerMenu {
         receiversCombo.removeAllItems();
 
         club.getUsers().forEach(u -> {
-            receivers.add((User) u);
-            receiversCombo.addItem(((User) u).getName());
+            if (!(((User) u).getID() == trainer.getID())) {
+                receivers.add((User) u);
+                receiversCombo.addItem(((User) u).getName());
+            }
         });
 
         receivers.remove((User) trainer);

@@ -261,6 +261,7 @@ public class ClubMenu {
             });
         }
 
+
         addListeners();
 
     }
@@ -329,7 +330,7 @@ public class ClubMenu {
         });
 
         addAttendeeButton.addActionListener(e -> {
-
+            System.out.println(gymClasses);
             club.addAttendeeToGymClass(gymClasses.get(gymClassesCombo.getSelectedIndex()),
                     clients.get(attendeesCombo.getSelectedIndex()),
                     usersAtLeastEmployeeAccess.get(attendeesUserCombo.getSelectedIndex()));
@@ -378,6 +379,7 @@ public class ClubMenu {
         addGroupClientButton.addActionListener(e -> {
             if (groupsCombo.getItemCount() == 0 || clientsNotInGroupCombo.getItemCount() == 0 || groups.size() == 0)
                 return;
+
             int index = clientsNotInGroupCombo.getSelectedIndex();
             Client c1 = clientsNotInGroup.get(index);
 
@@ -632,8 +634,8 @@ public class ClubMenu {
     public void addGymClass(String d, String n, Trainer t, Object da, Number sh, Number eh, Number dat, User u) {
         club.addGymClass(d, n, t, da, sh, eh, dat, u);
         gymClassesCombo.addItem(n + " -> " + d);
+        gymClasses.clear();
         club.getGymClasses().forEach(g -> {
-            gymClasses.clear();
             gymClasses.add((GymClass) g);
         });
         setGymClassesTextArea();

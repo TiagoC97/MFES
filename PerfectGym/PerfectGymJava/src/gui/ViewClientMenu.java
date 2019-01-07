@@ -72,20 +72,26 @@ public class ViewClientMenu {
 
     private void addListeners() {
         sendMsgUserButton.addActionListener(e -> {
+            if (receiversCombo.getItemCount() == 0)
+                return;
             client.sendMessage(receivers.get(receiversCombo.getSelectedIndex()), newMsgTextField.getText());
         });
 
         sendMsgGroupButton.addActionListener(e -> {
+            if (groupsCombo.getItemCount() == 0)
+                return;
             client.sendMessageToGroup(newMsgTextField.getText(), groupsCombo.getSelectedItem().toString());
-            groups.get(groupsCombo.getSelectedItem().toString()).sendMessage(client, newMsgTextField.getText());
+
             setGroupsTextArea();
         });
 
         removeMessageButton.addActionListener(e -> {
+            if (receivedCombo.getItemCount() == 0)
+                return;
             Map map;
             int index = receivedCombo.getSelectedIndex();
             map = inbox.get(index);
-            client.deleteMessageNFromUser(Integer.parseInt(map.get(0).toString()), senders.get(index));
+            client.deleteMessageNFromUser(Integer.parseInt(map.get(senders.get(index)).toString()), senders.get(index));
             senders.remove(index);
             receivedCombo.removeItemAt(index);
             inbox.remove(index);
@@ -108,6 +114,8 @@ public class ViewClientMenu {
         });
 
         buyProductButton.addActionListener(e -> {
+            if (productsToBuyCombo.getItemCount() == 0)
+                return;
             ProductPayment p = new ProductPayment(client, products.get(productsToBuyCombo.getSelectedIndex()),
                     (Number) productToBuySpinner.getValue(), Integer.parseInt(productPayDateTextField.getText()),
                     Integer.parseInt(productPayHourTextField.getText()));
@@ -153,10 +161,10 @@ public class ViewClientMenu {
         nationalityTextField.setText(client.getNationality());
         clubTextField.setText(club.toString());
         accessTextField.setText(client.getAccess().toString());
-        trainerTextField.setText(client.getTrainer().toString());
+        if (client.getTrainer() != null)
+            trainerTextField.setText(client.getTrainer().toString());
         feeTextField.setText(client.getPersonalTrainingFee().toString());
         gymFeeTextField.setText(club.getFee().toString());
-        ;
 
         receivers = new ArrayList<>();
         groups = new HashMap<>();
@@ -173,11 +181,12 @@ public class ViewClientMenu {
         productsAddPaymentCombo.removeAllItems();
 
         club.getUsers().forEach(u -> {
-            receivers.add((User) u);
-            receiversCombo.addItem(((User) u).getName());
-        });
+            if (!(((User) u).getID() == client.getID())) {
 
-        receivers.remove((User) client);
+                receivers.add((User) u);
+                receiversCombo.addItem(((User) u).getName());
+            }
+        });
 
         club.getGroups().forEach((n, g) -> {
             if (((Group) g).getClients().contains(client)) {

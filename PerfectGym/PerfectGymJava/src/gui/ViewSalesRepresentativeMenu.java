@@ -53,7 +53,7 @@ public class ViewSalesRepresentativeMenu {
             Map map;
             int index = receivedCombo.getSelectedIndex();
             map = inbox.get(index);
-            salesRepresentative.deleteMessageNFromUser(Integer.parseInt(map.get(0).toString()), senders.get(index));
+            salesRepresentative.deleteMessageNFromUser(Integer.parseInt(map.get(senders.get(index)).toString()), senders.get(index));
             senders.remove(index);
             receivedCombo.removeItemAt(index);
             inbox.remove(index);
@@ -85,8 +85,10 @@ public class ViewSalesRepresentativeMenu {
         receiversCombo.removeAllItems();
 
         club.getUsers().forEach(u -> {
-            receivers.add((User) u);
-            receiversCombo.addItem(((User) u).getName());
+            if (!(((User) u).getID() == salesRepresentative.getID())) {
+                receivers.add((User) u);
+                receiversCombo.addItem(((User) u).getName());
+            }
         });
 
         receivers.remove((User) salesRepresentative);
